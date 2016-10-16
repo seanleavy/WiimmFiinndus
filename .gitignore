@@ -14,4 +14,4 @@ app/build/
 build/
 gradle/
 .idea/*
-
+gradlew.bat
