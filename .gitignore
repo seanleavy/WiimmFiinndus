@@ -1,5 +1,15 @@
-"*.iml"
+*.iml
+.DS_Store
+.gradle/
+.idea/compiler.xml
+.idea/copyright/
+.idea/encodings.xml
+.idea/gradle.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/runConfigurations.xml
+.idea/vcs.xml
+.idea/workspace.xml
 
-
-".idea/*"
+.idea/*
 
