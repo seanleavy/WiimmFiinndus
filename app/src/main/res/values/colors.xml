@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="nintendo_red">#C92A25</color>
+    <color name="nintendo_red_dark">#991B23</color>
+    <color name="nintendo_red_light">#EF666A</color>
+    <color name="nintendo_grey_light">#E7E7E7</color>
+    <color name="white">#ffffff</color>
 </resources>

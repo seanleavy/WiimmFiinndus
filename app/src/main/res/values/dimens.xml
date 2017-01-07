@@ -6,4 +6,16 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="miis_found_layout_size">35dp</dimen>
+    <dimen name="padding_margin_10dp">10dp</dimen>
+    <dimen name="collapsing_image_Size">120dp</dimen>
+
+    <dimen name="card_view_default_height">200dp</dimen>
+
+    <dimen name="icon_size">80dp</dimen>
+    <dimen name="vertical_icon_size_mii">130dp</dimen>
+    <dimen name="horizontal_icon_size_mii">40dp</dimen>
+
+    <dimen name="toolbar_textsize">16dp</dimen>
+    <dimen name="miis_found_textsize">26dp</dimen>
 </resources>

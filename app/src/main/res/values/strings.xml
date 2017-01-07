@@ -3,6 +3,8 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="miis_found_text">"Miis found:"</string>
+    <string name="press_search">Press the search button dummy</string>
 
     <string name="action_settings">Settings</string>
 </resources>
