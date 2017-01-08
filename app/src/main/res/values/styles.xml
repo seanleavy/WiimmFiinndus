@@ -34,4 +34,9 @@
         <item name="android:textSize">@dimen/miis_found_textsize</item>
     </style>
 
+    <style name="MyAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/nintendo_red_dark</item>
+        <item name="android:textColor">@color/nintendo_grey_light</item>
+    </style>
+
 </resources>

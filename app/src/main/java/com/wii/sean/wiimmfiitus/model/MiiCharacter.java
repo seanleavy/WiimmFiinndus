@@ -4,13 +4,13 @@ public class MiiCharacter {
 
     private String friendCode;
     private String mii;
-    private int vr;
+    private String vr;
 
     public MiiCharacter() {
 
     }
 
-    public MiiCharacter(String fCode, String miiName, int vrPoints) {
+    public MiiCharacter(String fCode, String miiName, String vrPoints) {
         this.friendCode = fCode;
         this.mii = miiName;
         this.vr = vrPoints;
@@ -33,11 +33,11 @@ public class MiiCharacter {
         this.mii = mii;
     }
 
-    public int getVr() {
+    public String getVr() {
         return vr;
     }
 
-    public void setVr(int vr) {
+    public void setVr(String vr) {
         this.vr = vr;
     }
 }
