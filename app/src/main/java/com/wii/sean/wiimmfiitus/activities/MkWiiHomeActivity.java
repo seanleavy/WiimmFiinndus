@@ -9,9 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -63,29 +64,44 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         wiiCyclerView.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(this);
         wiiCyclerView.setLayoutManager(recyclerLayoutManager);
-        alertDialogBuilder = new AlertDialog.Builder(this);
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LayoutInflater layoutInflater = LayoutInflater.from(view.getContext());
-                View dialogView = layoutInflater.inflate(R.layout.friend_code_dialog, null);
-                final EditText friendCodeEditText1 = (EditText) dialogView.findViewById(R.id.friend_code_edittext1);
-                final EditText friendCodeEditText2 = (EditText) dialogView.findViewById(R.id.friend_code_edittext2);
-                final EditText friendCodeEditText3 = (EditText) dialogView.findViewById(R.id.friend_code_edittext3);
+                alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+                final LayoutInflater layoutInflater = getLayoutInflater();
+                final View dialogView = layoutInflater.inflate(R.layout.friend_code_dialog, null);
+                alertDialogBuilder.setView(dialogView);
+                final EditText friendCodeEditText = (EditText) dialogView.findViewById(R.id.friend_code_edittext);
+                friendCodeEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable text) {
+                        if(text.length() == 4 || text.length() == 9)  {
+                            text.append('-');
+                        }
+                    }
+                });
                 alertDialogBuilder.setTitle(R.string.dialog_title)
                         .setMessage(R.string.dialog_body).setPositiveButton("Search", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String friendCode = friendCodeEditText1.getText().toString()
-                                + friendCodeEditText2.getText().toString()
-                                + friendCodeEditText3.getText().toString();
+                        String friendCode = friendCodeEditText.getText().toString();
                         new FriendSearchAsyncTask().execute(friendCode);
                         startButton.setClickable(false);
                         startButton.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.VISIBLE);
                     }
                 }).setNegativeButton("Cancel", null)
-                        .setView(R.layout.friend_code_dialog)
                         .create()
                         .show();
             }

@@ -59,7 +59,7 @@ public class MkFriendSearch {
 
     private void searchResults(String tag, ArrayList vr, ArrayList miiName, ArrayList fCode) {
         for(int i = 0; i < fCode.size(); i++) {
-            if(fCode.get(i).toString().contains(tag) ||
+            if(fCode.get(i).equals(tag) ||
                     //hardcoded bumchums
                     fCode.get(i).equals(FriendCodes.PONCHO.getFriendCode()) ||
                     fCode.get(i).equals(FriendCodes.ALAN.getFriendCode()) ||

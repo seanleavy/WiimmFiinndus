@@ -14,37 +14,16 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/friend_code_edittext1"
-            android:ems="4"
+            android:background="@color/nintendo_red_dark"
+            android:id="@+id/friend_code_edittext"
+            android:textColor="@color/white"
+            android:ems="20"
             android:text=""
             android:textAlignment="center"
-            android:digits="01234 56789"
-            android:inputType="number"
-            android:maxLength="4"
-            android:layout_width="@dimen/edittext_number_fields"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/friend_code_edittext2"
-            android:ems="4"
-            android:textAlignment="center"
-            android:text=""
-            android:digits="01234 56789"
-            android:inputType="number"
-            android:maxLength="4"
-            android:layout_width="@dimen/edittext_number_fields"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/friend_code_edittext3"
-            android:ems="4"
-            android:text=""
-            android:textAlignment="center"
-            android:digits="01234 56789"
-            android:inputType="number"
-            android:maxLength="4"
-            android:layout_width="@dimen/edittext_number_fields"
-            android:layout_height="wrap_content" />
+            android:inputType="number|text"
+            android:maxLength="14"
+            android:layout_width="@dimen/edittext_number_fields_horizontal"
+            android:layout_height="@dimen/edittext_number_fields_vertical" />
 
     </LinearLayout>
 
