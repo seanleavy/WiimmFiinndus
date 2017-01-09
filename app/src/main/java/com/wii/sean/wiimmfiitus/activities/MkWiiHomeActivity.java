@@ -117,7 +117,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
 //        miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
     }
 
-    private class FriendSearchAsyncTask extends AsyncTask<String, Void, Void> {
+    private class FriendSearchAsyncTask extends AsyncTask<String, Integer, Void> {
 
         @Override
         protected Void doInBackground(String... params) {
