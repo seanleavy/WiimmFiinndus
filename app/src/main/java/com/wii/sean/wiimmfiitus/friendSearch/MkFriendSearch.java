@@ -34,7 +34,7 @@ public class MkFriendSearch {
                     .userAgent(userAgent)
                     .get();
             Element table = mkDocument.select("table").get(0);
-            Elements tr = table.select("tr[class^=tr0]");
+            Elements tr = table.select("tr[class^=tr0],tr[class^=tr1]");
 
             miis = new ArrayList<>();
             friendCodes = new ArrayList<>();

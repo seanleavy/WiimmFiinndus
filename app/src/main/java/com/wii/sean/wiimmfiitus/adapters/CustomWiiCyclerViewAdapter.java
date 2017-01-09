@@ -79,14 +79,15 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         FriendViewHolder friendCard = (FriendViewHolder) holder;
+        friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_updated));
         for(MiiCharacter m : wiiList) {
-            if(m.getMii().equals(FriendCodes.PONCHO)) {
+            if(wiiList.get(position).getMii().equals(FriendCodes.PONCHO.getMii())) {
                 friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_poncho));
             }
-            if(m.getMii().equals(FriendCodes.FARTFACE)) {
+            if(wiiList.get(position).getMii().equals(FriendCodes.FARTFACE.getMii())) {
                 friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_fart));
             }
-            if(m.getMii().equals(FriendCodes.DIKROT)) {
+            if(wiiList.get(position).getMii().equals(FriendCodes.DIKROT.getMii())) {
                 friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_dikrot));
             }
         }
