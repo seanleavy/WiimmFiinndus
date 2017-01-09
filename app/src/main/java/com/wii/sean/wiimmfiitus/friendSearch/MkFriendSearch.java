@@ -62,7 +62,7 @@ public class MkFriendSearch {
             if(fCode.get(i).equals(tag) ||
                     //hardcoded bumchums
                     fCode.get(i).equals(FriendCodes.PONCHO.getFriendCode()) ||
-                    fCode.get(i).equals(FriendCodes.ALAN.getFriendCode()) ||
+                    fCode.get(i).equals(FriendCodes.DIKROT.getFriendCode()) ||
                     fCode.get(i).equals(FriendCodes.FARTFACE.getFriendCode()) ||
                     fCode.get(i).equals(FriendCodes.SEAN.getFriendCode())) {
                 miiFriendsFound.add(new MiiCharacter(fCode.get(i).toString(),

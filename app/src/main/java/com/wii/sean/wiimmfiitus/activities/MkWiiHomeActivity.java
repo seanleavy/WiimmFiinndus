@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
+import com.wii.sean.wiimmfiitus.friendSearch.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
@@ -34,6 +38,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private FloatingActionButton startButton;
     private ImageView wiimfiiIcon;
+    private ImageView nintendoLogo;
     private TextView miisFoundTextViewLabel;
     private TextView miisFoundTextViewValue;
     private ItemTouchHelper miiItemTouchHelper;
@@ -60,6 +65,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         miisFoundTextViewLabel = (TextView) findViewById(R.id.miis_found_label);
         miisFoundTextViewValue = (TextView) findViewById(R.id.miis_found_value);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_search);
+//        nintendoLogo = (ImageView) findViewById(R.id.nintendo_logo_imageview);
 
         wiiCyclerView.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(this);
@@ -68,11 +74,20 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                nintendoLogo.setVisibility(View.INVISIBLE);
                 alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+                AlertDialog searchDialog;
                 final LayoutInflater layoutInflater = getLayoutInflater();
                 final View dialogView = layoutInflater.inflate(R.layout.friend_code_dialog, null);
                 alertDialogBuilder.setView(dialogView);
                 final EditText friendCodeEditText = (EditText) dialogView.findViewById(R.id.friend_code_edittext);
+                final Button deleteEdittext = (Button) dialogView.findViewById(R.id.delete_friend_code);
+                deleteEdittext.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        friendCodeEditText.setText("");
+                    }
+                });
                 friendCodeEditText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -101,9 +116,24 @@ public class MkWiiHomeActivity extends AppCompatActivity {
                         startButton.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.VISIBLE);
                     }
-                }).setNegativeButton("Cancel", null)
-                        .create()
-                        .show();
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        nintendoLogo.setVisibility(View.VISIBLE);
+                    }
+                }).setNeutralButton("BumChums", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+//                                nintendoLogo.setVisibility(View.INVISIBLE);
+                                new FriendSearchAsyncTask().execute("");
+                                startButton.setClickable(false);
+                                startButton.setVisibility(View.INVISIBLE);
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+                        });
+                searchDialog = alertDialogBuilder.create();
+                searchDialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                searchDialog.show();
             }
         });
 
@@ -114,23 +144,23 @@ public class MkWiiHomeActivity extends AppCompatActivity {
             }
         });
 
-//        simpleMiiItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-//            @Override
-//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-//                wiiList.remove(viewHolder.getAdapterPosition());
-//                friendsFound --;
-//                miisFoundTextViewValue.setText(String.valueOf(friendsFound));
-//                wiiAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-//            }
-//        };
-//        simpleMiiItemTouchCallback.getSwipeVelocityThreshold(0f);
-//        miiItemTouchHelper = new ItemTouchHelper(simpleMiiItemTouchCallback);
-//        miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
+        simpleMiiItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                wiiList.remove(viewHolder.getAdapterPosition());
+                friendsFound --;
+                miisFoundTextViewValue.setText(String.valueOf(friendsFound));
+                wiiAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        };
+        simpleMiiItemTouchCallback.getSwipeVelocityThreshold(0f);
+        miiItemTouchHelper = new ItemTouchHelper(simpleMiiItemTouchCallback);
+        miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
     }
 
     private class FriendSearchAsyncTask extends AsyncTask<String, Integer, Void> {

@@ -13,17 +13,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <EditText
-            android:background="@color/nintendo_red_dark"
-            android:id="@+id/friend_code_edittext"
-            android:textColor="@color/white"
-            android:ems="20"
-            android:text=""
-            android:textAlignment="center"
-            android:inputType="number|text"
-            android:maxLength="14"
-            android:layout_width="@dimen/edittext_number_fields_horizontal"
-            android:layout_height="@dimen/edittext_number_fields_vertical" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            
+            <EditText
+                android:background="@color/nintendo_red_dark"
+                android:id="@+id/friend_code_edittext"
+                android:textColor="@color/white"
+                android:ems="20"
+                android:hint=""
+                android:text=""
+                android:paddingLeft="@dimen/edittext_padding_left"
+                android:inputType="number|text"
+                android:maxLength="14"
+                android:layout_width="@dimen/edittext_number_fields_horizontal"
+                android:layout_height="@dimen/edittext_number_fields_vertical" />
+            
+            <Button
+                android:id="@+id/delete_friend_code"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="@dimen/padding_margin_10dp"
+                android:layout_gravity="end|center_vertical"
+                android:background="@drawable/ic_delete_forever_white_48dp"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 
