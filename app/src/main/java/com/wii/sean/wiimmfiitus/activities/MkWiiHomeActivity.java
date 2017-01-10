@@ -50,8 +50,6 @@ public class MkWiiHomeActivity extends AppCompatActivity {
     private Snackbar firstRunSnackbar;
     private EditText friendCodeEditText;
 
-    private SharedPreferences savedSearches;
-    private SharedPreferences.Editor searchEditor;
     private MkFriendSearch mkFriendSearch;
     private int friendsFound = 0;
     private String searchTag = null;
@@ -73,8 +71,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
 
         // To save every fCode search
         final LayoutInflater layoutInflater = getLayoutInflater();
-        savedSearches = this.getSharedPreferences(getApplication().getPackageName(), MODE_PRIVATE);
-        searchEditor = savedSearches.edit();
+        SharedPreferences savedSearches = this.getSharedPreferences(getApplication().getPackageName(), MODE_PRIVATE);
         searchHistoryResultSet = savedSearches.getStringSet(searchPreferencesKey, new HashSet<String>());
 
         startButton = (FloatingActionButton) findViewById(R.id.button_search_frame);
@@ -160,7 +157,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
                 history.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        showSearchHistoryDialog();
+                        showSearchHistoryDialog();
                     }
                 });
 
@@ -265,12 +262,17 @@ public class MkWiiHomeActivity extends AppCompatActivity {
     }
 
     private void saveSearchHistory() {
+        SharedPreferences savedSearches = getSharedPreferences(getApplication().getPackageName(), MODE_PRIVATE);
+        SharedPreferences.Editor searchEditor = savedSearches.edit();
+        // bug? need to remove shared preference then re-add it
+        searchEditor.remove(searchPreferencesKey);
+        searchEditor.commit();
         searchEditor.putStringSet(searchPreferencesKey, searchHistoryResultSet);
         searchEditor.commit();
     }
 
 
-    //todo use spinner instead. this is a mess
+    //TODO use spinner instead. this is a mess. Need to overrride LinearLayout xml probably
     private void showSearchHistoryDialog() {
         View searchHistoryDialogView = getLayoutInflater().inflate(R.layout.search_history_dialog, null);
         final ArrayAdapter<String> searchResultsAdapter = new ArrayAdapter<>(searchHistoryDialogView.getContext(),
@@ -287,7 +289,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         });
         searchDialogBuilder.setView(searchHistoryDialogView);
         AlertDialog searchHistoryDialog = searchDialogBuilder.create();
-        searchHistoryDialog.getWindow().setLayout(600, 400);
+        //doesnt work
         searchHistoryDialog.getWindow().clearFlags(LayoutParams.FLAG_DIM_BEHIND);
         searchDialogBuilder.show();
     }
