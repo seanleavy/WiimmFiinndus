@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -39,7 +37,6 @@ import java.util.Set;
 public class MkWiiHomeActivity extends AppCompatActivity {
 
     private RecyclerView wiiCyclerView;
-    private SwipeRefreshLayout swipeRefreshCardsLayout;
     private CustomWiiCyclerViewAdapter wiiAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private FloatingActionButton startButton;
@@ -70,7 +67,6 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mk_wii_home_activity);
         View parentCoordinatorLayout = findViewById(R.id.home_main_layout);
-        swipeRefreshCardsLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh_cards);
         firstRunSnackbar = Snackbar.make(parentCoordinatorLayout, R.string.first_run_message, Snackbar.LENGTH_LONG);
         firstRunSnackbar.setActionTextColor(getResources().getColor(android.R.color.holo_red_dark));
         firstRunSnackbar.show();
@@ -222,12 +218,6 @@ public class MkWiiHomeActivity extends AppCompatActivity {
             }
         };
 
-        swipeRefreshCardsLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                submitSearch(friendCodeEditText);
-            }
-        });
         simpleMiiItemTouchCallback.getSwipeVelocityThreshold(0f);
         miiItemTouchHelper = new ItemTouchHelper(simpleMiiItemTouchCallback);
         miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
@@ -280,7 +270,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
     }
 
 
-    //todo use spinner
+    //todo use spinner instead. this is a mess
     private void showSearchHistoryDialog() {
         View searchHistoryDialogView = getLayoutInflater().inflate(R.layout.search_history_dialog, null);
         final ArrayAdapter<String> searchResultsAdapter = new ArrayAdapter<>(searchHistoryDialogView.getContext(),
