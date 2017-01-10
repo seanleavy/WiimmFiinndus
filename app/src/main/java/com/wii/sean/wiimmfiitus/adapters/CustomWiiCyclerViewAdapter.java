@@ -16,9 +16,7 @@ import com.wii.sean.wiimmfiitus.friendSearch.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCyclerViewAdapter.ViewHolder> {
 
@@ -79,7 +77,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         FriendViewHolder friendCard = (FriendViewHolder) holder;
-        friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_updated));
+        friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_default));
         for(MiiCharacter m : wiiList) {
             if(wiiList.get(position).getMii().equals(FriendCodes.PONCHO.getMii())) {
                 friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_poncho));
