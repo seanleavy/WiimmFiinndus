@@ -134,6 +134,28 @@ public class MkWiiHomeActivity extends AppCompatActivity {
                 searchDialog = alertDialogBuilder.create();
                 searchDialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 searchDialog.show();
+//                needs to be on 2 lines for some reason
+                final Button searchButton = searchDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                searchButton.setEnabled(false);
+                friendCodeEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if(friendCodeEditText.getText().toString().length() >= 14 ) {
+                            searchButton.setEnabled(true);
+                        } else
+                            searchButton.setEnabled(false);
+                    }
+                });
             }
         });
 
