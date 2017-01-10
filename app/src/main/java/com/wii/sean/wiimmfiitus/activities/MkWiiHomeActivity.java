@@ -90,6 +90,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 View searchDialogView = layoutInflater.inflate(R.layout.friend_code_dialog, null);
                 // building the Search Dialog
+                //todo refactor all custom Dialogs to seperate class
                 alertDialogBuilder = new AlertDialog.Builder(view.getContext());
                 AlertDialog searchDialog;
                 alertDialogBuilder.setView(searchDialogView);
@@ -266,7 +267,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         SharedPreferences.Editor searchEditor = savedSearches.edit();
         // bug? need to remove shared preference then re-add it
         searchEditor.remove(searchPreferencesKey);
-        searchEditor.commit();
+        searchEditor.apply();
         searchEditor.putStringSet(searchPreferencesKey, searchHistoryResultSet);
         searchEditor.commit();
     }
