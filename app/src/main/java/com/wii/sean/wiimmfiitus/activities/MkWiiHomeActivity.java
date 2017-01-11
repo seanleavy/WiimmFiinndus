@@ -3,6 +3,7 @@ package com.wii.sean.wiimmfiitus.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -51,6 +52,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
     private AlertDialog.Builder alertDialogBuilder;
     private Snackbar snackbar;
     private EditText friendCodeEditText;
+    private View parentCoordinatorLayout;
 
     private MkFriendSearch mkFriendSearch;
     private int friendsFound = 0;
@@ -66,10 +68,8 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         mkFriendSearch = new MkFriendSearch();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mk_wii_home_activity);
-        final View parentCoordinatorLayout = findViewById(R.id.home_main_layout);
-        snackbar = Snackbar.make(parentCoordinatorLayout, R.string.first_run_message, Snackbar.LENGTH_LONG);
-        snackbar.setActionTextColor(getResources().getColor(android.R.color.holo_red_dark));
-        snackbar.show();
+        parentCoordinatorLayout = findViewById(R.id.home_main_layout);
+        showSnackBar(getResources().getString(R.string.first_run_message), Snackbar.LENGTH_LONG, null);
 
         // To save every fCode search
         final LayoutInflater layoutInflater = getLayoutInflater();
@@ -93,14 +93,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
                 new FriendSearchAsyncTask().execute("");
                 startButton.setClickable(false);
                 progressBar.setVisibility(View.VISIBLE);
-                snackbar = Snackbar.make(parentCoordinatorLayout, "", Snackbar.LENGTH_SHORT);
-                snackbar.setActionTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                snackbar.show();
-                View snackBarView = snackbar.getView();
-                snackBarView.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_pixel_fixed));
-                TextView snackText = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
-                snackText.setGravity(Gravity.CENTER_HORIZONTAL);
-                snackText.setTextAlignment(Gravity.CENTER_HORIZONTAL);
+                showSnackBar("", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_pixel_fixed));
                 return true;
 
             }
@@ -314,6 +307,19 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         //doesnt work
         searchHistoryDialog.getWindow().clearFlags(LayoutParams.FLAG_DIM_BEHIND);
         searchDialogBuilder.show();
+    }
+
+    private void showSnackBar(String resource, int length, Drawable d) {
+        snackbar = Snackbar.make(parentCoordinatorLayout, resource, length);
+        snackbar.setActionTextColor(getResources().getColor(android.R.color.holo_red_dark));
+        snackbar.show();
+        View snackBarView = snackbar.getView();
+        if(d != null) {
+            snackBarView.setBackground(d);
+        }
+        TextView snackText = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        snackText.setGravity(Gravity.CENTER_HORIZONTAL);
+        snackText.setTextAlignment(Gravity.CENTER_HORIZONTAL);
     }
 
     @Override
