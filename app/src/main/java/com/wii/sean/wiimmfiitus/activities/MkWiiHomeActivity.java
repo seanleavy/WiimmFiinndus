@@ -7,12 +7,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
@@ -47,7 +49,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
     private ItemTouchHelper.SimpleCallback simpleMiiItemTouchCallback;
     private ProgressBar progressBar;
     private AlertDialog.Builder alertDialogBuilder;
-    private Snackbar firstRunSnackbar;
+    private Snackbar snackbar;
     private EditText friendCodeEditText;
 
     private MkFriendSearch mkFriendSearch;
@@ -64,10 +66,10 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         mkFriendSearch = new MkFriendSearch();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mk_wii_home_activity);
-        View parentCoordinatorLayout = findViewById(R.id.home_main_layout);
-        firstRunSnackbar = Snackbar.make(parentCoordinatorLayout, R.string.first_run_message, Snackbar.LENGTH_LONG);
-        firstRunSnackbar.setActionTextColor(getResources().getColor(android.R.color.holo_red_dark));
-        firstRunSnackbar.show();
+        final View parentCoordinatorLayout = findViewById(R.id.home_main_layout);
+        snackbar = Snackbar.make(parentCoordinatorLayout, R.string.first_run_message, Snackbar.LENGTH_LONG);
+        snackbar.setActionTextColor(getResources().getColor(android.R.color.holo_red_dark));
+        snackbar.show();
 
         // To save every fCode search
         final LayoutInflater layoutInflater = getLayoutInflater();
@@ -84,6 +86,25 @@ public class MkWiiHomeActivity extends AppCompatActivity {
         wiiCyclerView.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(this);
         wiiCyclerView.setLayoutManager(recyclerLayoutManager);
+
+        startButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                new FriendSearchAsyncTask().execute("");
+                startButton.setClickable(false);
+                progressBar.setVisibility(View.VISIBLE);
+                snackbar = Snackbar.make(parentCoordinatorLayout, "", Snackbar.LENGTH_SHORT);
+                snackbar.setActionTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                snackbar.show();
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_pixel_fixed));
+                TextView snackText = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+                snackText.setGravity(Gravity.CENTER_HORIZONTAL);
+                snackText.setTextAlignment(Gravity.CENTER_HORIZONTAL);
+                return true;
+
+            }
+        });
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
