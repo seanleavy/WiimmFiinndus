@@ -93,7 +93,7 @@ public class MkWiiHomeActivity extends AppCompatActivity {
                 new FriendSearchAsyncTask().execute("");
                 startButton.setClickable(false);
                 progressBar.setVisibility(View.VISIBLE);
-                showSnackBar("", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_pixel_fixed));
+                showSnackBar("", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_red_light));
                 return true;
 
             }
