@@ -45,4 +45,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Custom_tabs" parent="TextAppearance.Design.Tab">
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
 </resources>

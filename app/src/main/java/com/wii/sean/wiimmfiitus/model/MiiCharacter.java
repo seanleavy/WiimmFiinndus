@@ -1,5 +1,16 @@
 package com.wii.sean.wiimmfiitus.model;
 
+import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 public class MiiCharacter {
 
     private String friendCode;
@@ -39,5 +50,22 @@ public class MiiCharacter {
 
     public void setVr(String vr) {
         this.vr = vr;
+    }
+
+    public List toList() {
+        List<String> list = new ArrayList<String>();
+        list.add(getMii());
+        list.add(getFriendCode());
+        list.add(getVr());
+        return list;
+    }
+
+    public String toGson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    public static MiiCharacter gsonToMii(String gson) {
+        return new Gson().fromJson(gson, MiiCharacter.class);
     }
 }
