@@ -10,6 +10,7 @@
 .idea/runConfigurations.xml
 .idea/vcs.xml
 .idea/workspace.xml
+local.properties
 app/build/
 build/
 gradle/
