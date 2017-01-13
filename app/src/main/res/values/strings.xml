@@ -7,7 +7,8 @@
     <string name="press_search">Press the search button dummy</string>
     <string name="dialog_body">Enter Friend Code</string>
     <string name="dialog_title">Search</string>
-    <string name="first_run_message">Press BUMCHUMS when searching to find us all</string>
+    <string name="first_run_message">Press and hold the SEARCH button to Quick Search</string>
+    <string name="default_search">searching</string>
 
     <string name="action_settings">Settings</string>
 </resources>

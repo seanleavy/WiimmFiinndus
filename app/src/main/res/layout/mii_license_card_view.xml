@@ -27,7 +27,7 @@
                 android:padding="@dimen/activity_vertical_margin"
                 android:layout_width="@dimen/horizontal_icon_size_mii"
                 android:layout_height="@dimen/vertical_icon_size_mii"
-                android:src="@drawable/mii_updated"/>
+                android:src="@drawable/mii_default"/>
 
             <LinearLayout
                 android:layout_weight="1"
