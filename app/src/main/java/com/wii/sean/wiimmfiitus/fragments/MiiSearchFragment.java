@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wii.sean.wiimmfiitus.R;
+import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class MiiSearchFragment extends Fragment {
+public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.PreferenceUpdateListener {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView wiiCyclerView;
@@ -81,7 +81,7 @@ public class MiiSearchFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         miiSearchView = inflater.inflate(R.layout.fragment_mii_search, container, false);
         mkFriendSearch = new MkFriendSearch();
@@ -120,7 +120,8 @@ public class MiiSearchFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                View searchDialogView = layoutInflater.inflate(R.layout.friend_code_dialog, null);
+                ViewGroup viewGroup = (ViewGroup) view.findViewById(R.id.homescreen_main_layout);
+                View searchDialogView = layoutInflater.inflate(R.layout.friend_code_dialog, viewGroup, false);
                 // building the Search Dialog
                 //todo refactor all custom Dialogs to seperate class
                 alertDialogBuilder = new AlertDialog.Builder(view.getContext());
@@ -196,6 +197,7 @@ public class MiiSearchFragment extends Fragment {
 
                 // auto show keyboard
                 searchDialog = alertDialogBuilder.create();
+                if(searchDialog.getWindow() != null)
                 searchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 searchDialog.show();
 //                needs to be on 2 lines for some reason
@@ -245,8 +247,8 @@ public class MiiSearchFragment extends Fragment {
                         wiiList.get(viewHolder.getAdapterPosition()).toGson());
                 wiiList.remove(viewHolder.getAdapterPosition());
                 friendsFound --;
+                ((MkWiiHomeActivity)getActivity()).prefernceUpdated();
                 miisFoundTextViewValue.setText(String.valueOf(friendsFound));
-                wiiAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
             }
         };
 
@@ -264,38 +266,19 @@ public class MiiSearchFragment extends Fragment {
         }
     }
 
+
     @Override
     public void onAttach(Context context) {
+        ((MkWiiHomeActivity) getActivity()).registerPreferenceUPdateListener(this);
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void onDestroy() {
+        ((MkWiiHomeActivity)getActivity()).removePreferenceUpdateListener(this);
+        super.onDestroy();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
@@ -369,4 +352,8 @@ public class MiiSearchFragment extends Fragment {
 //        snackText.setTextAlignment(Gravity.CENTER_HORIZONTAL);
     }
 
+    @Override
+    public void preferenceUpdate() {
+
+    }
 }

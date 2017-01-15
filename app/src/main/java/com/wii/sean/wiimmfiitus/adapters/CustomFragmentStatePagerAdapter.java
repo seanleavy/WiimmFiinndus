@@ -4,6 +4,8 @@ package com.wii.sean.wiimmfiitus.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.SparseArray;
+import android.view.ViewGroup;
 
 import com.wii.sean.wiimmfiitus.fragments.FavouritesFragment;
 import com.wii.sean.wiimmfiitus.fragments.MiiSearchFragment;

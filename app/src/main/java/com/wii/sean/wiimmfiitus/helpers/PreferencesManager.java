@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PreferencesManager {
@@ -37,7 +39,7 @@ public class PreferencesManager {
         if(!getPreferencesFor(preferenceKey).contains(valueToAdd)) {
             Set<String> set = getPreferencesFor(preferenceKey);
             set.add(valueToAdd);
-            preferenceEditor = getNewEditor();
+            preferenceEditor = sharedPreferences.edit();
             preferenceEditor.remove(preferenceKey);
             preferenceEditor.apply();
             preferenceEditor.putStringSet(preferenceKey, set);
@@ -50,7 +52,7 @@ public class PreferencesManager {
         if(getPreferencesFor(preferenceKey).contains(valueToRemove)) {
             Set<String> set = getPreferencesFor(preferenceKey);
             set.remove(valueToRemove);
-            preferenceEditor = getNewEditor();
+            preferenceEditor = sharedPreferences.edit();
             preferenceEditor.remove(preferenceKey);
             preferenceEditor.apply();
             preferenceEditor.putStringSet(preferenceKey, set);
@@ -59,13 +61,11 @@ public class PreferencesManager {
         return false;
     }
 
-    public SharedPreferences.Editor getNewEditor() {
-        preferenceEditor = sharedPreferences.edit();
-        return preferenceEditor;
-    }
-
-    public void saveOnClose() {
-        preferenceEditor = getNewEditor();
-        preferenceEditor.commit();
+    public List<MiiCharacter> getPreferencesAsList(String key) {
+        List<MiiCharacter> list = new ArrayList<>();
+        for(String s : getPreferencesFor(key)) {
+            list.add(MiiCharacter.gsonToMii(s));
+        }
+        return list;
     }
 }
