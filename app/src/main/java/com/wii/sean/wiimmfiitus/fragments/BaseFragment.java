@@ -15,13 +15,7 @@ import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 
 public class BaseFragment extends Fragment {
 
-    public interface UpdateInterface {
-        void updateFavouritesView();
-    }
-
     private OnFragmentInteractionListener mListener;
-
-    public UpdateInterface updateInterface;
 
     public BaseFragment() {
         // Required empty public constructor
@@ -54,7 +48,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        updateInterface = (UpdateInterface) context;
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
