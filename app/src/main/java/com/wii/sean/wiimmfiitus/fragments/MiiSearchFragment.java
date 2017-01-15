@@ -61,7 +61,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
 
     private MkFriendSearch mkFriendSearch;
     private int friendsFound = 0;
-    private String searchTag = null;
     private PreferencesManager searchPreferncesManager;
     private Set<String> searchHistoryResultSet;
 
