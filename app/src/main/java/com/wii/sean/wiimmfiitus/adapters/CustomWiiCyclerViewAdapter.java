@@ -2,6 +2,7 @@ package com.wii.sean.wiimmfiitus.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,12 @@ import java.util.List;
 public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCyclerViewAdapter.ViewHolder> {
 
     private List<MiiCharacter> wiiList = new ArrayList<>();
+
+    public interface Clicklistener {
+        void itemClicked(View v, int position);
+    }
+
+    private Clicklistener clicklistener;
 
     public static final int SEARCHED_STATE = 1;
     public static final int DEFAULT_STATE = 0;
@@ -44,11 +51,13 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         private TextView friendCode;
         private TextView miiName;
         private TextView vrPoints;
+        private CardView licenseCard;
         private ImageView icon;
 
         public FriendViewHolder(View v) {
             super(v);
             context = v.getContext();
+            this.licenseCard = (CardView) v.findViewById(R.id.mii_license_card);
             this.friendCode = (TextView)v.findViewById(R.id.friend_code_textview);
             this.miiName = (TextView)v.findViewById(R.id.mii_name_textview);
             this.vrPoints = (TextView)v.findViewById(R.id.vr_textview);
@@ -75,7 +84,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         FriendViewHolder friendCard = (FriendViewHolder) holder;
         friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_default));
         for(MiiCharacter m : wiiList) {
@@ -93,6 +102,13 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         friendCard.vrPoints.setText(String.valueOf(wiiList.get(position).getVr()));
         friendCard.miiName.setText(wiiList.get(position).getMii());
         setAnimation(((FriendViewHolder) holder).itemView, position);
+        friendCard.licenseCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clicklistener.itemClicked(v, holder.getAdapterPosition());
+            }
+        });
+
     }
 
     @Override
@@ -107,6 +123,10 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         } else {
             return SEARCHED_STATE;
         }
+    }
+
+    public void setClickListener(Clicklistener listener) {
+        this.clicklistener = listener;
     }
 
     private void setAnimation(View viewToAnimate, int pos) {

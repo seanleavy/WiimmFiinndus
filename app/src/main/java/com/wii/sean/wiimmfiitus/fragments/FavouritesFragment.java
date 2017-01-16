@@ -2,6 +2,7 @@ package com.wii.sean.wiimmfiitus.fragments;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,18 +10,21 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
+import com.wii.sean.wiimmfiitus.friendSearch.Constants.FriendCodes;
+import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivity.PreferenceUpdateListener {
-
+public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivity.PreferenceUpdateListener, CustomWiiCyclerViewAdapter.Clicklistener {
     private OnFragmentInteractionListener mListener;
     private View favouritesView;
     private CustomWiiCyclerViewAdapter wiiCyclerViewAdapter;
@@ -30,6 +34,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private ItemTouchHelper miiItemTouchHelper;
     private ItemTouchHelper.Callback simpleMiiItemTouchCallback;
     private List<MiiCharacter> miiList;
+    private List<MiiCharacter> foundMiis;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -106,12 +111,42 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     private void setAdapter() {
         miiList = new ArrayList<>(preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES));
+        miiList.add(FriendCodes.PONCHO);
+        miiList.add(FriendCodes.FARTFACE);
+        miiList.add(FriendCodes.DIKROT);
+        miiList.add(FriendCodes.SEAN);
         wiiCyclerViewAdapter = new CustomWiiCyclerViewAdapter(miiList);
         layoutManager = new LinearLayoutManager(favouritesView.getContext());
         wiiCyclerView.setLayoutManager(layoutManager);
         wiiCyclerView.setHasFixedSize(false);
         wiiCyclerView.setAdapter(wiiCyclerViewAdapter);
         wiiCyclerViewAdapter.notifyDataSetChanged();
+        wiiCyclerViewAdapter.setClickListener(this);
         favouritesView.invalidate();
+    }
+
+    @Override
+    public void itemClicked(View v, int position) {
+        TextView mii = (TextView) v.findViewById(R.id.mii_name_textview);
+        TextView friendCode = (TextView) v.findViewById(R.id.friend_code_textview);
+        foundMiis = new ArrayList<>();
+        new FriendSearchAsyncTask().execute(friendCode.getText().toString(), mii.toString());
+    }
+
+    private class FriendSearchAsyncTask extends AsyncTask<String, Integer, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            foundMiis = new MkFriendSearch().searchFriendList(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(getContext(), foundMiis.toString(), Toast.LENGTH_SHORT).show();
+            // set an online label to card
+        }
+
     }
 }
