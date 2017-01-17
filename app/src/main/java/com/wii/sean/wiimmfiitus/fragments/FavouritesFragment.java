@@ -10,6 +10,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private ItemTouchHelper.Callback simpleMiiItemTouchCallback;
     private List<MiiCharacter> miiList;
     private List<MiiCharacter> foundMiis;
+    private ImageButton defaultFriendsImageButton;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -64,6 +66,8 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         wiiCyclerView = (RecyclerView) favouritesView.findViewById(R.id.favourites_fragment_recycler_view);
         preferencesManager = new PreferencesManager(favouritesView.getContext());
         setAdapter();
+        defaultFriendsImageButton = (ImageButton) favouritesView.findViewById(R.id.default_friends);
+        setDefaultFriends();
 
         simpleMiiItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
@@ -111,10 +115,6 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     private void setAdapter() {
         miiList = new ArrayList<>(preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES));
-        miiList.add(FriendCodes.PONCHO);
-        miiList.add(FriendCodes.FARTFACE);
-        miiList.add(FriendCodes.DIKROT);
-        miiList.add(FriendCodes.SEAN);
         wiiCyclerViewAdapter = new CustomWiiCyclerViewAdapter(miiList);
         layoutManager = new LinearLayoutManager(favouritesView.getContext());
         wiiCyclerView.setLayoutManager(layoutManager);
@@ -123,6 +123,23 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         wiiCyclerViewAdapter.notifyDataSetChanged();
         wiiCyclerViewAdapter.setClickListener(this);
         favouritesView.invalidate();
+    }
+
+    private void setDefaultFriends() {
+        defaultFriendsImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!miiList.contains(FriendCodes.PONCHO))
+                miiList.add(FriendCodes.PONCHO);
+                if(!miiList.contains(FriendCodes.FARTFACE))
+                miiList.add(FriendCodes.FARTFACE);
+                if(!miiList.contains(FriendCodes.DIKROT))
+                miiList.add(FriendCodes.DIKROT);
+                if(!miiList.contains(FriendCodes.SEAN))
+                miiList.add(FriendCodes.SEAN);
+                wiiCyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
