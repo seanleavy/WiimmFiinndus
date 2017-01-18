@@ -1,27 +1,20 @@
 package com.wii.sean.wiimmfiitus.fragments;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +28,6 @@ import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
 public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivity.PreferenceUpdateListener, CustomWiiCyclerViewAdapter.Clicklistener {
     private OnFragmentInteractionListener mListener;
@@ -85,9 +76,13 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         defaultFriendsImageButton = (Button) favouritesView.findViewById(R.id.default_friends);
 
         setOnBoardingAnimation();
-
         setDefaultFriends();
+        swipeRemoveMiiFromFavourites();
 
+        return favouritesView;
+    }
+
+    private void swipeRemoveMiiFromFavourites() {
         simpleMiiItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -105,8 +100,6 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         simpleMiiItemTouchCallback.getSwipeVelocityThreshold(0f);
         miiItemTouchHelper = new ItemTouchHelper(simpleMiiItemTouchCallback);
         miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
-
-        return favouritesView;
     }
 
     @Override

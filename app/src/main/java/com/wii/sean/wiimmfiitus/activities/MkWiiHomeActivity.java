@@ -30,7 +30,7 @@ public class MkWiiHomeActivity extends AppCompatActivity implements BaseFragment
         mViewPager = (ViewPager) findViewById(R.id.homescreen_view_pager);
         customFragmentPagerAdapter = new CustomFragmentStatePagerAdapter(getSupportFragmentManager(), 0);
         mViewPager.setAdapter(customFragmentPagerAdapter);
-        prefernceUpdated();
+        preferenceUpdated();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MkWiiHomeActivity extends AppCompatActivity implements BaseFragment
         listeners.remove(listener);
     }
 
-    public synchronized void prefernceUpdated() {
+    public synchronized void preferenceUpdated() {
         for(PreferenceUpdateListener l : listeners) {
             l.preferenceUpdate();
         }

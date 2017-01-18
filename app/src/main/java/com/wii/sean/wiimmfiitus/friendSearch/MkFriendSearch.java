@@ -44,9 +44,9 @@ public class MkFriendSearch {
             int rowCount = 0;
             for(Element row : tr) {
                 if(row.text().length() > 8) {
-                    friendCodes.add(row.select("a").text());
-                    vrpoints.add(tr.get(rowCount).select("td").get(4).text());
-                    miis.add(tr.get(rowCount).select("td").get(6).text());
+                    friendCodes.add(row.select("a").text().trim());
+                    vrpoints.add(tr.get(rowCount).select("td").get(5).text());
+                    miis.add(tr.get(rowCount).select("td").get(7).text());
                     rowCount++;
                 }
             }

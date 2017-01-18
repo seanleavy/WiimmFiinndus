@@ -247,7 +247,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                         wiiList.get(viewHolder.getAdapterPosition()).toGson());
                 wiiList.remove(viewHolder.getAdapterPosition());
                 friendsFound --;
-                ((MkWiiHomeActivity)getActivity()).prefernceUpdated();
+                ((MkWiiHomeActivity)getActivity()).preferenceUpdated();
                 miisFoundTextViewValue.setText(String.valueOf(friendsFound));
             }
         };
