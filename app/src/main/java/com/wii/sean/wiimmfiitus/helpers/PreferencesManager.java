@@ -14,9 +14,11 @@ public class PreferencesManager {
 
     public static String HISTORYPREFERENCES = "searchesMade";
     public static String FAVOURITESPREFERENCES = "favourites";
+    public static String DEFAULTPREFERENCES = "default";
 
     private Set<String> savedHistory;
     private Set<String> savedFriends;
+    private String firstRun;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor preferenceEditor;
 
@@ -67,5 +69,13 @@ public class PreferencesManager {
             list.add(MiiCharacter.gsonToMii(s));
         }
         return list;
+    }
+
+    public boolean isFirstRun() {
+        return !sharedPreferences.getBoolean(PreferencesManager.DEFAULTPREFERENCES, false);
+    }
+
+    public void setFirstRunToBe(boolean bool) {
+        sharedPreferences.edit().putBoolean(PreferencesManager.DEFAULTPREFERENCES, bool).commit();
     }
 }

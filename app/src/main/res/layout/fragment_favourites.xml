@@ -1,64 +1,20 @@
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:gravity="center"
     tools:context="com.wii.sean.wiimmfiitus.fragments.FavouritesFragment">
 
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:expandedTitleTextAppearance="@style/Toolbar_textstyle"
-            app:collapsedTitleTextAppearance="@style/Toolbar_textstyle"
-            app:contentScrim="@color/nintendo_red"
-            android:fitsSystemWindows="true"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:gravity="center"
-                app:layout_collapseMode="parallax"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                    android:id="@+id/friends_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/activity_vertical_margin_large"
-                    android:textSize="@dimen/friends_fragment_text_size"
-                    android:textColor="@color/nintendo_grey_light"
-                    android:text="@string/saved_friends"
-                    android:layout_gravity="center|top"/>
-
-                <ImageButton
-                    android:id="@+id/default_friends"
-                    android:background="@null"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_child_care_white_36dp"/>
-
-            </LinearLayout>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
+    <include
+        layout="@layout/titlebar" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/favourites_fragment_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:padding="@dimen/padding_margin_10dp"
         />
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

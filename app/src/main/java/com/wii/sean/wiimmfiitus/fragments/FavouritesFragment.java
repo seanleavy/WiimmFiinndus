@@ -1,16 +1,27 @@
 package com.wii.sean.wiimmfiitus.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +36,8 @@ import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
+
 public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivity.PreferenceUpdateListener, CustomWiiCyclerViewAdapter.Clicklistener {
     private OnFragmentInteractionListener mListener;
     private View favouritesView;
@@ -36,7 +49,8 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private ItemTouchHelper.Callback simpleMiiItemTouchCallback;
     private List<MiiCharacter> miiList;
     private List<MiiCharacter> foundMiis;
-    private ImageButton defaultFriendsImageButton;
+    private Button defaultFriendsImageButton;
+    private Toolbar toolbar;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -63,10 +77,15 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         favouritesView = inflater.inflate(R.layout.fragment_favourites, container, false);
+        toolbar = (Toolbar) favouritesView.findViewById(R.id.favourites_toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         wiiCyclerView = (RecyclerView) favouritesView.findViewById(R.id.favourites_fragment_recycler_view);
         preferencesManager = new PreferencesManager(favouritesView.getContext());
         setAdapter();
-        defaultFriendsImageButton = (ImageButton) favouritesView.findViewById(R.id.default_friends);
+        defaultFriendsImageButton = (Button) favouritesView.findViewById(R.id.default_friends);
+
+        setOnBoardingAnimation();
+
         setDefaultFriends();
 
         simpleMiiItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -88,6 +107,18 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
 
         return favouritesView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.wii_base, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void setOnBoardingAnimation() {
+        if(preferencesManager.isFirstRun()) {
+
+        }
     }
 
     @Override
@@ -147,7 +178,8 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         TextView mii = (TextView) v.findViewById(R.id.mii_name_textview);
         TextView friendCode = (TextView) v.findViewById(R.id.friend_code_textview);
         foundMiis = new ArrayList<>();
-        new FriendSearchAsyncTask().execute(friendCode.getText().toString(), mii.toString());
+        wiiCyclerView.setClickable(false);
+//        new FriendSearchAsyncTask().execute(friendCode.getText().toString(), mii.toString());
     }
 
     private class FriendSearchAsyncTask extends AsyncTask<String, Integer, Void> {

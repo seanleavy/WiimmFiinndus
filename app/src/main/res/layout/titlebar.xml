@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:http="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:id="@+id/favourites_toolbar"
+    android:background="@drawable/rounded_toolbar"
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:layout_height="@dimen/toolbar_height"
+    >
+
+    <ImageView
+        android:layout_width="@dimen/toolbar_icon_size"
+        android:layout_height="@dimen/toolbar_icon_size"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/mario1600"/>
+
+    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:gravity="start|center"
+        android:textSize="@dimen/toolbar_textsize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/nintendo_grey_light"
+        android:text="@string/saved_friends"
+        android:id="@+id/nintendoTextview" />
+
+    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/nintendo_grey_light"
+        android:text="pushme->"
+        android:layout_marginEnd="50dp"
+        android:gravity="end"/>
+    <Button
+        android:layout_gravity="end"
+        android:gravity="end|center_vertical"
+        android:id="@+id/default_friends"
+        android:background="@drawable/button_state"
+        android:layout_marginEnd="15dp"
+        android:layout_width="@dimen/toolbar_icon_size"
+        android:layout_height="@dimen/toolbar_icon_size"
+        android:src="@drawable/button_state"/>
+
+</android.support.v7.widget.Toolbar>
