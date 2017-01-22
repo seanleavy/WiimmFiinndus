@@ -4,7 +4,7 @@ package com.wii.sean.wiimmfiitus.helpers;
 import android.content.Context;
 import android.graphics.Typeface;
 
-import com.wii.sean.wiimmfiitus.friendSearch.Constants.Fonts;
+import com.wii.sean.wiimmfiitus.Constants.Fonts;
 
 public class NintendoFonts {
 

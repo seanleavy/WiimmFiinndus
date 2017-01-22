@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +22,7 @@ import android.widget.Toast;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
-import com.wii.sean.wiimmfiitus.friendSearch.Constants.FriendCodes;
+import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
@@ -42,6 +43,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private List<MiiCharacter> foundMiis;
     private Button defaultFriendsImageButton;
     private Toolbar toolbar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -74,12 +76,24 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         preferencesManager = new PreferencesManager(favouritesView.getContext());
         setAdapter();
         defaultFriendsImageButton = (Button) favouritesView.findViewById(R.id.default_friends);
+        swipeRefreshLayout = (SwipeRefreshLayout) favouritesView.findViewById(R.id.swipe_refresh_layout);
 
         setOnBoardingAnimation();
         setDefaultFriends();
         swipeRemoveMiiFromFavourites();
+        setRefreshListener();
 
         return favouritesView;
+    }
+
+    private void setRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                wiiCyclerViewAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void swipeRemoveMiiFromFavourites() {
@@ -95,6 +109,9 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                         miiList.get(viewHolder.getAdapterPosition()).toGson());
                 miiList.remove(viewHolder.getAdapterPosition());
                 wiiCyclerViewAdapter.notifyDataSetChanged();
+                if(!miiList.containsAll(FriendCodes.getDefaultMiis())) {
+                    defaultFriendsImageButton.setVisibility(View.VISIBLE);
+                }
             }
         };
         simpleMiiItemTouchCallback.getSwipeVelocityThreshold(0f);
@@ -153,21 +170,40 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         defaultFriendsImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!miiList.contains(FriendCodes.PONCHO))
-                miiList.add(FriendCodes.PONCHO);
-                if(!miiList.contains(FriendCodes.FARTFACE))
-                miiList.add(FriendCodes.FARTFACE);
-                if(!miiList.contains(FriendCodes.DIKROT))
-                miiList.add(FriendCodes.DIKROT);
-                if(!miiList.contains(FriendCodes.SEAN))
-                miiList.add(FriendCodes.SEAN);
+//                if(!miiList.contains(FriendCodes.PONCHO)) {
+//                    miiList.add(FriendCodes.PONCHO);
+//                    preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES,
+//                            FriendCodes.PONCHO.toGson());
+//                }
+//                if(!miiList.contains(FriendCodes.FARTFACE)) {
+//                    miiList.add(FriendCodes.FARTFACE);
+//                    preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES,
+//                            FriendCodes.FARTFACE.toGson());
+//                }
+//                if(!miiList.contains(FriendCodes.DIKROT)) {
+//                    miiList.add(FriendCodes.DIKROT);
+//                    preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES,
+//                            FriendCodes.DIKROT.toGson());
+//                }
+//                if(!miiList.contains(FriendCodes.SEAN)) {
+//                    miiList.add(FriendCodes.SEAN);
+//                    preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES,
+//                            FriendCodes.SEAN.toGson());
+//                }
+                for(MiiCharacter mii : FriendCodes.getDefaultMiis()) {
+                    if(!miiList.contains(mii)) {
+                        miiList.add(mii);
+                        preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES, mii.toGson());
+                    }
+                }
                 wiiCyclerViewAdapter.notifyDataSetChanged();
+                defaultFriendsImageButton.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     @Override
-    public void itemClicked(View v, int position) {
+    public void itemLongClicked(View v, int position) {
         TextView mii = (TextView) v.findViewById(R.id.mii_name_textview);
         TextView friendCode = (TextView) v.findViewById(R.id.friend_code_textview);
         foundMiis = new ArrayList<>();

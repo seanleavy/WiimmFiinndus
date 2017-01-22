@@ -34,6 +34,7 @@ import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
+import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
@@ -54,7 +55,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private ItemTouchHelper.SimpleCallback simpleMiiItemTouchCallback;
     private ProgressBar progressBar;
     private AlertDialog.Builder alertDialogBuilder;
-    private Snackbar snackbar;
     private EditText friendCodeEditText;
     private View parentCoordinatorLayout;
     private View miiSearchView;
@@ -92,7 +92,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         searchPreferncesManager = new PreferencesManager(miiSearchView.getContext());
         searchHistoryResultSet = searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES);
         if(searchPreferncesManager.isFirstRun())
-        showSnackBar(getResources().getString(R.string.first_run_message), Snackbar.LENGTH_LONG, null);
+        SnackBarHelper.showSnackBar(getContext(), parentCoordinatorLayout,getResources().getString(R.string.first_run_message), Snackbar.LENGTH_LONG, null);
 
         startButton = (FloatingActionButton) miiSearchView.findViewById(R.id.button_search_frame);
         wiiCyclerView = (RecyclerView) miiSearchView.findViewById(R.id.search_fragment_recycler_view);
@@ -111,7 +111,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                 new MiiSearchFragment.FriendSearchAsyncTask().execute("");
                 startButton.setClickable(false);
                 progressBar.setVisibility(View.VISIBLE);
-                showSnackBar("", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_red_light));
+                SnackBarHelper.showSnackBar(v.getContext(), parentCoordinatorLayout,"", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_red_light));
                 return true;
 
             }
@@ -337,19 +337,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         //doesnt work
         searchHistoryDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         searchDialogBuilder.show();
-    }
-
-    private void showSnackBar(String resource, int length, Drawable d) {
-        snackbar = Snackbar.make(parentCoordinatorLayout, resource, length);
-        snackbar.setActionTextColor(getResources().getColor(android.R.color.holo_red_dark));
-        snackbar.show();
-        View snackBarView = snackbar.getView();
-        if(d != null) {
-            snackBarView.setBackground(d);
-        }
-        TextView snackText = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
-        snackText.setGravity(Gravity.CENTER_HORIZONTAL);
-//        snackText.setTextAlignment(Gravity.CENTER_HORIZONTAL);
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.wii.sean.wiimmfiitus.friendSearch;
 
 import android.util.Log;
 
-import com.wii.sean.wiimmfiitus.friendSearch.Constants.FriendCodes;
-import com.wii.sean.wiimmfiitus.friendSearch.Constants.UrlConstants;
+import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
+import com.wii.sean.wiimmfiitus.Constants.UrlConstants;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
 import com.wii.sean.wiimmfiitus.helpers.RandomUserAgent;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
@@ -45,8 +45,8 @@ public class MkFriendSearch {
             for(Element row : tr) {
                 if(row.text().length() > 8) {
                     friendCodes.add(row.select("a").text().trim());
-                    vrpoints.add(tr.get(rowCount).select("td").get(5).text());
-                    miis.add(tr.get(rowCount).select("td").get(7).text());
+                    vrpoints.add(tr.get(rowCount).select("td").get(6).text());
+                    miis.add(tr.get(rowCount).select("td").get(8).text());
                     rowCount++;
                 }
             }

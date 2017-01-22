@@ -1,4 +1,4 @@
-package com.wii.sean.wiimmfiitus.friendSearch.Constants;
+package com.wii.sean.wiimmfiitus.Constants;
 
 
 public final class UrlConstants {

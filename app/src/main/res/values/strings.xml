@@ -10,10 +10,12 @@
     <string name="first_run_message">Press and hold the SEARCH button to Quick Search</string>
     <string name="saved_friends">Saved Miis</string>
     <string name="default_search">searching</string>
+    <string name="favourites_card_tip">Press and hold to search for friend</string>
 
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="placeholder_for_asynchelper">Need to implement asynctask</string>
 
 </resources>

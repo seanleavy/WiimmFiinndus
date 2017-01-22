@@ -1,6 +1,7 @@
 package com.wii.sean.wiimmfiitus.adapters;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +12,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wii.sean.wiimmfiitus.R;
-import com.wii.sean.wiimmfiitus.friendSearch.Constants.FriendCodes;
+import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
+import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
+import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
@@ -24,7 +28,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
     private List<MiiCharacter> wiiList = new ArrayList<>();
 
     public interface Clicklistener {
-        void itemClicked(View v, int position);
+        void itemLongClicked(View v, int position);
     }
 
     private Clicklistener clicklistener;
@@ -105,10 +109,20 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         friendCard.licenseCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clicklistener.itemClicked(v, holder.getAdapterPosition());
+                SnackBarHelper.showSnackBar(v.getContext(),
+                        v, v.getResources().getString(R.string.favourites_card_tip),
+                        Snackbar.LENGTH_SHORT,
+                        null);
             }
         });
-
+        friendCard.licenseCard.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(v.getContext(), v.getResources().getString(R.string.placeholder_for_asynchelper),
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     @Override
