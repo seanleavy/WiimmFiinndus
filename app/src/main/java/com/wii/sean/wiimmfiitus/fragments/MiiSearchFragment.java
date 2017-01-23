@@ -92,7 +92,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         searchPreferncesManager = new PreferencesManager(miiSearchView.getContext());
         searchHistoryResultSet = searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES);
         if(searchPreferncesManager.isFirstRun())
-        SnackBarHelper.showSnackBar(getContext(), parentCoordinatorLayout,getResources().getString(R.string.first_run_message), Snackbar.LENGTH_LONG, null);
 
         startButton = (FloatingActionButton) miiSearchView.findViewById(R.id.button_search_frame);
         wiiCyclerView = (RecyclerView) miiSearchView.findViewById(R.id.search_fragment_recycler_view);
@@ -112,7 +111,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                 searchAsyncHelper.execute("");
                 startButton.setClickable(false);
                 progressBar.setVisibility(View.VISIBLE);
-                SnackBarHelper.showSnackBar(v.getContext(), parentCoordinatorLayout,"", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_red_light));
+                SnackBarHelper.showSnackBar(v.getContext(), miiSearchView,"", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_red_light));
                 return true;
 
             }

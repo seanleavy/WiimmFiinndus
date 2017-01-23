@@ -3,6 +3,8 @@ package com.wii.sean.wiimmfiitus.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +30,7 @@ import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
+import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
@@ -50,6 +53,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomWiiCyclerViewAdapter.Clicklistener clicklistenerCallback;
+    private ImageView onlineStatusImageView;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -91,6 +95,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         return favouritesView;
     }
 
+    //todo search for everyone shown
     private void setRefreshListener() {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -199,6 +204,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         TextView friendCode = (TextView) v.findViewById(R.id.friend_code_textview);
         foundMiis = new ArrayList<>();
         wiiCyclerView.setClickable(false);
+        onlineStatusImageView = (ImageView) v.findViewById(R.id.online_offline_image);
         searchTask(friendCode);
     }
 
@@ -210,18 +216,24 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     @Override
     public void onTaskComplete(Object result) {
         //pass in search tag here maybe
-        ImageView onlineStatusImageView = (ImageView) favouritesView.findViewById(R.id.online_offline_image);
         if(result != null) {
             if (((List) result).size() > 0) {
-                Toast.makeText(favouritesView.getContext(),
-                        ((List<MiiCharacter>) result).get(0).getMii() + R.string.online,
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(favouritesView.getContext(),
+//                        ((List<MiiCharacter>) result).get(0).getMii() + getString(R.string.online),
+//                        Toast.LENGTH_SHORT).show();
+                SnackBarHelper.showSnackBar(getContext(), favouritesView,
+                        ((List<MiiCharacter>) result).get(0).getMii() + getString(R.string.online),
+                        Snackbar.LENGTH_LONG, null);
+                Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(400);
                 onlineStatusImageView.setImageDrawable(ContextCompat.getDrawable(getContext(),
                         R.drawable.nintendo_network_logo_online));
             }
             else {
                 Toast.makeText(favouritesView.getContext(), R.string.offline, Toast.LENGTH_SHORT).show();
-                onlineStatusImageView.setVisibility(View.INVISIBLE);
+                onlineStatusImageView.setImageDrawable(ContextCompat.getDrawable(getContext(),
+                        R.drawable.nintendo_network_logo_offline));
+//                onlineStatusImageView.setVisibility(View.INVISIBLE);
             }
         }
     }

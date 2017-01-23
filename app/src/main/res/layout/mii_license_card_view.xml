@@ -79,7 +79,7 @@
                     android:id="@+id/online_offline_image"
                     android:paddingEnd="@dimen/activity_vertical_margin"
                     android:layout_gravity="bottom|end"
-                    android:layout_width="@dimen/toolbar_icon_size"
+                    android:layout_width="@dimen/toolbar_icon_size_big"
                     android:layout_height="@dimen/toolbar_icon_size" />
 
             </LinearLayout>

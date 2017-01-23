@@ -20,6 +20,6 @@ public class SnackBarHelper {
         }
         TextView snackText = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
         snackText.setGravity(Gravity.CENTER_HORIZONTAL);
-//        snackText.setTextAlignment(Gravity.CENTER_HORIZONTAL);
+        snackText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 }
