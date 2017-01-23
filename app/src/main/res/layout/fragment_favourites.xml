@@ -22,6 +22,7 @@
             android:padding="@dimen/padding_margin_10dp"
             />
 
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

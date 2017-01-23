@@ -2,6 +2,7 @@ package com.wii.sean.wiimmfiitus.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
@@ -17,6 +18,7 @@ public class MkWiiHomeActivity extends AppCompatActivity implements BaseFragment
     private ViewPager mViewPager;
     private CustomFragmentStatePagerAdapter customFragmentPagerAdapter;
     private List<PreferenceUpdateListener> listeners;
+    private TabLayout tabLayout;
 
     public interface PreferenceUpdateListener {
         void preferenceUpdate();
@@ -28,6 +30,8 @@ public class MkWiiHomeActivity extends AppCompatActivity implements BaseFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mk_wii_home_activity);
         mViewPager = (ViewPager) findViewById(R.id.homescreen_view_pager);
+        tabLayout = (TabLayout) findViewById(R.id.tab_dots);
+        tabLayout.setupWithViewPager(mViewPager, true);
         customFragmentPagerAdapter = new CustomFragmentStatePagerAdapter(getSupportFragmentManager(), 0);
         mViewPager.setAdapter(customFragmentPagerAdapter);
         preferenceUpdated();
