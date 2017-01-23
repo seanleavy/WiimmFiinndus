@@ -17,13 +17,15 @@ import android.widget.Toast;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
+import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
+import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCyclerViewAdapter.ViewHolder> {
+public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCyclerViewAdapter.ViewHolder> implements AsyncTaskCompleteListener {
 
     private List<MiiCharacter> wiiList = new ArrayList<>();
 
@@ -87,6 +89,11 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         wiiList = wiiFriendList;
     }
 
+    public CustomWiiCyclerViewAdapter(List<MiiCharacter> wiiFriendList, Clicklistener clicklistener) {
+        wiiList = wiiFriendList;
+        this.clicklistener = clicklistener;
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final FriendViewHolder friendCard = (FriendViewHolder) holder;
@@ -118,9 +125,8 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         friendCard.licenseCard.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(v.getContext(), v.getResources().getString(R.string.placeholder_for_asynchelper),
-                        Toast.LENGTH_SHORT).show();
-                return true;
+                clicklistener.itemLongClicked(v, holder.getAdapterPosition());
+                return false;
             }
         });
     }
@@ -149,5 +155,9 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
             viewToAnimate.startAnimation(animation);
             lastPosition = pos;
         }
+    }
+
+    @Override
+    public void onTaskComplete(Object result) {
     }
 }

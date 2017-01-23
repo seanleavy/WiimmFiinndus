@@ -33,15 +33,17 @@ import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
+import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
+import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.PreferenceUpdateListener {
+public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.PreferenceUpdateListener, AsyncTaskCompleteListener {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView wiiCyclerView;
@@ -108,7 +110,8 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         startButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                new MiiSearchFragment.FriendSearchAsyncTask().execute("");
+                SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(v.getContext(), MiiSearchFragment.this);
+                searchAsyncHelper.execute("");
                 startButton.setClickable(false);
                 progressBar.setVisibility(View.VISIBLE);
                 SnackBarHelper.showSnackBar(v.getContext(), parentCoordinatorLayout,"", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_red_light));
@@ -180,7 +183,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                         .setNeutralButton("BumChums", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new MiiSearchFragment.FriendSearchAsyncTask().execute("");
+                                searchTask("");
                                 startButton.setClickable(false);
                                 startButton.setVisibility(View.INVISIBLE);
                                 progressBar.setVisibility(View.VISIBLE);
@@ -283,38 +286,17 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         void onFragmentInteraction(Uri uri);
     }
 
-    private class FriendSearchAsyncTask extends AsyncTask<String, Integer, Void> {
-
-        @Override
-        protected Void doInBackground(String... params) {
-            wiiList = mkFriendSearch.searchFriendList(params[0]);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if(wiiList != null) {
-                friendsFound = wiiList.size();
-            }
-            wiiAdapter = new CustomWiiCyclerViewAdapter(wiiList);
-            wiiCyclerView.setAdapter(wiiAdapter);
-            miisFoundTextViewLabel.setVisibility(View.VISIBLE);
-            miisFoundTextViewValue.setVisibility(View.VISIBLE);
-            miisFoundTextViewValue.setText(String.valueOf(friendsFound));
-            startButton.setVisibility(View.VISIBLE);
-            startButton.setClickable(true);
-            progressBar.setVisibility(View.GONE);
-        }
-
-    }
-
     private void submitSearch(EditText friendCodeEditText) {
         String friendCode = friendCodeEditText.getText().toString();
-        new FriendSearchAsyncTask().execute(friendCode);
+        searchTask(friendCode);
         startButton.setClickable(false);
         startButton.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void searchTask(String friendCode) {
+        SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(getContext(), this);
+        searchAsyncHelper.execute(friendCode);
     }
 
     //TODO use spinner instead. this is a mess. Need to overrride LinearLayout xml probably
@@ -342,5 +324,19 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     @Override
     public void preferenceUpdate() {
 
+    }
+
+    @Override
+    public void onTaskComplete(Object result) {
+        miisFoundTextViewLabel.setText(R.string.miis_found_text);
+        miisFoundTextViewLabel.setVisibility(View.VISIBLE);
+        wiiAdapter = new CustomWiiCyclerViewAdapter((List)result);
+        if(wiiList != null) {
+            miisFoundTextViewValue.setText(String.valueOf(((List) result).size()));
+        }
+        wiiCyclerView.setAdapter(wiiAdapter);
+        startButton.setVisibility(View.VISIBLE);
+        startButton.setClickable(true);
+        progressBar.setVisibility(View.GONE);
     }
 }
