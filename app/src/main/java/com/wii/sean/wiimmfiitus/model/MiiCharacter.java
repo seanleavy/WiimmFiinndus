@@ -1,15 +1,8 @@
 package com.wii.sean.wiimmfiitus.model;
 
-import android.support.annotation.NonNull;
-
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class MiiCharacter {
 

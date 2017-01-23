@@ -2,7 +2,6 @@ package com.wii.sean.wiimmfiitus.fragments;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
-import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
-import com.wii.sean.wiimmfiitus.helpers.LogHelper;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
@@ -177,8 +175,14 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         defaultFriendsImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(MiiCharacter mii : FriendCodes.getDefaultMiis()) {
-                    if(!preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES).contains(mii)) {
+                for(final MiiCharacter mii : FriendCodes.getDefaultMiis()) {
+                    if(!Iterables.any(preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES),
+                            new Predicate<MiiCharacter>() {
+                                @Override
+                                public boolean apply(MiiCharacter input) {
+                                    return input.getFriendCode().equals(mii.getFriendCode());
+                                }
+                            })) {
                         miiList.add(mii);
                         preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES, mii.toGson());
                     }
@@ -190,7 +194,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     }
 
     @Override
-    public void itemLongClicked(View v, int position) {
+    public void recyclerViewItemClicked(View v, int position) {
         TextView mii = (TextView) v.findViewById(R.id.mii_name_textview);
         TextView friendCode = (TextView) v.findViewById(R.id.friend_code_textview);
         foundMiis = new ArrayList<>();
@@ -205,11 +209,12 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     @Override
     public void onTaskComplete(Object result) {
+        //pass in search tag here maybe
         ImageView onlineStatusImageView = (ImageView) favouritesView.findViewById(R.id.online_offline_image);
         if(result != null) {
             if (((List) result).size() > 0) {
                 Toast.makeText(favouritesView.getContext(),
-                        ((List<MiiCharacter>) result).get(0).getMii() + R.string.offline,
+                        ((List<MiiCharacter>) result).get(0).getMii() + R.string.online,
                         Toast.LENGTH_SHORT).show();
                 onlineStatusImageView.setImageDrawable(ContextCompat.getDrawable(getContext(),
                         R.drawable.nintendo_network_logo_online));

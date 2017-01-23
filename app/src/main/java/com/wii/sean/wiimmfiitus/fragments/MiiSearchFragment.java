@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +61,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private View miiSearchView;
 
     private MkFriendSearch mkFriendSearch;
-    private int friendsFound = 0;
     private PreferencesManager searchPreferncesManager;
     private Set<String> searchHistoryResultSet;
 
@@ -248,10 +246,12 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 searchPreferncesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES,
                         wiiList.get(viewHolder.getAdapterPosition()).toGson());
+                SnackBarHelper.showSnackBar(getContext(), miiSearchView,
+                        wiiList.get(viewHolder.getAdapterPosition()).getMii()
+                                + getResources().getString(R.string.friend_added), Snackbar.LENGTH_SHORT,
+                        null);
                 wiiList.remove(viewHolder.getAdapterPosition());
-                friendsFound --;
                 ((MkWiiHomeActivity)getActivity()).preferenceUpdated();
-                miisFoundTextViewValue.setText(String.valueOf(friendsFound));
             }
         };
 
@@ -329,11 +329,10 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     @Override
     public void onTaskComplete(Object result) {
         miisFoundTextViewLabel.setText(R.string.miis_found_text);
+        wiiList.addAll((List)result);
         miisFoundTextViewLabel.setVisibility(View.VISIBLE);
-        wiiAdapter = new CustomWiiCyclerViewAdapter((List)result);
-        if(wiiList != null) {
-            miisFoundTextViewValue.setText(String.valueOf(((List) result).size()));
-        }
+        wiiAdapter = new CustomWiiCyclerViewAdapter(wiiList);
+        miisFoundTextViewValue.setVisibility(View.VISIBLE);
         wiiCyclerView.setAdapter(wiiAdapter);
         startButton.setVisibility(View.VISIBLE);
         startButton.setClickable(true);
