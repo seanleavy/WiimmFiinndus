@@ -178,7 +178,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
             @Override
             public void onClick(View view) {
                 for(MiiCharacter mii : FriendCodes.getDefaultMiis()) {
-                    if(!miiList.contains(mii)) {
+                    if(!preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES).contains(mii)) {
                         miiList.add(mii);
                         preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES, mii.toGson());
                     }

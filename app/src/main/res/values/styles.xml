@@ -10,6 +10,10 @@
         <item name="windowNoTitle">true</item>
         <item name="colorControlHighlight">@color/nintendo_blue_dark</item>
     </style>
+    
+    <style name="LauncherTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_layer_drawable</item>
+    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
