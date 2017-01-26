@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
-        versionName "1.4"
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -39,5 +39,6 @@ dependencies {
     compile 'com.google.guava:guava:20.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.jsoup:jsoup:1.10.1'
+    compile 'com.rohit.recycleritemclicksupport:recycleritemclicksupport:1.0.1'
     testCompile 'junit:junit:4.12'
 }

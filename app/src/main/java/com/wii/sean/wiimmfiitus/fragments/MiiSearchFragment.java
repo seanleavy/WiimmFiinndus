@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
@@ -327,12 +329,20 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
 
     @Override
     public void onTaskComplete(Object result) {
+        wiiList = new ArrayList<>();
         miisFoundTextViewLabel.setText(R.string.miis_found_text);
         wiiList.addAll((List)result);
         miisFoundTextViewLabel.setVisibility(View.VISIBLE);
         wiiAdapter = new CustomWiiCyclerViewAdapter(wiiList);
         miisFoundTextViewValue.setVisibility(View.VISIBLE);
         wiiCyclerView.setAdapter(wiiAdapter);
+        RecyclerItemClickSupport.addTo(wiiCyclerView).setOnItemClickListener(new RecyclerItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Log.d("TESR", "TESTTTTTTTT");
+                Toast.makeText(getContext(), "HELLO", Toast.LENGTH_LONG).show();
+            }
+        });
         startButton.setVisibility(View.VISIBLE);
         startButton.setClickable(true);
         progressBar.setVisibility(View.GONE);

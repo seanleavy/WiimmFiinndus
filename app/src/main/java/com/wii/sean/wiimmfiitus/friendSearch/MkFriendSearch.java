@@ -57,6 +57,7 @@ public class MkFriendSearch {
         return miiFriendsFound;
     }
 
+    //todo do a loose match for codes also
     private void searchResults(String tag, ArrayList vr, ArrayList miiName, ArrayList fCode) {
         for(int i = 0; i < fCode.size(); i++) {
             if(fCode.get(i).equals(tag) ||
