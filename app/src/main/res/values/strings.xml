@@ -8,7 +8,7 @@
     <string name="press_search">Press the search button dummy</string>
     <string name="dialog_body">Enter Friend Code</string>
     <string name="dialog_title">Search</string>
-    <string name="first_run_message">Press and hold the SEARCH button to Quick Search</string>
+    <string name="first_run_message">Hold the SEARCH button to Quick Search</string>
     <string name="saved_friends">Saved Miis</string>
     <string name="friend_added">"  added  to  favourites"</string>
     <string name="default_search">searching</string>

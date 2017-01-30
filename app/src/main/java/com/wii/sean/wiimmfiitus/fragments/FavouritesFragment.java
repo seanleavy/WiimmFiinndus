@@ -51,7 +51,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private ItemTouchHelper.Callback simpleMiiItemTouchCallback;
     private List<MiiCharacter> miiList;
     private List<MiiCharacter> foundMiis;
-    private Button defaultFriendsImageButton;
+    private TextView defaultFriendsImageButton;
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView onlineStatusImageView;
@@ -87,7 +87,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         wiiCyclerView = (RecyclerView) favouritesView.findViewById(R.id.favourites_fragment_recycler_view);
         preferencesManager = new PreferencesManager(favouritesView.getContext());
         setAdapter();
-        defaultFriendsImageButton = (Button) favouritesView.findViewById(R.id.default_friends);
+        defaultFriendsImageButton = (TextView) favouritesView.findViewById(R.id.default_friends);
         swipeRefreshLayout = (SwipeRefreshLayout) favouritesView.findViewById(R.id.swipe_refresh_layout);
 
         setOnBoardingAnimation();
