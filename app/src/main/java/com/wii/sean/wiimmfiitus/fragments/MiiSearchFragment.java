@@ -3,9 +3,8 @@ package com.wii.sean.wiimmfiitus.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
+import com.wii.sean.wiimmfiitus.Constants.UrlConstants;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
@@ -53,7 +53,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private FloatingActionButton startButton;
     private ImageView wiimfiiIcon;
     private TextView miisFoundTextViewLabel;
-    private TextView miisFoundTextViewValue;
     private ItemTouchHelper miiItemTouchHelper;
     private ItemTouchHelper.SimpleCallback simpleMiiItemTouchCallback;
     private ProgressBar progressBar;
@@ -93,18 +92,25 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         final LayoutInflater layoutInflater = getLayoutInflater(savedInstanceState);
         searchPreferncesManager = new PreferencesManager(miiSearchView.getContext());
         searchHistoryResultSet = searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES);
-        if(searchPreferncesManager.isFirstRun())
-
         startButton = (FloatingActionButton) miiSearchView.findViewById(R.id.button_search_frame);
         wiiCyclerView = (RecyclerView) miiSearchView.findViewById(R.id.search_fragment_recycler_view);
         wiimfiiIcon = (ImageView) miiSearchView.findViewById(R.id.wiimfii_icon);
         miisFoundTextViewLabel = (TextView) miiSearchView.findViewById(R.id.miis_found_label);
-        miisFoundTextViewValue = (TextView) miiSearchView.findViewById(R.id.miis_found_value);
         progressBar = (ProgressBar) miiSearchView.findViewById(R.id.progress_bar_search);
 
         wiiCyclerView.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(miiSearchView.getContext());
         wiiCyclerView.setLayoutManager(recyclerLayoutManager);
+        final View parentTabView = getActivity().findViewById(R.id.tab_dots);
+        if(searchPreferncesManager.isFirstRun()) {
+            SnackBarHelper.showSnackBar(getContext(), parentCoordinatorLayout,
+                    getResources().getString(R.string.first_run_message),
+                    Snackbar.LENGTH_LONG,
+                    null,
+                    parentTabView);
+                searchPreferncesManager.setFirstRunToBe(true);
+        }
+
 
         startButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -113,7 +119,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                 searchAsyncHelper.execute("");
                 startButton.setClickable(false);
                 progressBar.setVisibility(View.VISIBLE);
-                SnackBarHelper.showSnackBar(v.getContext(), miiSearchView,"", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_red_light));
+                SnackBarHelper.showSnackBar(v.getContext(), parentCoordinatorLayout,"", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_red_light), parentTabView);
                 return true;
 
             }
@@ -233,7 +239,9 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         wiimfiiIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), R.string.press_search, Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), R.string.pressed_wiimfii, Toast.LENGTH_SHORT).show();
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(UrlConstants.WiimFiiUrl));
+                startActivity(browserIntent);
             }
         });
 
@@ -250,8 +258,9 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                 SnackBarHelper.showSnackBar(getContext(), miiSearchView,
                         wiiList.get(viewHolder.getAdapterPosition()).getMii()
                                 + getResources().getString(R.string.friend_added), Snackbar.LENGTH_SHORT,
-                        null);
+                        null, startButton);
                 wiiList.remove(viewHolder.getAdapterPosition());
+                miisFoundTextViewLabel.setVisibility(View.INVISIBLE);
                 ((MkWiiHomeActivity)getActivity()).preferenceUpdated();
             }
         };
@@ -330,19 +339,25 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     @Override
     public void onTaskComplete(Object result) {
         wiiList = new ArrayList<>();
-        miisFoundTextViewLabel.setText(R.string.miis_found_text);
-        wiiList.addAll((List)result);
-        miisFoundTextViewLabel.setVisibility(View.VISIBLE);
-        wiiAdapter = new CustomWiiCyclerViewAdapter(wiiList);
-        miisFoundTextViewValue.setVisibility(View.VISIBLE);
-        wiiCyclerView.setAdapter(wiiAdapter);
-        RecyclerItemClickSupport.addTo(wiiCyclerView).setOnItemClickListener(new RecyclerItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Log.d("TESR", "TESTTTTTTTT");
-                Toast.makeText(getContext(), "HELLO", Toast.LENGTH_LONG).show();
-            }
-        });
+        if(((List) result).size() > 0) {
+            miisFoundTextViewLabel.setText(R.string.miis_found_text);
+            miisFoundTextViewLabel.setVisibility(View.VISIBLE);
+            wiiList.addAll((List) result);
+            wiiAdapter = new CustomWiiCyclerViewAdapter(wiiList);
+            wiiCyclerView.setAdapter(wiiAdapter);
+            RecyclerItemClickSupport.addTo(wiiCyclerView).setOnItemClickListener(new RecyclerItemClickSupport.OnItemClickListener() {
+                @Override
+                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                    Log.d("TESR", "TESTTTTTTTT");
+                    Toast.makeText(getContext(),
+                            "HELLO it's a me, " + ((CustomWiiCyclerViewAdapter.FriendViewHolder) recyclerView.getChildViewHolder(v)).miiName.getText(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            miisFoundTextViewLabel.setVisibility(View.VISIBLE);
+            miisFoundTextViewLabel.setText(R.string.miis_not_found_text);
+        }
         startButton.setVisibility(View.VISIBLE);
         startButton.setClickable(true);
         progressBar.setVisibility(View.GONE);

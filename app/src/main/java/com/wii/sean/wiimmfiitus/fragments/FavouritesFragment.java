@@ -102,7 +102,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                wiiCyclerViewAdapter.notifyDataSetChanged();
+                setAdapter();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

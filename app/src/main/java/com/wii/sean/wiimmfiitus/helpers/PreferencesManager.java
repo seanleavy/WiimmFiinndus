@@ -76,6 +76,8 @@ public class PreferencesManager {
     }
 
     public void setFirstRunToBe(boolean bool) {
-        sharedPreferences.edit().putBoolean(PreferencesManager.DEFAULTPREFERENCES, bool).commit();
+        preferenceEditor = sharedPreferences.edit();
+        preferenceEditor.putBoolean(PreferencesManager.DEFAULTPREFERENCES, bool);
+        preferenceEditor.commit();
     }
 }
