@@ -3,12 +3,12 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="miis_found_text">"friend   found"</string>
+    <string name="miis_found_text">"found  !!"</string>
     <string name="miis_not_found_text">"friend  not  online"</string>
-    <string name="press_search">Press the search button dummy</string>
+    <string name="pressed_wiimfii">loading wiimmfi.de/mkw</string>
     <string name="dialog_body">Enter Friend Code</string>
     <string name="dialog_title">Search</string>
-    <string name="first_run_message">Hold the SEARCH button to Quick Search</string>
+    <string name="first_run_message">"Hold the SEARCH button if you're from Roscommon"</string>
     <string name="saved_friends">Saved Miis</string>
     <string name="friend_added">"  added  to  favourites"</string>
     <string name="default_search">searching</string>
