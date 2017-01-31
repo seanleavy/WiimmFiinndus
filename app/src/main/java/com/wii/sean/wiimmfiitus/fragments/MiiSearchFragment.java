@@ -33,7 +33,6 @@ import com.wii.sean.wiimmfiitus.Constants.UrlConstants;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
-import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
@@ -42,7 +41,6 @@ import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.PreferenceUpdateListener, AsyncTaskCompleteListener {
 
@@ -61,9 +59,8 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private View parentCoordinatorLayout;
     private View miiSearchView;
 
-    private MkFriendSearch mkFriendSearch;
     private PreferencesManager searchPreferncesManager;
-    private Set<String> searchHistoryResultSet;
+    private List<String> searchHistoryResultSet;
 
     private List<MiiCharacter> wiiList = new ArrayList<>();
 
@@ -84,14 +81,13 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         miiSearchView = inflater.inflate(R.layout.fragment_mii_search, container, false);
-        mkFriendSearch = new MkFriendSearch();
 
         parentCoordinatorLayout = miiSearchView.findViewById(R.id.search_fragment_main_layout);
 
         // To save every fCode search
         final LayoutInflater layoutInflater = getLayoutInflater(savedInstanceState);
         searchPreferncesManager = new PreferencesManager(miiSearchView.getContext());
-        searchHistoryResultSet = searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES);
+        searchHistoryResultSet = searchPreferncesManager.getPreferencesAsList(PreferencesManager.HISTORYPREFERENCES);
         startButton = (FloatingActionButton) miiSearchView.findViewById(R.id.button_search_frame);
         wiiCyclerView = (RecyclerView) miiSearchView.findViewById(R.id.search_fragment_recycler_view);
         wiimfiiIcon = (ImageView) miiSearchView.findViewById(R.id.wiimfii_icon);
@@ -115,11 +111,17 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         startButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(v.getContext(), MiiSearchFragment.this);
+                SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(v.getContext(),
+                        MiiSearchFragment.this);
                 searchAsyncHelper.execute("");
                 startButton.setClickable(false);
                 progressBar.setVisibility(View.VISIBLE);
-                SnackBarHelper.showSnackBar(v.getContext(), parentCoordinatorLayout,"", Snackbar.LENGTH_SHORT, ContextCompat.getDrawable(v.getContext(), R.drawable.nintendo_logo_red_light), parentTabView);
+                SnackBarHelper.showSnackBar(v.getContext(),
+                        parentCoordinatorLayout,"",
+                        Snackbar.LENGTH_SHORT,
+                        ContextCompat.getDrawable(v.getContext(),
+                                R.drawable.nintendo_logo_red_light),
+                        parentTabView);
                 return true;
 
             }
@@ -174,7 +176,8 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 submitSearch(friendCodeEditText);
-                                searchPreferncesManager.addToPreference(PreferencesManager.HISTORYPREFERENCES, friendCodeEditText.getText().toString() );
+                                searchPreferncesManager.addToPreference(PreferencesManager.HISTORYPREFERENCES,
+                                        friendCodeEditText.getText().toString() );
                                 dialog.dismiss();
                             }
                         })
@@ -247,7 +250,8 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
 
         simpleMiiItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
                 return false;
             }
 
@@ -350,7 +354,8 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                 public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                     Log.d("TESR", "TESTTTTTTTT");
                     Toast.makeText(getContext(),
-                            "HELLO it's a me, " + ((CustomWiiCyclerViewAdapter.FriendViewHolder) recyclerView.getChildViewHolder(v)).miiName.getText(),
+                            "HELLO it's a me, " +
+                                    ((CustomWiiCyclerViewAdapter.FriendViewHolder) recyclerView.getChildViewHolder(v)).miiName.getText(),
                             Toast.LENGTH_LONG).show();
                 }
             });

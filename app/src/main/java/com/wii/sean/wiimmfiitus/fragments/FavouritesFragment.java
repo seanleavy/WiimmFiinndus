@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +36,7 @@ import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivity.PreferenceUpdateListener, AsyncTaskCompleteListener {
@@ -50,7 +50,6 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private ItemTouchHelper miiItemTouchHelper;
     private ItemTouchHelper.Callback simpleMiiItemTouchCallback;
     private List<MiiCharacter> miiList;
-    private List<MiiCharacter> foundMiis;
     private TextView defaultFriendsImageButton;
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -62,8 +61,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     }
 
     public static FavouritesFragment newInstance() {
-        FavouritesFragment fragment = new FavouritesFragment();
-        return fragment;
+        return new FavouritesFragment();
     }
 
     @Override
@@ -110,19 +108,28 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     //implement itemtouch helper in adapter
     private void swipeRemoveMiiFromFavourites() {
-        simpleMiiItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        //todo this is a mess
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int swipes = ItemTouchHelper.LEFT;
+                int drags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                return makeMovementFlags(drags, swipes);
+            }
+
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public boolean isLongPressDragEnabled() {
-                return true;
-            }
-
-            @Override
-            public boolean isItemViewSwipeEnabled() {
+                if(viewHolder.getAdapterPosition() < target.getAdapterPosition()) {
+                    for(int i = viewHolder.getAdapterPosition(); i < target.getAdapterPosition(); i++) {
+                        Collections.swap(miiList, i, i + 1);
+                    }
+                } else {
+                    for(int i = viewHolder.getAdapterPosition(); i > target.getAdapterPosition(); i--) {
+                        Collections.swap(miiList, i, i - 1);
+                    }
+                }
+                preferencesManager.overWritePreferencesWith(miiList, PreferencesManager.FAVOURITESPREFERENCES);
+                wiiCyclerViewAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
                 return true;
             }
 
@@ -137,7 +144,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                 }
             }
         };
-        miiItemTouchHelper = new ItemTouchHelper(simpleMiiItemTouchCallback);
+        miiItemTouchHelper = new ItemTouchHelper(callback);
         miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
     }
 
@@ -149,7 +156,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     private void setOnBoardingAnimation() {
         if(preferencesManager.isFirstRun()) {
-
+            // todo ?!
         }
     }
 
