@@ -13,6 +13,8 @@
 local.properties
 app/build/
 build/
+WiimmFiitus.iml
 gradle/
 .idea/*
 gradlew.bat
+.idea/

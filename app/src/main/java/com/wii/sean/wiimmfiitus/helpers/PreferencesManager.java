@@ -2,14 +2,13 @@ package com.wii.sean.wiimmfiitus.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-import com.google.gson.Gson;
+
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
-import org.json.JSONArray;
-import org.json.JSONException;
+
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PreferencesManager {
 
@@ -17,19 +16,21 @@ public class PreferencesManager {
     public static String FAVOURITESPREFERENCES = "favourites";
     public static String DEFAULTPREFERENCES = "default";
 
-    private String savedHistory;
-    private String savedFriends;
+    private Set<String> savedHistory;
+    private Set<String> savedFriends;
     private String firstRun;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor preferenceEditor;
+    private Context context;
 
     public PreferencesManager(Context context) {
         sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-        savedHistory = sharedPreferences.getString(HISTORYPREFERENCES, "");
-        savedFriends = sharedPreferences.getString(FAVOURITESPREFERENCES, "");
+        savedHistory = sharedPreferences.getStringSet(HISTORYPREFERENCES, new LinkedHashSet<String>());
+        savedFriends = sharedPreferences.getStringSet(FAVOURITESPREFERENCES, new LinkedHashSet<String>());
+        this.context = context;
     }
 
-    public String getPreferencesFor(String key) {
+    public Set<String> getPreferencesFor(String key) {
         if(key.equals(HISTORYPREFERENCES)) {
             return savedHistory;
         } else if(key.equals(FAVOURITESPREFERENCES)) {
@@ -40,81 +41,55 @@ public class PreferencesManager {
 
     public boolean addToPreference(String preferenceKey, String valueToAdd) {
         if(!getPreferencesFor(preferenceKey).contains(valueToAdd)) {
-            JSONArray jsonArray;
-            try {
-                jsonArray = new JSONArray(getPreferencesFor(preferenceKey));
-                jsonArray.put(valueToAdd);
-                preferenceEditor = sharedPreferences.edit();
-                preferenceEditor.remove(preferenceKey);
-                preferenceEditor.apply();
-                preferenceEditor.putString(preferenceKey, jsonArray.toString());
-                return preferenceEditor.commit();
-            } catch (JSONException e) {
-                Log.e(LogHelper.getTag(getClass()), e.getMessage());
-            }
+            Set<String> set = getPreferencesFor(preferenceKey);
+            set.add(valueToAdd);
+            preferenceEditor = sharedPreferences.edit();
+            preferenceEditor.remove(preferenceKey);
+            preferenceEditor.apply();
+            preferenceEditor.putStringSet(preferenceKey, set);
+            return preferenceEditor.commit();
         }
         return false;
     }
 
     public boolean removeFromPreference(String preferenceKey, String valueToRemove) {
         if(getPreferencesFor(preferenceKey).contains(valueToRemove)) {
-            try {
-                JSONArray jsonArray = new JSONArray(getPreferencesFor(preferenceKey));
-                for(int i = 0; i < jsonArray.length(); i++) {
-                    String prefVal = jsonArray.getJSONObject(i).toString();
-                    if(prefVal.contains(preferenceKey)) {
-                        jsonArray.remove(i);
-                    }
-                }
-                preferenceEditor = sharedPreferences.edit();
-                preferenceEditor.remove(preferenceKey);
-                preferenceEditor.apply();
-                preferenceEditor.putString(preferenceKey, jsonArray.toString());
-                return preferenceEditor.commit();
-            } catch (JSONException e) {
-                Log.e(LogHelper.getTag(getClass()), e.getMessage());
-            }
+            Set<String> set = getPreferencesFor(preferenceKey);
+            set.remove(valueToRemove);
+            preferenceEditor = sharedPreferences.edit();
+            preferenceEditor.remove(preferenceKey);
+            preferenceEditor.apply();
+            preferenceEditor.putStringSet(preferenceKey, set);
+            return preferenceEditor.commit();
         }
         return false;
     }
 
-    //todo generics instead
-    public List getPreferencesAsList(String key) {
-        if(key.equals(PreferencesManager.HISTORYPREFERENCES)) {
-            List<String> list = new ArrayList<>();
-            try {
-                JSONArray jsonArray = new JSONArray(key);
-                for(int i = 0; i < jsonArray.length(); i++) {
-                    list.add(jsonArray.getString(i));
-                }
-                return list;
-            } catch (JSONException e) {
-                Log.e(LogHelper.getTag(getClass()), e.getMessage());
+    public void overwritePreferenceWith(List list, String key) {
+        preferenceEditor = sharedPreferences.edit();
+        preferenceEditor.remove(key).commit();
+        preferenceEditor = sharedPreferences.edit();
+        Set<String> set = new LinkedHashSet<>();
+        for(int i = 0; i < list.size(); i++) {
+            if(list.get(i) instanceof MiiCharacter) {
+                set.add(((MiiCharacter) list.get(i)).toGson());
             }
+            else
+                set.add((String) list.get(i));
         }
-        List<MiiCharacter> list = new ArrayList<>();
-        try {
-            Gson gson = new Gson();
-            JSONArray jsonArray = new JSONArray(getPreferencesFor(key));
-            for(int i = 0; i < jsonArray.length(); i++) {
-                //todo pucnh myself in the face
-                // wonderful design here
-                list.add(MiiCharacter.gsonToMii(gson.toJson(jsonArray.get(i))));
-            }
-        } catch (JSONException e) {
-            Log.e(LogHelper.getTag(getClass()), e.getMessage());
-        }
-        return list;
+        preferenceEditor.putStringSet(key, set).commit();
     }
 
-    public void overWritePreferencesWith(Collection preferences, String preferenceType) {
-        preferenceEditor = sharedPreferences.edit();
-        preferenceEditor.remove(preferenceType);
-        preferenceEditor.commit();
-        JSONArray jsonArray = new JSONArray(preferences);
-        preferenceEditor = sharedPreferences.edit();
-        preferenceEditor.putString(preferenceType, jsonArray.toString());
-        preferenceEditor.commit();
+    public List<MiiCharacter> getPreferencesAsList(String key) {
+        List list = new ArrayList<>();
+        for(String s : getPreferencesFor(key)) {
+            if(!key.equals(PreferencesManager.HISTORYPREFERENCES)) {
+                list.add(MiiCharacter.gsonToMii(s));
+            }
+            else
+                list.add(s);
+        }
+        return list;
     }
 
     public boolean isFirstRun() {

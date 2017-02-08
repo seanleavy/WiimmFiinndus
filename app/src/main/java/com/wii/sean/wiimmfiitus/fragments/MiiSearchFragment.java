@@ -60,7 +60,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private View miiSearchView;
 
     private PreferencesManager searchPreferncesManager;
-    private List<String> searchHistoryResultSet;
+    private List<MiiCharacter> searchHistoryResultSet;
 
     private List<MiiCharacter> wiiList = new ArrayList<>();
 

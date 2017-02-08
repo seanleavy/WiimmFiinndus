@@ -90,7 +90,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
         setOnBoardingAnimation();
         setDefaultFriends();
-        swipeRemoveMiiFromFavourites();
+        enableSwipeDragFavourites();
         setRefreshListener();
         return favouritesView;
     }
@@ -107,7 +107,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     }
 
     //implement itemtouch helper in adapter
-    private void swipeRemoveMiiFromFavourites() {
+    private void enableSwipeDragFavourites() {
         //todo this is a mess
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
             @Override
@@ -128,7 +128,8 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                         Collections.swap(miiList, i, i - 1);
                     }
                 }
-                preferencesManager.overWritePreferencesWith(miiList, PreferencesManager.FAVOURITESPREFERENCES);
+                preferencesManager.overwritePreferenceWith(miiList, PreferencesManager.FAVOURITESPREFERENCES);
+                preferencesManager = new PreferencesManager(favouritesView.getContext());
                 wiiCyclerViewAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
                 return true;
             }
