@@ -175,7 +175,9 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     @Override
     public void preferenceUpdate() {
-        setAdapter();
+        if(favouritesView != null) {
+            setAdapter();
+        }
     }
 
     public void onButtonPressed(Uri uri) {
