@@ -59,16 +59,26 @@ public class MkFriendSearch {
 
     //todo do a loose match for codes also
     private void searchResults(String tag, ArrayList vr, ArrayList miiName, ArrayList fCode) {
-        for(int i = 0; i < fCode.size(); i++) {
-            if(fCode.get(i).equals(tag) ||
-                    //hardcoded bumchums
-                    fCode.get(i).equals(FriendCodes.PONCHO.getFriendCode()) ||
-                    fCode.get(i).equals(FriendCodes.DIKROT.getFriendCode()) ||
-                    fCode.get(i).equals(FriendCodes.FARTFACE.getFriendCode()) ||
-                    fCode.get(i).equals(FriendCodes.SEAN.getFriendCode())) {
-                miiFriendsFound.add(new MiiCharacter(fCode.get(i).toString(),
-                        miiName.get(i).toString(),
-                        vr.get(i).toString()));
+        if(!tag.equals("")) {
+            for (int i = 0; i < fCode.size(); i++) {
+                if (fCode.get(i).equals(tag)) {
+                    miiFriendsFound.add(new MiiCharacter(fCode.get(i).toString(),
+                            miiName.get(i).toString(),
+                            vr.get(i).toString()));
+                }
+            }
+        }
+        // default friend search
+        else {
+            for (int i = 0; i < fCode.size(); i++) {
+                if (fCode.get(i).equals(FriendCodes.PONCHO.getFriendCode()) ||
+                        fCode.get(i).equals(FriendCodes.DIKROT.getFriendCode()) ||
+                        fCode.get(i).equals(FriendCodes.FARTFACE.getFriendCode()) ||
+                        fCode.get(i).equals(FriendCodes.SEAN.getFriendCode())) {
+                    miiFriendsFound.add(new MiiCharacter(fCode.get(i).toString(),
+                            miiName.get(i).toString(),
+                            vr.get(i).toString()));
+                }
             }
         }
     }
