@@ -246,7 +246,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                         R.drawable.nintendo_network_logo_online));
             }
             else {
-                Toast.makeText(favouritesView.getContext(), R.string.offline, Toast.LENGTH_SHORT).show();
+                Toast.makeText(favouritesView.getContext(), friendViewHolder.miiName.getText() + getResources().getString( R.string.offline), Toast.LENGTH_SHORT).show();
                 friendViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(getContext(),
                         R.drawable.nintendo_network_logo_offline));
 //                onlineStatusImageView.setVisibility(View.INVISIBLE);

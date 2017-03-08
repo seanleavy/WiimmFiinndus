@@ -14,7 +14,7 @@
     <string name="default_search">searching</string>
     <string name="favourites_card_tip">Hold to search</string>
     <string name="online">" is online!"</string>
-    <string name="offline">"I'm offline"</string>
+    <string name="offline">" is offline"</string>
 
     <string name="action_settings">Settings</string>
 
