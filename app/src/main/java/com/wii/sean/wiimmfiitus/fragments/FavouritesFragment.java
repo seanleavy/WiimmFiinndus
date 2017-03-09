@@ -55,6 +55,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView onlineStatusImageView;
     private CustomWiiCyclerViewAdapter.FriendViewHolder friendViewHolder;
+    private boolean isGroupSearch = false;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -97,11 +98,15 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     //todo search for everyone shown
     private void setRefreshListener() {
+        final List<MiiCharacter> favouritesFriendCodesList = preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                setAdapter();
                 swipeRefreshLayout.setRefreshing(false);
+                isGroupSearch = true;
+                searchTask(favouritesFriendCodesList);
+                // Get fCode from each card
+                // add multiple friendcode search to MKFriendSearch and allow SearchAsyncHelper to pass a list as an argument
             }
         });
     }
@@ -227,29 +232,38 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         });
     }
 
-    private void searchTask(String friendCode) {
+    private void searchTask(Object args) {
         SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(getContext(), this);
-        searchAsyncHelper.execute(friendCode);
+        searchAsyncHelper.execute(args);
     }
 
     @Override
     public void onTaskComplete(Object result) {
         //pass in search tag here maybe
         if(result != null) {
-            if (((List) result).size() > 0) {
-                SnackBarHelper.showSnackBar(getContext(), favouritesView,
-                        ((List<MiiCharacter>) result).get(0).getMii() + getString(R.string.online),
-                        Snackbar.LENGTH_LONG, null);
-                Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(400);
-                friendViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(getContext(),
-                        R.drawable.nintendo_network_logo_online));
-            }
-            else {
-                Toast.makeText(favouritesView.getContext(), friendViewHolder.miiName.getText() + getResources().getString( R.string.offline), Toast.LENGTH_SHORT).show();
-                friendViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(getContext(),
-                        R.drawable.nintendo_network_logo_offline));
+            // used swipe refresh behaviour
+            if(!isGroupSearch) {
+                if (((List) result).size() > 0) {
+                    SnackBarHelper.showSnackBar(getContext(), favouritesView,
+                            ((List<MiiCharacter>) result).get(0).getMii() + getString(R.string.online),
+                            Snackbar.LENGTH_LONG, null);
+                    Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(400);
+                    friendViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(getContext(),
+                            R.drawable.nintendo_network_logo_online));
+                } else {
+                    Toast.makeText(favouritesView.getContext(), friendViewHolder.miiName.getText() + getResources().getString(R.string.offline), Toast.LENGTH_SHORT).show();
+                    friendViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(getContext(),
+                            R.drawable.nintendo_network_logo_offline));
 //                onlineStatusImageView.setVisibility(View.INVISIBLE);
+                }
+            }
+            if(isGroupSearch) {
+                if(((List) result).size() == 0) {
+                    Toast.makeText(favouritesView.getContext(), "Placeholder to handle results", Toast.LENGTH_SHORT).show();
+                    //reset flag
+                }
+                isGroupSearch = false;
             }
         }
     }

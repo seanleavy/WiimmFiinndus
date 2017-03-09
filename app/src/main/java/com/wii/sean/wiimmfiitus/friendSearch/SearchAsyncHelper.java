@@ -8,7 +8,7 @@ import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.List;
 
-public class SearchAsyncHelper extends AsyncTask<String, Void, List> {
+public class SearchAsyncHelper extends AsyncTask<Object, Void, List> {
 
     private AsyncTaskCompleteListener asyncTaskCompleteListener;
     private Context context;
@@ -19,7 +19,7 @@ public class SearchAsyncHelper extends AsyncTask<String, Void, List> {
     }
 
     @Override
-    protected List doInBackground(String... params) {
+    protected List doInBackground(Object... params) {
         return new MkFriendSearch().searchFriendList(params[0]);
     }
 

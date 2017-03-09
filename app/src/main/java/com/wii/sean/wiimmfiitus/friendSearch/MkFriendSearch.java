@@ -27,7 +27,7 @@ public class MkFriendSearch {
     public MkFriendSearch() {
     }
 
-    public List<MiiCharacter> searchFriendList(String friendCodeSearchTag) {
+    public List<MiiCharacter> searchFriendList(Object friendCodeSearchTag) {
         try {
             String userAgent = RandomUserAgent.getRandomUserAgent();
             Document mkDocument = Jsoup.connect(UrlConstants.WiimFiiUrl)
@@ -58,26 +58,38 @@ public class MkFriendSearch {
     }
 
     //todo do a loose match for codes also
-    private void searchResults(String tag, ArrayList vr, ArrayList miiName, ArrayList fCode) {
-        if(!tag.equals("")) {
-            for (int i = 0; i < fCode.size(); i++) {
-                if (fCode.get(i).equals(tag)) {
-                    miiFriendsFound.add(new MiiCharacter(fCode.get(i).toString(),
-                            miiName.get(i).toString(),
-                            vr.get(i).toString()));
+    private void searchResults(Object tag, ArrayList vr, ArrayList miiName, ArrayList<String> fCode) {
+        if(tag instanceof String) {
+            if(!tag.equals("")) {
+                for(int i = 0; i < fCode.size(); i++) {
+                    if (fCode.get(i).equals(tag)) {
+                        miiFriendsFound.add(new MiiCharacter(fCode.get(i),
+                                miiName.get(i).toString(),
+                                vr.get(i).toString()));
+                    }
+                }
+            }
+            // default friend search
+            else {
+                for(int i = 0; i < fCode.size(); i++) {
+                    if(fCode.get(i).equals(FriendCodes.PONCHO.getFriendCode()) ||
+                            fCode.get(i).equals(FriendCodes.DIKROT.getFriendCode()) ||
+                            fCode.get(i).equals(FriendCodes.FARTFACE.getFriendCode()) ||
+                            fCode.get(i).equals(FriendCodes.SEAN.getFriendCode())) {
+                        miiFriendsFound.add(new MiiCharacter(fCode.get(i),
+                                miiName.get(i).toString(),
+                                vr.get(i).toString()));
+                    }
                 }
             }
         }
-        // default friend search
-        else {
-            for (int i = 0; i < fCode.size(); i++) {
-                if (fCode.get(i).equals(FriendCodes.PONCHO.getFriendCode()) ||
-                        fCode.get(i).equals(FriendCodes.DIKROT.getFriendCode()) ||
-                        fCode.get(i).equals(FriendCodes.FARTFACE.getFriendCode()) ||
-                        fCode.get(i).equals(FriendCodes.SEAN.getFriendCode())) {
-                    miiFriendsFound.add(new MiiCharacter(fCode.get(i).toString(),
-                            miiName.get(i).toString(),
-                            vr.get(i).toString()));
+
+        if(tag instanceof List) {
+            for(String s : fCode) {
+                for(MiiCharacter m : (List<MiiCharacter>) tag) {
+                    if(s.equals(m.getFriendCode())) {
+                        miiFriendsFound.add(m);
+                    }
                 }
             }
         }
