@@ -98,6 +98,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     //todo search for everyone shown
     private void setRefreshListener() {
+        preferencesManager = new PreferencesManager(favouritesView.getContext());
         final List<MiiCharacter> favouritesFriendCodesList = preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
