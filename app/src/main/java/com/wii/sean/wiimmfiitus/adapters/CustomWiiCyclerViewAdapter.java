@@ -22,9 +22,10 @@ import java.util.List;
 
 public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCyclerViewAdapter.ViewHolder> implements AsyncTaskCompleteListener {
 
-    private List<MiiCharacter> wiiList = new ArrayList<>();
+    public List<MiiCharacter> wiiList = new ArrayList<>();
     public static final int SEARCHED_STATE = 1;
     public static final int DEFAULT_STATE = 0;
+    public FriendViewHolder friendCardViewHolder;
     private int lastPosition = -1;
     private Context context;
 
@@ -81,24 +82,26 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final FriendViewHolder friendCard = (FriendViewHolder) holder;
-        friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_default));
+        friendCardViewHolder = (FriendViewHolder) holder;
+        friendCardViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.icon.getContext(), R.drawable.mii_default));
         for(MiiCharacter m : wiiList) {
             if(wiiList.get(position).getMii().equals(FriendCodes.PONCHO.getMii())) {
-                friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_poncho));
+                friendCardViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.icon.getContext(), R.drawable.mii_poncho));
             }
             if(wiiList.get(position).getMii().equals(FriendCodes.FARTFACE.getMii())) {
-                friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_fart));
+                friendCardViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.icon.getContext(), R.drawable.mii_fart));
             }
             if(wiiList.get(position).getMii().equals(FriendCodes.DIKROT.getMii())) {
-                friendCard.icon.setImageDrawable(ContextCompat.getDrawable(friendCard.icon.getContext(), R.drawable.mii_dikrot));
+                friendCardViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.icon.getContext(), R.drawable.mii_dikrot));
             }
         }
-        friendCard.friendCode.setText(wiiList.get(position).getFriendCode());
-        friendCard.vrPoints.setText(String.valueOf(wiiList.get(position).getVr()));
-        friendCard.miiName.setText(wiiList.get(position).getMii());
+        friendCardViewHolder.friendCode.setText(wiiList.get(position).getFriendCode());
+        friendCardViewHolder.vrPoints.setText(String.valueOf(wiiList.get(position).getVr()));
+        friendCardViewHolder.miiName.setText(wiiList.get(position).getMii());
+        friendCardViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.onlineIcon.getContext(),
+                wiiList.get(position).isOnline() == true ? R.drawable.nintendo_network_logo_online : R.drawable.nintendo_network_logo_offline));
         setAnimation(((FriendViewHolder) holder).itemView, position);
-//        friendCard.licenseCard.setOnClickListener(new View.OnClickListener() {
+//        friendCardViewHolder.licenseCard.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                clicklistener.recyclerViewItemClicked(v, holder.getAdapterPosition());

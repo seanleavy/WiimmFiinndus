@@ -59,13 +59,15 @@ public class MkFriendSearch {
 
     //todo do a loose match for codes also
     private void searchResults(Object tag, ArrayList vr, ArrayList miiName, ArrayList<String> fCode) {
+        boolean isOnline = true;
         if(tag instanceof String) {
             if(!tag.equals("")) {
                 for(int i = 0; i < fCode.size(); i++) {
                     if (fCode.get(i).equals(tag)) {
                         miiFriendsFound.add(new MiiCharacter(fCode.get(i),
                                 miiName.get(i).toString(),
-                                vr.get(i).toString()));
+                                vr.get(i).toString(),
+                                isOnline));
                     }
                 }
             }
@@ -78,16 +80,19 @@ public class MkFriendSearch {
                             fCode.get(i).equals(FriendCodes.SEAN.getFriendCode())) {
                         miiFriendsFound.add(new MiiCharacter(fCode.get(i),
                                 miiName.get(i).toString(),
-                                vr.get(i).toString()));
+                                vr.get(i).toString(),
+                                isOnline));
                     }
                 }
             }
         }
 
         if(tag instanceof List) {
-            for(String s : fCode) {
+            for(int i = 0; i < fCode.size(); i++) {
                 for(MiiCharacter m : (List<MiiCharacter>) tag) {
-                    if(s.equals(m.getFriendCode())) {
+                    if(fCode.get(i).equals(m.getFriendCode())) {
+                        m.setOnlineTo(true);
+                        m.setVr(vrpoints.get(i));
                         miiFriendsFound.add(m);
                     }
                 }

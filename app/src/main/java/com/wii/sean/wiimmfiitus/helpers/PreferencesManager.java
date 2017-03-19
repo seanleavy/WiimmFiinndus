@@ -84,7 +84,10 @@ public class PreferencesManager {
         List list = new ArrayList<>();
         for(String s : getPreferencesFor(key)) {
             if(!key.equals(PreferencesManager.HISTORYPREFERENCES)) {
-                list.add(MiiCharacter.gsonToMii(s));
+                // reset online status at startup
+                MiiCharacter mii = MiiCharacter.gsonToMii(s);
+                mii.setOnlineTo(false);
+                list.add(mii);
             }
             else
                 list.add(s);

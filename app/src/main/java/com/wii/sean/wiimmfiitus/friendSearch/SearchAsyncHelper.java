@@ -20,6 +20,7 @@ public class SearchAsyncHelper extends AsyncTask<Object, Void, List> {
 
     @Override
     protected List doInBackground(Object... params) {
+        //Create a Friend search interface and call it here instead
         return new MkFriendSearch().searchFriendList(params[0]);
     }
 

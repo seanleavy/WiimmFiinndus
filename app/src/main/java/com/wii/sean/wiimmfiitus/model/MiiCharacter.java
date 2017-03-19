@@ -9,6 +9,7 @@ public class MiiCharacter {
     private String friendCode;
     private String mii;
     private String vr;
+    private boolean isOnline = false;
 
     public MiiCharacter() {
 
@@ -19,6 +20,13 @@ public class MiiCharacter {
         this.mii = miiName;
         this.vr = vrPoints;
 
+    }
+
+    public MiiCharacter(String fCode, String miiName, String vrPoints, boolean online) {
+        this.friendCode = fCode;
+        this.mii = miiName;
+        this.vr = vrPoints;
+        this.isOnline = online;
     }
 
     public String getFriendCode() {
@@ -45,6 +53,14 @@ public class MiiCharacter {
         this.vr = vr;
     }
 
+    public void setOnlineTo(boolean isOnline) {
+        this.isOnline = isOnline;
+    }
+
+    public boolean isOnline() {
+        return this.isOnline;
+    }
+
     public List toList() {
         List<String> list = new ArrayList<String>();
         list.add(getMii());
@@ -60,5 +76,15 @@ public class MiiCharacter {
 
     public static MiiCharacter gsonToMii(String gson) {
         return new Gson().fromJson(gson, MiiCharacter.class);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((MiiCharacter) obj).getFriendCode().equals(this.getFriendCode()) && ((MiiCharacter) obj).getMii().equals(this.getMii());
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
     }
 }

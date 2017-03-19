@@ -106,8 +106,6 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                 swipeRefreshLayout.setRefreshing(false);
                 isGroupSearch = true;
                 searchTask(favouritesFriendCodesList);
-                // Get fCode from each card
-                // add multiple friendcode search to MKFriendSearch and allow SearchAsyncHelper to pass a list as an argument
             }
         });
     }
@@ -208,7 +206,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         wiiCyclerView.setLayoutManager(layoutManager);
         wiiCyclerView.setHasFixedSize(false);
         wiiCyclerViewAdapter.notifyDataSetChanged();
-        favouritesView.invalidate();
+        favouritesView.invalidate(); // Is this necessary?
     }
 
     private void setDefaultFriends() {
@@ -240,32 +238,37 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     @Override
     public void onTaskComplete(Object result) {
-        //pass in search tag here maybe
         if(result != null) {
-            // used swipe refresh behaviour
-            if(!isGroupSearch) {
-                if (((List) result).size() > 0) {
-                    SnackBarHelper.showSnackBar(getContext(), favouritesView,
-                            ((List<MiiCharacter>) result).get(0).getMii() + getString(R.string.online),
-                            Snackbar.LENGTH_LONG, null);
-                    Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-                    v.vibrate(400);
-                    friendViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(getContext(),
-                            R.drawable.nintendo_network_logo_online));
-                } else {
-                    Toast.makeText(favouritesView.getContext(), friendViewHolder.miiName.getText() + getResources().getString(R.string.offline), Toast.LENGTH_SHORT).show();
-                    friendViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(getContext(),
-                            R.drawable.nintendo_network_logo_offline));
-//                onlineStatusImageView.setVisibility(View.INVISIBLE);
+            processResult(result);
+        }
+    }
+
+    private void processResult(Object result) {
+        int i;
+        boolean found = false;
+        for(i = 0; i < wiiCyclerViewAdapter.wiiList.size(); i++) {
+            for (MiiCharacter mii : (List<MiiCharacter>) result) {
+                if (mii.getFriendCode().equals(wiiCyclerViewAdapter.wiiList.get(i).getFriendCode())) {
+                    found = true;
+                    wiiCyclerViewAdapter.wiiList.set(i, mii);
+                    break;
                 }
-            }
-            if(isGroupSearch) {
-                if(((List) result).size() == 0) {
-                    Toast.makeText(favouritesView.getContext(), "Placeholder to handle results", Toast.LENGTH_SHORT).show();
-                    //reset flag
-                }
-                isGroupSearch = false;
             }
         }
+        if(found) {
+            Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(400);
+        }
+        if(isGroupSearch) {
+            String totalResult = String.valueOf(((List) result).size());
+            Toast.makeText(getContext(), totalResult + getString(R.string.group_search), Toast.LENGTH_SHORT).show();
+            isGroupSearch = false;
+        }
+        else
+            Toast.makeText(favouritesView.getContext(),
+                    friendViewHolder.miiName.getText() +
+                            ( ((List<MiiCharacter>)result).size() > 0 ? getResources().getString(R.string.online) : getResources().getString(R.string.offline)),
+                    Toast.LENGTH_SHORT).show();
+        wiiCyclerViewAdapter.notifyDataSetChanged();
     }
 }
