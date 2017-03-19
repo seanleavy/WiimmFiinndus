@@ -13,6 +13,7 @@
         android:layout_width="@dimen/toolbar_icon_size"
         android:layout_height="@dimen/toolbar_icon_size"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:id="@+id/mario_favourites_tolbar_icon"
         android:src="@mipmap/mario1600"/>
 
     <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
@@ -35,7 +36,7 @@
     <TextView
         android:layout_gravity="end"
         android:gravity="end|center_vertical"
-        android:id="@+id/default_friends"
+        android:id="@+id/refresh_favourites"
         android:background="@drawable/button_state"
         android:layout_marginEnd="15dp"
         android:layout_width="@dimen/toolbar_icon_size"

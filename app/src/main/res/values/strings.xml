@@ -16,6 +16,7 @@
     <string name="online">" is online!"</string>
     <string name="offline">" is offline"</string>
     <string name="group_search">" online"</string>
+    <string name="searching">Searching</string>
 
     <string name="action_settings">Settings</string>
 

@@ -3,9 +3,9 @@ package com.wii.sean.wiimmfiitus.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -243,8 +243,12 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), R.string.pressed_wiimfii, Toast.LENGTH_SHORT).show();
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(UrlConstants.WiimFiiUrl));
-                startActivity(browserIntent);
+                Uri uri = Uri.parse(UrlConstants.WiimFiiUrl);
+                CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
+                intentBuilder.setToolbarColor(ContextCompat.getColor(getContext(), R.color.nintendo_red_dark));
+                intentBuilder.setSecondaryToolbarColor(ContextCompat.getColor(getContext(), R.color.nintendo_red));
+                CustomTabsIntent customTabsIntent = intentBuilder.build();
+                customTabsIntent.launchUrl(getContext(), uri);
             }
         });
 

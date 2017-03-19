@@ -2,7 +2,11 @@ package com.wii.sean.wiimmfiitus.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import com.snappydb.DB;
+import com.snappydb.DBFactory;
+import com.snappydb.SnappydbException;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
@@ -24,10 +28,17 @@ public class PreferencesManager {
     private Context context;
 
     public PreferencesManager(Context context) {
-        sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-        savedHistory = sharedPreferences.getStringSet(HISTORYPREFERENCES, new LinkedHashSet<String>());
-        savedFriends = sharedPreferences.getStringSet(FAVOURITESPREFERENCES, new LinkedHashSet<String>());
-        this.context = context;
+        try {
+            //ITS BEGINS
+            DB snappy = DBFactory.open(context);
+            // To remove
+            sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+            savedHistory = sharedPreferences.getStringSet(HISTORYPREFERENCES, new LinkedHashSet<String>());
+            savedFriends = sharedPreferences.getStringSet(FAVOURITESPREFERENCES, new LinkedHashSet<String>());
+            this.context = context;
+        } catch (SnappydbException e) {
+            Log.e(LogHelper.getTag(getClass()), e.getMessage());
+        }
     }
 
     public Set<String> getPreferencesFor(String key) {

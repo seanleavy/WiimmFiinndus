@@ -50,8 +50,9 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private ItemTouchHelper miiItemTouchHelper;
     private ItemTouchHelper.Callback simpleMiiItemTouchCallback;
     private List<MiiCharacter> miiList;
-    private TextView defaultFriendsImageButton;
+    private ImageView defaultFriendsImageButton;
     private Toolbar toolbar;
+    private TextView refreshButtonTextViewTerribleCode;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView onlineStatusImageView;
     private CustomWiiCyclerViewAdapter.FriendViewHolder friendViewHolder;
@@ -86,7 +87,8 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         wiiCyclerView = (RecyclerView) favouritesView.findViewById(R.id.favourites_fragment_recycler_view);
         preferencesManager = new PreferencesManager(favouritesView.getContext());
         setAdapter();
-        defaultFriendsImageButton = (TextView) favouritesView.findViewById(R.id.default_friends);
+        defaultFriendsImageButton = (ImageView) favouritesView.findViewById(R.id.mario_favourites_tolbar_icon);
+        refreshButtonTextViewTerribleCode = (TextView) favouritesView.findViewById(R.id.refresh_favourites);
         swipeRefreshLayout = (SwipeRefreshLayout) favouritesView.findViewById(R.id.swipe_refresh_layout);
 
         setOnBoardingAnimation();
@@ -96,18 +98,33 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         return favouritesView;
     }
 
-    //todo search for everyone shown
     private void setRefreshListener() {
-        preferencesManager = new PreferencesManager(favouritesView.getContext());
-        final List<MiiCharacter> favouritesFriendCodesList = preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES);
+        swipeRefreshLayout.setDistanceToTriggerSync(280);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-                isGroupSearch = true;
-                searchTask(favouritesFriendCodesList);
+                refreshAll();
             }
         });
+        refreshButtonTextViewTerribleCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshAll();
+            }
+        });
+    }
+
+    private void refreshAll() {
+        preferencesManager = new PreferencesManager(favouritesView.getContext());
+        final List<MiiCharacter> favouritesFriendCodesList = preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES);
+        View parent = favouritesView.findViewById(R.id.parent_linearlayout);
+        SnackBarHelper.showSnackBar(getContext(),
+                parent, "",
+                Snackbar.LENGTH_SHORT,
+                ContextCompat.getDrawable(getContext(), R.drawable.nintendo_logo_red_light));
+        swipeRefreshLayout.setRefreshing(false);
+        isGroupSearch = true;
+        searchTask(favouritesFriendCodesList);
     }
 
     //implement itemtouch helper in adapter
@@ -144,9 +161,6 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                         miiList.get(viewHolder.getAdapterPosition()).toGson());
                 miiList.remove(viewHolder.getAdapterPosition());
                 wiiCyclerViewAdapter.notifyDataSetChanged();
-                if(!miiList.containsAll(FriendCodes.getDefaultMiis())) {
-                    defaultFriendsImageButton.setVisibility(android.view.View.VISIBLE);
-                }
             }
         };
         miiItemTouchHelper = new ItemTouchHelper(callback);
@@ -226,7 +240,6 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                     }
                 }
                 wiiCyclerViewAdapter.notifyDataSetChanged();
-                defaultFriendsImageButton.setVisibility(android.view.View.INVISIBLE);
             }
         });
     }
