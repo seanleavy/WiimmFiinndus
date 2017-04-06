@@ -1,9 +1,9 @@
 package com.wii.sean.wiimmfiitus.fragments;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -38,6 +38,7 @@ import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivity.PreferenceUpdateListener, AsyncTaskCompleteListener {
 
@@ -269,8 +270,13 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
             }
         }
         if(found) {
-            Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(400);
+            int[] sounds = {R.raw.coin, R.raw.nsmbwiicoin, R.raw.smw_coin};
+            Random r = new Random();
+            int Low = 0;
+            int High = 3;
+            int rndm = r.nextInt(High-Low) + Low;
+            MediaPlayer mp1 = MediaPlayer.create(getContext(),sounds[rndm]);
+            mp1.start();
         }
         if(isGroupSearch) {
             String totalResult = String.valueOf(((List) result).size());
