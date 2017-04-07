@@ -273,7 +273,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
             int[] sounds = {R.raw.coin, R.raw.nsmbwiicoin, R.raw.smw_coin};
             Random r = new Random();
             int Low = 0;
-            int High = 3;
+            int High = 2;
             int rndm = r.nextInt(High-Low) + Low;
             MediaPlayer mp1 = MediaPlayer.create(getContext(),sounds[rndm]);
             mp1.start();

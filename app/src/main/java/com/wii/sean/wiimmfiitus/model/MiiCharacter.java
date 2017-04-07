@@ -75,6 +75,7 @@ public class MiiCharacter {
     }
 
     public static MiiCharacter gsonToMii(String gson) {
+
         return new Gson().fromJson(gson, MiiCharacter.class);
     }
 
