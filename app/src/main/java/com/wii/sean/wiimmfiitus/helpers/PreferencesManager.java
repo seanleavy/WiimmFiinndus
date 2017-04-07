@@ -7,12 +7,11 @@ import android.util.Log;
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
-import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class PreferencesManager {
 
@@ -20,8 +19,7 @@ public class PreferencesManager {
     public static String FAVOURITESPREFERENCES = "favourites";
     public static String DEFAULTPREFERENCES = "default";
 
-    private Set<String> savedHistory;
-    private Set<String> savedFriends;
+    private DB snappy;
     private String firstRun;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor preferenceEditor;
@@ -29,81 +27,80 @@ public class PreferencesManager {
 
     public PreferencesManager(Context context) {
         try {
-            //ITS BEGINS
-            DB snappy = DBFactory.open(context);
-            // To remove
+            snappy = DBFactory.open(context);
             sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-            savedHistory = sharedPreferences.getStringSet(HISTORYPREFERENCES, new LinkedHashSet<String>());
-            savedFriends = sharedPreferences.getStringSet(FAVOURITESPREFERENCES, new LinkedHashSet<String>());
             this.context = context;
         } catch (SnappydbException e) {
             Log.e(LogHelper.getTag(getClass()), e.getMessage());
         }
     }
 
-    public Set<String> getPreferencesFor(String key) {
-        if(key.equals(HISTORYPREFERENCES)) {
-            return savedHistory;
-        } else if(key.equals(FAVOURITESPREFERENCES)) {
-            return savedFriends;
-        }
+    public Object[] getPreferencesFor(String key) {
+            try {
+                if(snappy.getObjectArray(key, Object.class) != null)
+                return snappy.getObjectArray(key, Object.class);
+            }
+            catch (SnappydbException e) {
+                Log.e(LogHelper.getTag(getClass()), e.getMessage());
+            }
         return null;
     }
 
-    public boolean addToPreference(String preferenceKey, String valueToAdd) {
-        if(!getPreferencesFor(preferenceKey).contains(valueToAdd)) {
-            Set<String> set = getPreferencesFor(preferenceKey);
-            set.add(valueToAdd);
-            preferenceEditor = sharedPreferences.edit();
-            preferenceEditor.remove(preferenceKey);
-            preferenceEditor.apply();
-            preferenceEditor.putStringSet(preferenceKey, set);
-            return preferenceEditor.commit();
+    public List getPreferencesAsList(String key) {
+        try {
+            if(snappy.getObjectArray(key, Object.class) != null) {
+                return Arrays.asList(snappy.getObjectArray(key, Object.class));
+            }
         }
-        return false;
+        catch (SnappydbException e) {
+            Log.e(LogHelper.getTag(getClass()), e.getMessage());
+        }
+        return new ArrayList();
     }
 
-    public boolean removeFromPreference(String preferenceKey, String valueToRemove) {
-        if(getPreferencesFor(preferenceKey).contains(valueToRemove)) {
-            Set<String> set = getPreferencesFor(preferenceKey);
-            set.remove(valueToRemove);
-            preferenceEditor = sharedPreferences.edit();
-            preferenceEditor.remove(preferenceKey);
-            preferenceEditor.apply();
-            preferenceEditor.putStringSet(preferenceKey, set);
-            return preferenceEditor.commit();
+    public void addToPreference(String preferenceKey, Object valueToAdd) {
+        List preferenceList;
+        if(getPreferencesFor(preferenceKey) != null)
+            preferenceList = new ArrayList(Arrays.asList(getPreferencesFor(preferenceKey)));
+        else
+            preferenceList = new ArrayList();
+        if(!preferenceList.contains(valueToAdd)) {
+            try {
+                preferenceList.add(valueToAdd);
+                snappy.del(preferenceKey);
+                snappy.put(preferenceKey, preferenceList.toArray());
+            } catch (SnappydbException e) {
+                Log.e(LogHelper.getTag(getClass()), e.getMessage());
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+    }
+
+    public boolean removeFromPreference(String preferenceKey, Object toRemove) {
+        List values = new ArrayList(Arrays.asList(getPreferencesFor(preferenceKey)));
+        if(values.contains(toRemove)) {
+            values.remove(toRemove);
+            try {
+                snappy.del(preferenceKey);
+                snappy.put(preferenceKey, values.toArray());
+            }
+            catch (SnappydbException e) {
+                Log.e(LogHelper.getTag(getClass()), e.getMessage());
+            }
         }
         return false;
     }
 
     public void overwritePreferenceWith(List list, String key) {
-        preferenceEditor = sharedPreferences.edit();
-        preferenceEditor.remove(key).commit();
-        preferenceEditor = sharedPreferences.edit();
-        Set<String> set = new LinkedHashSet<>();
-        for(int i = 0; i < list.size(); i++) {
-            if(list.get(i) instanceof MiiCharacter) {
-                set.add(((MiiCharacter) list.get(i)).toGson());
-            }
-            else
-                set.add((String) list.get(i));
+        try {
+            snappy.del(key);
+            snappy.put(key, list.toArray());
+        } catch (SnappydbException e) {
+            Log.e(LogHelper.getTag(getClass()), e.getMessage());
         }
-        preferenceEditor.putStringSet(key, set).commit();
-    }
-
-    public List<MiiCharacter> getPreferencesAsList(String key) {
-        List list = new ArrayList<>();
-        for(String s : getPreferencesFor(key)) {
-            if(!key.equals(PreferencesManager.HISTORYPREFERENCES)) {
-                // reset online status at startup
-                MiiCharacter mii = MiiCharacter.gsonToMii(s);
-                mii.setOnlineTo(false);
-                list.add(mii);
-            }
-            else
-                list.add(s);
-        }
-        return list;
     }
 
     public boolean isFirstRun() {

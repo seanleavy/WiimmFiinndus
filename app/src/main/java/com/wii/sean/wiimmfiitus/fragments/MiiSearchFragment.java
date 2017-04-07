@@ -60,7 +60,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private View miiSearchView;
 
     private PreferencesManager searchPreferncesManager;
-    private List<MiiCharacter> searchHistoryResultSet;
+    private List<String> searchHistoryResultSet;
 
     private List<MiiCharacter> wiiList = new ArrayList<>();
 
@@ -262,7 +262,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 searchPreferncesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES,
-                        wiiList.get(viewHolder.getAdapterPosition()).toGson());
+                        wiiList.get(viewHolder.getAdapterPosition()));
                 SnackBarHelper.showSnackBar(getContext(), miiSearchView,
                         wiiList.get(viewHolder.getAdapterPosition()).getMii()
                                 + getResources().getString(R.string.friend_added), Snackbar.LENGTH_SHORT,
@@ -319,6 +319,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
 
     //TODO use spinner instead. this is a mess. Need to overrride LinearLayout xml probably
     private void showSearchHistoryDialog() {
+        searchHistoryResultSet = searchPreferncesManager.getPreferencesAsList(PreferencesManager.HISTORYPREFERENCES);
         View searchHistoryDialogView = getLayoutInflater(null).inflate(R.layout.search_history_dialog, null);
         final ArrayAdapter<String> searchResultsAdapter = new ArrayAdapter<>(searchHistoryDialogView.getContext(),
                 R.layout.search_history_row,

@@ -159,7 +159,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 preferencesManager.removeFromPreference(PreferencesManager.FAVOURITESPREFERENCES,
-                        miiList.get(viewHolder.getAdapterPosition()).toGson());
+                        miiList.get(viewHolder.getAdapterPosition()));
                 miiList.remove(viewHolder.getAdapterPosition());
                 wiiCyclerViewAdapter.notifyDataSetChanged();
             }
@@ -206,7 +206,10 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     }
 
     private void setAdapter() {
-        miiList = new ArrayList<>(preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES));
+        if(preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES) != null)
+            miiList = new ArrayList<>(preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES));
+        else
+            miiList = new ArrayList<>();
         wiiCyclerViewAdapter = new CustomWiiCyclerViewAdapter(miiList);
         layoutManager = new LinearLayoutManager(favouritesView.getContext());
         wiiCyclerView.setAdapter(wiiCyclerViewAdapter);
@@ -237,7 +240,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                                 }
                             })) {
                         miiList.add(mii);
-                        preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES, mii.toGson());
+                        preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES, mii);
                     }
                 }
                 wiiCyclerViewAdapter.notifyDataSetChanged();
