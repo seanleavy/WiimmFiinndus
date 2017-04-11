@@ -161,12 +161,13 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 searchPreferncesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES,
-                        wiiList.get(viewHolder.getAdapterPosition()).toGson());
+                        wiiList.get(viewHolder.getAdapterPosition()));
                 SnackBarHelper.showSnackBar(getContext(), miiSearchView,
                         wiiList.get(viewHolder.getAdapterPosition()).getMii()
                                 + getResources().getString(R.string.friend_added), Snackbar.LENGTH_SHORT,
                         null, startButton);
                 wiiList.remove(viewHolder.getAdapterPosition());
+                wiiAdapter.notifyDataSetChanged();
                 miisFoundTextViewLabel.setVisibility(View.INVISIBLE);
                 ((MkWiiHomeActivity)getActivity()).preferenceUpdated();
             }
