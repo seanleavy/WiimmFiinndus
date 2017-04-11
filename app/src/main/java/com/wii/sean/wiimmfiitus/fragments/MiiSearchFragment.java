@@ -63,7 +63,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private View miiSearchView;
 
     private PreferencesManager searchPreferncesManager;
-    private List<MiiCharacter> searchHistoryResultSet;
 
     private List<MiiCharacter> wiiList = new ArrayList<>();
 
@@ -90,7 +89,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         // To save every fCode search
         final LayoutInflater layoutInflater = getLayoutInflater(savedInstanceState);
         searchPreferncesManager = new PreferencesManager(miiSearchView.getContext());
-        searchHistoryResultSet = searchPreferncesManager.getPreferencesAsList(PreferencesManager.HISTORYPREFERENCES);
         startButton = (FloatingActionButton) miiSearchView.findViewById(R.id.button_search_frame);
         wiiCyclerView = (RecyclerView) miiSearchView.findViewById(R.id.search_fragment_recycler_view);
         wiimfiiIcon = (ImageView) miiSearchView.findViewById(R.id.wiimfii_icon);
@@ -133,117 +131,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewGroup viewGroup = (ViewGroup) view.findViewById(R.id.homescreen_main_layout);
-                // building the Search Dialog
-                //
-                View searchDialogView = layoutInflater.inflate(R.layout.friend_code_dialog, viewGroup, false);
-                //todo refactor all custom Dialogs to seperate class
-                alertDialogBuilder = new AlertDialog.Builder(view.getContext());
-                AlertDialog searchDialog;
-                alertDialogBuilder.setView(searchDialogView);
-
-                final TextView dialogSubtitle = (TextView) searchDialogView.findViewById(R.id.dialog_title);
-                final TextView history = (TextView) searchDialogView.findViewById(R.id.search_history);
-                friendCodeEditText = (EditText) searchDialogView.findViewById(R.id.friend_code_edittext);
-                final Button deleteEdittext = (Button) searchDialogView.findViewById(R.id.delete_friend_code);
-
-                alertDialogBuilder.setTitle(R.string.dialog_title)
-                        // SEARCH Button
-                        .setPositiveButton("Search", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                submitSearch(friendCodeEditText);
-                                searchPreferncesManager.addToPreference(PreferencesManager.HISTORYPREFERENCES,
-                                        friendCodeEditText.getText().toString() );
-                                dialog.dismiss();
-                            }
-                        })
-                        // CANCEL Button
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-
-                // Clicking the HISTORY textlabel
-                history.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showSearchHistoryDialog();
-                    }
-                });
-
-                // auto show keyboard
-                searchDialog = alertDialogBuilder.create();
-
-                //Empty the friend code editext field
-                deleteEdittext.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        friendCodeEditText.setText("");
-                    }
-                });
-
-                if(searchDialog.getWindow() != null)
-                searchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                searchDialog.show();
-//                needs to be on 2 lines for some reason
-                final Button searchButton = searchDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                searchButton.setEnabled(false);
-
-                final Switch toggleSwitch = (Switch) searchDialogView.findViewById(R.id.alertdialog_toggle_switch);
-                toggleSwitch.setTextOff(getString(R.string.fcode));
-                toggleSwitch.setTextOn(getString(R.string.mii));
-                toggleSwitch.setChecked(false);
-
-                //format friend code textfield
-                final TextWatcher textWatcher = new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        //add switch here for mii or frindcode if(something)
-                        if(s.length() == 4 || s.length() == 9) {
-                            s.append('-');
-                        }
-                        if(!toggleSwitch.isChecked()) {
-                            if (friendCodeEditText.getText().toString().length() >= 14) {
-                                searchButton.setEnabled(true);
-                            } else
-                                searchButton.setEnabled(false);
-                        }
-                        if(toggleSwitch.isChecked()) {
-                            if (friendCodeEditText.getText().toString().length() >= 1) {
-                                searchButton.setEnabled(true);
-                            } else
-                                searchButton.setEnabled(false);
-                        }
-                    }
-                };
-                friendCodeEditText.addTextChangedListener(textWatcher);
-                toggleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                        if(isChecked) {
-                            dialogSubtitle.setText(R.string.dialog_body_mii);
-                            friendCodeEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                            friendCodeEditText.getText().clear();
-                        }
-                        else {
-                            dialogSubtitle.setText(R.string.dialog_body_fcode);
-                            friendCodeEditText.getText().clear();
-                            friendCodeEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_TEXT);
-                        }
-                    }
-                });
+                showSearchDialog(view, layoutInflater);
             }
         });
 
@@ -261,6 +149,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
             }
         });
 
+        //todo refactor into its own class
         simpleMiiItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
@@ -287,6 +176,124 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
         // Inflate the layout for this fragment
         return miiSearchView;
+    }
+
+    // Search Dialog
+    // todo create a dialog class instead
+    private void showSearchDialog(View view, LayoutInflater layoutInflater) {
+        ViewGroup viewGroup = (ViewGroup) view.findViewById(R.id.homescreen_main_layout);
+        // building the Search Dialog
+        //
+        View searchDialogView = layoutInflater.inflate(R.layout.friend_code_dialog, viewGroup, false);
+        //todo refactor all custom Dialogs to seperate class
+        alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+        AlertDialog searchDialog;
+        alertDialogBuilder.setView(searchDialogView);
+
+        final TextView dialogSubtitle = (TextView) searchDialogView.findViewById(R.id.dialog_title);
+        final TextView history = (TextView) searchDialogView.findViewById(R.id.search_history);
+        friendCodeEditText = (EditText) searchDialogView.findViewById(R.id.friend_code_edittext);
+        final Button deleteEdittext = (Button) searchDialogView.findViewById(R.id.delete_friend_code);
+
+        final Switch toggleSwitch = (Switch) searchDialogView.findViewById(R.id.alertdialog_toggle_switch);
+        toggleSwitch.setTextOff(getString(R.string.fcode));
+        toggleSwitch.setTextOn(getString(R.string.mii));
+        toggleSwitch.setChecked(false);
+
+        alertDialogBuilder.setTitle(R.string.dialog_title)
+                // SEARCH Button
+                .setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        submitSearch(friendCodeEditText);
+                        if(!toggleSwitch.isChecked())
+                        searchPreferncesManager.addToPreference(PreferencesManager.HISTORYPREFERENCES,
+                                friendCodeEditText.getText().toString() );
+                        dialog.dismiss();
+                    }
+                })
+                // CANCEL Button
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        // Clicking the HISTORY textlabel
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSearchHistoryDialog();
+            }
+        });
+
+        // auto show keyboard
+        searchDialog = alertDialogBuilder.create();
+
+        //Empty the friend code editext field
+        deleteEdittext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                friendCodeEditText.setText("");
+            }
+        });
+
+        if(searchDialog.getWindow() != null)
+        searchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        searchDialog.show();
+
+        //needs to be on 2 lines for some reason
+        final Button searchButton = searchDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        searchButton.setEnabled(false);
+
+        //format friendcode textfield with this Textwatcher
+        final TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // for friendcode entries
+                if(!toggleSwitch.isChecked()) {
+                    // allows credit card style formatting
+                    if(s.length() == 4 || s.length() == 9) {
+                        s.append('-');
+                    }
+                    if (friendCodeEditText.getText().toString().length() >= 14) {
+                        searchButton.setEnabled(true);
+                    } else
+                        searchButton.setEnabled(false);
+                }
+                // for mii text entry
+                if(toggleSwitch.isChecked()) {
+                    if (friendCodeEditText.getText().toString().length() >= 1) {
+                        searchButton.setEnabled(true);
+                    } else
+                        searchButton.setEnabled(false);
+                }
+            }
+        };
+
+        friendCodeEditText.addTextChangedListener(textWatcher);
+        toggleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+                if(isChecked) {
+                    //change search title and keyboard type
+                    dialogSubtitle.setText(R.string.dialog_body_mii);
+                    friendCodeEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    friendCodeEditText.getText().clear();
+                }
+                else {
+                    dialogSubtitle.setText(R.string.dialog_body_fcode);
+                    friendCodeEditText.getText().clear();
+                    friendCodeEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_TEXT);
+                }
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -326,9 +333,12 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         searchAsyncHelper.execute(searchToken);
     }
 
-    //TODO use spinner instead. this is a mess. Need to overrride LinearLayout xml probably
+    //TODO use spinner instead. this is a mess.
     private void showSearchHistoryDialog() {
         View searchHistoryDialogView = getLayoutInflater(null).inflate(R.layout.search_history_dialog, null);
+        final TextView clearHistory = (TextView) searchHistoryDialogView.findViewById(R.id.clear_history_preferences);
+        // todo why is this a miicharacter and not a string
+        List<MiiCharacter> searchHistoryResultSet = searchPreferncesManager.getPreferencesAsList(PreferencesManager.HISTORYPREFERENCES);
         final ArrayAdapter<String> searchResultsAdapter = new ArrayAdapter<>(searchHistoryDialogView.getContext(),
                 R.layout.search_history_row,
                 searchHistoryResultSet.toArray(new String[searchHistoryResultSet.size()]));
@@ -339,6 +349,12 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
             public void onClick(DialogInterface dialog, int which) {
                 friendCodeEditText.setText(searchResultsAdapter.getItem(which));
                 dialog.dismiss();
+            }
+        });
+        clearHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchPreferncesManager.clearPrefencefromDB(PreferencesManager.HISTORYPREFERENCES);
             }
         });
         searchDialogBuilder.setView(searchHistoryDialogView);

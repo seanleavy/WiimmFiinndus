@@ -94,6 +94,16 @@ public class PreferencesManager {
         return false;
     }
 
+    public boolean clearPrefencefromDB(String preferenceKey) {
+        try {
+            snappy.del(preferenceKey);
+            return true;
+        } catch (SnappydbException e) {
+            Log.e(LogHelper.getTag(getClass()), e.getMessage());
+            return false;
+        }
+    }
+
     public void overwritePreferenceWith(List list, String key) {
         try {
             snappy.del(key);

@@ -9,6 +9,7 @@
     <string name="dialog_body_fcode">Enter Friend Code</string>
     <string name="dialog_body_mii">Enter Mii Name</string>
     <string name="fcode">FriendCode</string>
+    <string name="clear_history">"clear history"</string>
     <string name="mii">Mii</string>
     <string name="dialog_title">Search</string>
     <string name="first_run_message">"Hold the SEARCH button if you're from Roscommon"</string>
