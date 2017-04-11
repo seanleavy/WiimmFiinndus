@@ -27,7 +27,7 @@ public class MkFriendSearch {
     public MkFriendSearch() {
     }
 
-    public List<MiiCharacter> searchFriendList(Object friendCodeSearchTag) {
+    public List<MiiCharacter> searchFriendList(Object searchToken) {
         try {
             String userAgent = RandomUserAgent.getRandomUserAgent();
             Document mkDocument = Jsoup.connect(UrlConstants.WiimFiiUrl)
@@ -50,7 +50,7 @@ public class MkFriendSearch {
                     rowCount++;
                 }
             }
-            searchResults(friendCodeSearchTag, vrpoints, miis, friendCodes);
+            searchResults(searchToken, vrpoints, miis, friendCodes);
         } catch (IOException e) {
             Log.e(LogHelper.getTag(MkFriendSearch.class), e.getMessage());
         }
@@ -58,14 +58,19 @@ public class MkFriendSearch {
     }
 
     //todo do a loose match for codes also
-    private void searchResults(Object tag, ArrayList vr, ArrayList miiName, ArrayList<String> fCode) {
+    private void searchResults(Object tag, ArrayList<String> vr, ArrayList<String> miiName, ArrayList<String> fCode) {
         boolean isOnline = true;
         if(tag instanceof String) {
             if(!tag.equals("")) {
                 for(int i = 0; i < fCode.size(); i++) {
-                    if (fCode.get(i).equals(tag)) {
+                    if (fCode.get(i).equals(tag) || miiName.get(i).contains((String)tag)) {
+                        String mii = miiName.get(i);
+                        // remove 1. 2. Mii name here caused by 2 people on same wii
+                        if(mii.contains("1.") && mii.contains("2.")) {
+                            mii = mii.substring(2, mii.indexOf("2"));
+                        }
                         miiFriendsFound.add(new MiiCharacter(fCode.get(i),
-                                miiName.get(i).toString(),
+                                mii,
                                 vr.get(i).toString(),
                                 isOnline));
                     }
