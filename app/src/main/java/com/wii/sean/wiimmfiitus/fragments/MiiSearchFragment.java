@@ -54,6 +54,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private FloatingActionButton startButton;
     private ImageView wiimfiiIcon;
     private TextView miisFoundTextViewLabel;
+    private TextView history;
     private ItemTouchHelper miiItemTouchHelper;
     private ItemTouchHelper.SimpleCallback simpleMiiItemTouchCallback;
     private ProgressBar progressBar;
@@ -191,7 +192,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         alertDialogBuilder.setView(searchDialogView);
 
         final TextView dialogSubtitle = (TextView) searchDialogView.findViewById(R.id.dialog_title);
-        final TextView history = (TextView) searchDialogView.findViewById(R.id.search_history);
+        history = (TextView) searchDialogView.findViewById(R.id.search_history);
         friendCodeEditText = (EditText) searchDialogView.findViewById(R.id.friend_code_edittext);
         final Button deleteEdittext = (Button) searchDialogView.findViewById(R.id.delete_friend_code);
 
@@ -219,7 +220,13 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                     }
                 });
 
+        // Search History
+        Object[] searchHistory = searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES);
         // Clicking the HISTORY textlabel
+        history.setVisibility(View.INVISIBLE);
+        if(searchHistory != null)
+            if(searchHistory.length > 0)
+                history.setVisibility(View.VISIBLE);
         history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -337,6 +344,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private void showSearchHistoryDialog() {
         View searchHistoryDialogView = getLayoutInflater(null).inflate(R.layout.search_history_dialog, null);
         final TextView clearHistory = (TextView) searchHistoryDialogView.findViewById(R.id.clear_history_preferences);
+        clearHistory.setVisibility(View.INVISIBLE);
         // todo why is this a miicharacter and not a string
         List<MiiCharacter> searchHistoryResultSet = searchPreferncesManager.getPreferencesAsList(PreferencesManager.HISTORYPREFERENCES);
         final ArrayAdapter<String> searchResultsAdapter = new ArrayAdapter<>(searchHistoryDialogView.getContext(),
@@ -351,17 +359,24 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                 dialog.dismiss();
             }
         });
+        searchDialogBuilder.setView(searchHistoryDialogView);
+        final AlertDialog searchHistoryDialog = searchDialogBuilder.create();
+
+        if(searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES) != null)
+            if(searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES).length > 0)
+                clearHistory.setVisibility(View.VISIBLE);
         clearHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchPreferncesManager.clearPrefencefromDB(PreferencesManager.HISTORYPREFERENCES);
+                searchHistoryDialog.dismiss();
+                history.setVisibility(View.INVISIBLE);
+                Toast.makeText(getContext(), R.string.history_cleard_toast, Toast.LENGTH_SHORT).show();
             }
         });
-        searchDialogBuilder.setView(searchHistoryDialogView);
-        AlertDialog searchHistoryDialog = searchDialogBuilder.create();
+        searchHistoryDialog.show();
         //doesnt work
         searchHistoryDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        searchDialogBuilder.show();
     }
 
     @Override
