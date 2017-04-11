@@ -270,6 +270,8 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                     wiiCyclerViewAdapter.wiiList.set(i, mii);
                     break;
                 }
+                else
+                    wiiCyclerViewAdapter.wiiList.get(i).setOnlineTo(false);
             }
         }
         if(found) {
