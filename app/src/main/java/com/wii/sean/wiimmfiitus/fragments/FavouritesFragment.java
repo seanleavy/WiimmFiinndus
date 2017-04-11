@@ -275,6 +275,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
             }
         }
         if(found) {
+            preferencesManager.overwritePreferenceWith(wiiCyclerViewAdapter.wiiList, PreferencesManager.FAVOURITESPREFERENCES);
             int[] sounds = {R.raw.coin, R.raw.nsmbwiicoin, R.raw.smw_coin};
             Random r = new Random();
             int Low = 0;
