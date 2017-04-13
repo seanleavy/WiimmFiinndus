@@ -15,7 +15,8 @@
     <string name="dialog_title">Search</string>
     <string name="first_run_message">"Hold the SEARCH button if you're from Roscommon"</string>
     <string name="saved_friends">Saved Miis</string>
-    <string name="history">HISTORY</string>
+    <string name="search_friends">Mii Search</string>
+    <string name="history">History</string>
     <string name="friend_added">"  added  to  favourites"</string>
     <string name="default_search">searching</string>
     <string name="favourites_card_tip">Hold to search</string>
@@ -25,6 +26,8 @@
     <string name="searching">Searching</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_loaddefaults">"great bunch of lads"</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

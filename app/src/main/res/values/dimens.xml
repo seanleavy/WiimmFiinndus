@@ -4,21 +4,23 @@
     <dimen name="nav_header_height">160dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin_small">8dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_vertical_margin_large">26dp</dimen>
     <dimen name="activity_vertical_margin_extra_large">45dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="miis_found_layout_size">35dp</dimen>
     <dimen name="padding_margin_10dp">10dp</dimen>
+    <dimen name="padding_margin_1dp">1dp</dimen>
     <dimen name="collapsing_image_Size">120dp</dimen>
 
     <dimen name="card_view_default_height">200dp</dimen>
 
     <dimen name="icon_size">80dp</dimen>
-    <dimen name="vertical_icon_size_mii">160dp</dimen>
-    <dimen name="horizontal_icon_size_mii">60dp</dimen>
-    <dimen name="toolbar_icon_size">38dp</dimen>
-    <dimen name="toolbar_icon_size_big">58dp</dimen>
+    <dimen name="vertical_icon_size_mii">130dp</dimen>
+    <dimen name="horizontal_icon_size_mii">25dp</dimen>
+    <dimen name="toolbar_icon_size">48dp</dimen>
+    <dimen name="toolbar_icon_size_big">68dp</dimen>
     <dimen name="onboarding_icon_size_big">250dp</dimen>
     <dimen name="edittext_number_fields_horizontal">190dp</dimen>
     <dimen name="edittext_number_fields_vertical">40dp</dimen>

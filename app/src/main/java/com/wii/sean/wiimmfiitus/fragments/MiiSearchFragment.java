@@ -5,19 +5,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -25,9 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,9 @@ import com.wii.sean.wiimmfiitus.Constants.UrlConstants;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
+import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
+import com.wii.sean.wiimmfiitus.helpers.CustomTabsLoader;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
@@ -45,15 +48,13 @@ import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.PreferenceUpdateListener, AsyncTaskCompleteListener {
+public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity.PreferenceUpdateListener, AsyncTaskCompleteListener {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView wiiCyclerView;
     private CustomWiiCyclerViewAdapter wiiAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private FloatingActionButton startButton;
-    private ImageView wiimfiiIcon;
-    private TextView miisFoundTextViewLabel;
     private TextView history;
     private ItemTouchHelper miiItemTouchHelper;
     private ItemTouchHelper.SimpleCallback simpleMiiItemTouchCallback;
@@ -62,6 +63,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     private EditText friendCodeEditText;
     private View parentCoordinatorLayout;
     private View miiSearchView;
+    private Toolbar toolbar;
 
     private PreferencesManager searchPreferncesManager;
 
@@ -92,10 +94,9 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         searchPreferncesManager = new PreferencesManager(miiSearchView.getContext());
         startButton = (FloatingActionButton) miiSearchView.findViewById(R.id.button_search_frame);
         wiiCyclerView = (RecyclerView) miiSearchView.findViewById(R.id.search_fragment_recycler_view);
-        wiimfiiIcon = (ImageView) miiSearchView.findViewById(R.id.wiimfii_icon);
-        miisFoundTextViewLabel = (TextView) miiSearchView.findViewById(R.id.miis_found_label);
         progressBar = (ProgressBar) miiSearchView.findViewById(R.id.progress_bar_search);
-
+        toolbar = (Toolbar) miiSearchView.findViewById(R.id.wiimmfii_toolbar);
+        setHasOptionsMenu(true);
         wiiCyclerView.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(miiSearchView.getContext());
         wiiCyclerView.setLayoutManager(recyclerLayoutManager);
@@ -122,7 +123,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                         parentCoordinatorLayout,"",
                         Snackbar.LENGTH_SHORT,
                         ContextCompat.getDrawable(v.getContext(),
-                                R.drawable.nintendo_logo_red_light),
+                                R.drawable.nintendo_logo_black),
                         parentTabView);
                 return true;
 
@@ -133,20 +134,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
             @Override
             public void onClick(View view) {
                 showSearchDialog(view, layoutInflater);
-            }
-        });
-
-        //Listener on icon at top of view
-        wiimfiiIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(), R.string.pressed_wiimfii, Toast.LENGTH_SHORT).show();
-                Uri uri = Uri.parse(UrlConstants.WiimFiiUrl);
-                CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
-                intentBuilder.setToolbarColor(ContextCompat.getColor(getContext(), R.color.nintendo_red_dark));
-                intentBuilder.setSecondaryToolbarColor(ContextCompat.getColor(getContext(), R.color.nintendo_red));
-                CustomTabsIntent customTabsIntent = intentBuilder.build();
-                customTabsIntent.launchUrl(getContext(), uri);
             }
         });
 
@@ -168,7 +155,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                         null, startButton);
                 wiiList.remove(viewHolder.getAdapterPosition());
                 wiiAdapter.notifyDataSetChanged();
-                miisFoundTextViewLabel.setVisibility(View.INVISIBLE);
                 ((MkWiiHomeActivity)getActivity()).preferenceUpdated();
             }
         };
@@ -178,6 +164,18 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
         // Inflate the layout for this fragment
         return miiSearchView;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.menu_load_wiimfii) {
+            CustomTabsLoader.loadWebsite(UrlConstants.WiimFiiUrl, getContext());
+        }
+        if(id == R.id.menu_search_history) {
+            showSearchHistoryDialog();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // Search Dialog
@@ -193,13 +191,10 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
         alertDialogBuilder.setView(searchDialogView);
 
         final TextView dialogSubtitle = (TextView) searchDialogView.findViewById(R.id.dialog_title);
-        history = (TextView) searchDialogView.findViewById(R.id.search_history);
         friendCodeEditText = (EditText) searchDialogView.findViewById(R.id.friend_code_edittext);
         final Button deleteEdittext = (Button) searchDialogView.findViewById(R.id.delete_friend_code);
 
-        final Switch toggleSwitch = (Switch) searchDialogView.findViewById(R.id.alertdialog_toggle_switch);
-        toggleSwitch.setTextOff(getString(R.string.fcode));
-        toggleSwitch.setTextOn(getString(R.string.mii));
+        final SwitchCompat toggleSwitch = (SwitchCompat) searchDialogView.findViewById(R.id.alertdialog_toggle_switch);
         toggleSwitch.setChecked(false);
 
         alertDialogBuilder.setTitle(R.string.dialog_title)
@@ -220,20 +215,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 });
-
-        // Search History
-        Object[] searchHistory = searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES);
-        // Clicking the HISTORY textlabel
-        history.setVisibility(View.INVISIBLE);
-        if(searchHistory != null)
-            if(searchHistory.length > 0)
-                history.setVisibility(View.VISIBLE);
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSearchHistoryDialog();
-            }
-        });
 
         // auto show keyboard
         searchDialog = alertDialogBuilder.create();
@@ -319,6 +300,12 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     }
 
     @Override
+    public void onResume() {
+        getActivity().invalidateOptionsMenu();
+        super.onResume();
+    }
+
+    @Override
     public void onDestroy() {
         ((MkWiiHomeActivity)getActivity()).removePreferenceUpdateListener(this);
         super.onDestroy();
@@ -371,7 +358,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
             public void onClick(View v) {
                 searchPreferncesManager.clearPrefencefromDB(PreferencesManager.HISTORYPREFERENCES);
                 searchHistoryDialog.dismiss();
-                history.setVisibility(View.INVISIBLE);
                 Toast.makeText(getContext(), R.string.history_cleard_toast, Toast.LENGTH_SHORT).show();
             }
         });
@@ -389,8 +375,6 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
     public void onTaskComplete(Object result) {
         wiiList = new ArrayList<>();
         if(((List) result).size() > 0) {
-            miisFoundTextViewLabel.setText(R.string.miis_found_text);
-            miisFoundTextViewLabel.setVisibility(View.VISIBLE);
             wiiList.addAll((List) result);
             wiiAdapter = new CustomWiiCyclerViewAdapter(wiiList);
             wiiCyclerView.setAdapter(wiiAdapter);
@@ -405,8 +389,7 @@ public class MiiSearchFragment extends Fragment implements MkWiiHomeActivity.Pre
                 }
             });
         } else {
-            miisFoundTextViewLabel.setVisibility(View.VISIBLE);
-            miisFoundTextViewLabel.setText(R.string.miis_not_found_text);
+            // todo put messaging here
         }
         startButton.setVisibility(View.VISIBLE);
         startButton.setClickable(true);

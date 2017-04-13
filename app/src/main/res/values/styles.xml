@@ -3,12 +3,13 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/nintendo_red</item>
+        <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/nintendo_red_dark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/nintendo_red_dark</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorControlHighlight">@color/nintendo_blue_dark</item>
+        <item name="colorControlHighlight">@color/black</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
     
     <style name="LauncherTheme" parent="Theme.AppCompat.NoActionBar">
@@ -45,14 +46,20 @@
     </style>
 
     <style name="Mii_license_text">
-        <item name="android:textSize">15dp</item>
-        <item name="android:textColor">@color/nintendo_blue</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Custom_tabs" parent="TextAppearance.Design.Tab">
         <item name="android:textStyle">bold</item>
         <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="Switch_Button_style" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/nintendo_red</item>
+        <item name="colorSwitchThumbNormal">@color/nintendo_red</item>
+        <item name="android:colorForeground">@color/nintendo_red</item>
     </style>
 
 </resources>

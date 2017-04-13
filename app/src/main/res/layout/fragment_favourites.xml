@@ -8,9 +8,6 @@
     android:orientation="vertical"
     tools:context="com.wii.sean.wiimmfiitus.fragments.FavouritesFragment">
 
-    <include
-        layout="@layout/titlebar" />
-    
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -20,7 +17,9 @@
             android:id="@+id/favourites_fragment_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_margin_10dp"
+            android:paddingLeft="@dimen/padding_margin_10dp"
+            android:paddingRight="@dimen/padding_margin_10dp"
+            android:paddingTop="@dimen/padding_margin_1dp"
             />
 
 

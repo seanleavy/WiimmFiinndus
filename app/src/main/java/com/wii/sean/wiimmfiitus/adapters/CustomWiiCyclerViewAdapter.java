@@ -99,7 +99,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         friendCardViewHolder.vrPoints.setText(String.valueOf(wiiList.get(position).getVr()));
         friendCardViewHolder.miiName.setText(wiiList.get(position).getMii());
         friendCardViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.onlineIcon.getContext(),
-                wiiList.get(position).isOnline() == true ? R.drawable.nintendo_network_logo_online : R.drawable.nintendo_network_logo_offline));
+                wiiList.get(position).isOnline() == true ? R.drawable.online : R.drawable.offline));
         setAnimation(((FriendViewHolder) holder).itemView, position);
 //        friendCardViewHolder.licenseCard.setOnClickListener(new View.OnClickListener() {
 //            @Override

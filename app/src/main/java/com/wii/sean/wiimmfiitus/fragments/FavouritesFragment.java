@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
+import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
@@ -49,13 +51,9 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private RecyclerView.LayoutManager layoutManager;
     private PreferencesManager preferencesManager;
     private ItemTouchHelper miiItemTouchHelper;
-    private ItemTouchHelper.Callback simpleMiiItemTouchCallback;
     private List<MiiCharacter> miiList;
-    private ImageView defaultFriendsImageButton;
     private Toolbar toolbar;
-    private TextView refreshButtonTextViewTerribleCode;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ImageView onlineStatusImageView;
     private CustomWiiCyclerViewAdapter.FriendViewHolder friendViewHolder;
     private boolean isGroupSearch = false;
 
@@ -74,8 +72,8 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
 
     @Override
     public void onResume() {
+        getActivity().invalidateOptionsMenu();
         super.onResume();
-//        wiiCyclerView.invalidate();
     }
 
     @Override
@@ -83,17 +81,13 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                                           Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         favouritesView = inflater.inflate(R.layout.fragment_favourites, container, false);
-        toolbar = (Toolbar) favouritesView.findViewById(R.id.favourites_toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        setHasOptionsMenu(true);
         wiiCyclerView = (RecyclerView) favouritesView.findViewById(R.id.favourites_fragment_recycler_view);
         preferencesManager = new PreferencesManager(favouritesView.getContext());
         setAdapter();
-        defaultFriendsImageButton = (ImageView) favouritesView.findViewById(R.id.mario_favourites_tolbar_icon);
-        refreshButtonTextViewTerribleCode = (TextView) favouritesView.findViewById(R.id.refresh_favourites);
         swipeRefreshLayout = (SwipeRefreshLayout) favouritesView.findViewById(R.id.swipe_refresh_layout);
 
         setOnBoardingAnimation();
-        setDefaultFriends();
         enableSwipeDragFavourites();
         setRefreshListener();
         return favouritesView;
@@ -107,12 +101,6 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                 refreshAll();
             }
         });
-        refreshButtonTextViewTerribleCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refreshAll();
-            }
-        });
     }
 
     private void refreshAll() {
@@ -122,7 +110,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         SnackBarHelper.showSnackBar(getContext(),
                 parent, "",
                 Snackbar.LENGTH_SHORT,
-                ContextCompat.getDrawable(getContext(), R.drawable.nintendo_logo_red_light));
+                ContextCompat.getDrawable(getContext(), R.drawable.nintendo_logo_black));
         swipeRefreshLayout.setRefreshing(false);
         isGroupSearch = true;
         searchTask(favouritesFriendCodesList);
@@ -169,9 +157,15 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.wii_base, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_refresh) {
+            refreshAll();
+        }
+        if(id == R.id.load_default_miis) {
+            setDefaultFriends();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setOnBoardingAnimation() {
@@ -228,24 +222,19 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     }
 
     private void setDefaultFriends() {
-        defaultFriendsImageButton.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View view) {
-                for(final MiiCharacter mii : FriendCodes.getDefaultMiis()) {
-                    if(!Iterables.any(preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES),
-                            new Predicate<MiiCharacter>() {
-                                @Override
-                                public boolean apply(MiiCharacter input) {
-                                    return input.getFriendCode().equals(mii.getFriendCode());
-                                }
-                            })) {
-                        miiList.add(mii);
-                        preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES, mii);
-                    }
-                }
-                wiiCyclerViewAdapter.notifyDataSetChanged();
+        for(final MiiCharacter mii : FriendCodes.getDefaultMiis()) {
+            if(!Iterables.any(preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES),
+                    new Predicate<MiiCharacter>() {
+                        @Override
+                        public boolean apply(MiiCharacter input) {
+                            return input.getFriendCode().equals(mii.getFriendCode());
+                        }
+                    })) {
+                miiList.add(mii);
+                preferencesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES, mii);
             }
-        });
+        }
+        wiiCyclerViewAdapter.notifyDataSetChanged();
     }
 
     private void searchTask(Object args) {
