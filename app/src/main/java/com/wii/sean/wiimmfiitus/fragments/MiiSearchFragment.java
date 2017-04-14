@@ -7,27 +7,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +29,7 @@ import com.wii.sean.wiimmfiitus.Constants.UrlConstants;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
-import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
+import com.wii.sean.wiimmfiitus.dialogs.SearchDialog;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.CustomTabsLoader;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
@@ -48,7 +40,7 @@ import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity.PreferenceUpdateListener, AsyncTaskCompleteListener {
+public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity.PreferenceUpdateListener, AsyncTaskCompleteListener, SearchDialog.DialogListener {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView wiiCyclerView;
@@ -59,8 +51,6 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
     private ItemTouchHelper miiItemTouchHelper;
     private ItemTouchHelper.SimpleCallback simpleMiiItemTouchCallback;
     private ProgressBar progressBar;
-    private AlertDialog.Builder alertDialogBuilder;
-    private EditText friendCodeEditText;
     private View parentCoordinatorLayout;
     private View miiSearchView;
     private Toolbar toolbar;
@@ -85,12 +75,9 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
+
         miiSearchView = inflater.inflate(R.layout.fragment_mii_search, container, false);
-
         parentCoordinatorLayout = miiSearchView.findViewById(R.id.search_fragment_main_layout);
-
-        // To save every fCode search
-        final LayoutInflater layoutInflater = getLayoutInflater(savedInstanceState);
         searchPreferncesManager = new PreferencesManager(miiSearchView.getContext());
         startButton = (FloatingActionButton) miiSearchView.findViewById(R.id.button_search_frame);
         wiiCyclerView = (RecyclerView) miiSearchView.findViewById(R.id.search_fragment_recycler_view);
@@ -110,7 +97,6 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
                 searchPreferncesManager.setFirstRunToBe(true);
         }
 
-
         startButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -126,14 +112,16 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
                                 R.drawable.nintendo_logo_black),
                         parentTabView);
                 return true;
-
             }
         });
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showSearchDialog(view, layoutInflater);
+                // todo fix hack by passing fragment here maybe
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                SearchDialog searchDialog = SearchDialog.newInstance();
+                searchDialog.show(fragmentManager, "");
             }
         });
 
@@ -178,112 +166,6 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // Search Dialog
-    // todo create a dialog class instead
-    private void showSearchDialog(View view, LayoutInflater layoutInflater) {
-        ViewGroup viewGroup = (ViewGroup) view.findViewById(R.id.homescreen_main_layout);
-        // building the Search Dialog
-        //
-        View searchDialogView = layoutInflater.inflate(R.layout.friend_code_dialog, viewGroup, false);
-        //todo refactor all custom Dialogs to seperate class
-        alertDialogBuilder = new AlertDialog.Builder(view.getContext());
-        AlertDialog searchDialog;
-        alertDialogBuilder.setView(searchDialogView);
-
-        final TextView dialogSubtitle = (TextView) searchDialogView.findViewById(R.id.dialog_title);
-        friendCodeEditText = (EditText) searchDialogView.findViewById(R.id.friend_code_edittext);
-        final Button deleteEdittext = (Button) searchDialogView.findViewById(R.id.delete_friend_code);
-
-        final SwitchCompat toggleSwitch = (SwitchCompat) searchDialogView.findViewById(R.id.alertdialog_toggle_switch);
-        toggleSwitch.setChecked(false);
-
-        alertDialogBuilder.setTitle(R.string.dialog_title)
-                // SEARCH Button
-                .setPositiveButton("Search", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        submitSearch(friendCodeEditText);
-                        if(!toggleSwitch.isChecked())
-                        searchPreferncesManager.addToPreference(PreferencesManager.HISTORYPREFERENCES,
-                                friendCodeEditText.getText().toString() );
-                        dialog.dismiss();
-                    }
-                })
-                // CANCEL Button
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-
-        // auto show keyboard
-        searchDialog = alertDialogBuilder.create();
-
-        //Empty the friend code editext field
-        deleteEdittext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                friendCodeEditText.setText("");
-            }
-        });
-
-        if(searchDialog.getWindow() != null)
-        searchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        searchDialog.show();
-
-        //needs to be on 2 lines for some reason
-        final Button searchButton = searchDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        searchButton.setEnabled(false);
-
-        //format friendcode textfield with this Textwatcher
-        final TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // for friendcode entries
-                if(!toggleSwitch.isChecked()) {
-                    // allows credit card style formatting
-                    if(s.length() == 4 || s.length() == 9) {
-                        s.append('-');
-                    }
-                    if (friendCodeEditText.getText().toString().length() >= 14) {
-                        searchButton.setEnabled(true);
-                    } else
-                        searchButton.setEnabled(false);
-                }
-                // for mii text entry
-                if(toggleSwitch.isChecked()) {
-                    if (friendCodeEditText.getText().toString().length() >= 1) {
-                        searchButton.setEnabled(true);
-                    } else
-                        searchButton.setEnabled(false);
-                }
-            }
-        };
-
-        friendCodeEditText.addTextChangedListener(textWatcher);
-        toggleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                if(isChecked) {
-                    //change search title and keyboard type
-                    dialogSubtitle.setText(R.string.dialog_body_mii);
-                    friendCodeEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                    friendCodeEditText.getText().clear();
-                }
-                else {
-                    dialogSubtitle.setText(R.string.dialog_body_fcode);
-                    friendCodeEditText.getText().clear();
-                    friendCodeEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_TEXT);
-                }
-            }
-        });
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -315,8 +197,7 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
         void onFragmentInteraction(Uri uri);
     }
 
-    private void submitSearch(EditText friendCodeEditText) {
-        String searchToken = friendCodeEditText.getText().toString();
+    private void submitSearch(String searchToken) {
         searchTask(searchToken);
         startButton.setClickable(false);
         startButton.setVisibility(View.INVISIBLE);
@@ -343,7 +224,6 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
         searchDialogBuilder.setSingleChoiceItems(searchResultsAdapter, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                friendCodeEditText.setText(searchResultsAdapter.getItem(which));
                 dialog.dismiss();
             }
         });
@@ -394,5 +274,13 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
         startButton.setVisibility(View.VISIBLE);
         startButton.setClickable(true);
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void valuesReturned(String value, String searchType) {
+        submitSearch(value);
+        if(searchType.equals(SearchDialog.FRIENDCODESEARCH)) {
+            searchPreferncesManager.addToPreference(PreferencesManager.HISTORYPREFERENCES, value);
+        }
     }
 }
