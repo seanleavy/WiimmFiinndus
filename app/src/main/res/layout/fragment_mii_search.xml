@@ -14,6 +14,16 @@
         android:background="@color/black"
         android:fitsSystemWindows="true">
 
+        <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+            android:id="@+id/search_result_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:padding="@dimen/activity_vertical_margin_extra_large"
+            android:textSize="20dp"
+            android:textColor="@color/nintendo_grey_light"
+            android:visibility="invisible"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/search_fragment_recycler_view"
             android:layout_width="match_parent"

@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -23,10 +24,12 @@ public class SearchDialog extends DialogFragment {
     public static String FRIENDCODESEARCH = "fcode";
     private Button cancel;
     private Button search;
+    private Button delete;
     private NintendoTextview searchTypeTextView;
     private EditText friendCodeEditText;
     private SwitchCompat toggleSwitch;
 
+    // Dialog callback interface
     public interface DialogListener {
         public void valuesReturned(String value, String searchType);
     }
@@ -52,9 +55,18 @@ public class SearchDialog extends DialogFragment {
         searchTypeTextView = (NintendoTextview) view.findViewById(R.id.dialog_search_title);
         friendCodeEditText = (EditText) view.findViewById(R.id.friend_code_edittext);
         toggleSwitch = (SwitchCompat) view.findViewById(R.id.alertdialog_toggle_switch);
+        delete = (Button) view.findViewById(R.id.delete_friend_code);
+        delete.setVisibility(View.INVISIBLE);
         addEditTextListener();
         addSearchListener();
+        addOtherListeners();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     private TextWatcher getTextWatcher() {
@@ -68,6 +80,11 @@ public class SearchDialog extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                //hide show delete button
+                if(s.length() > 0)
+                    delete.setVisibility(View.VISIBLE);
+                else
+                    delete.setVisibility(View.INVISIBLE);
                 // for friendcode entries
                 if(!toggleSwitch.isChecked()) {
                     // allows credit card style formatting
@@ -121,6 +138,21 @@ public class SearchDialog extends DialogFragment {
                 DialogListener myListener = (DialogListener) getFragmentManager().getFragments().get(0);
                 myListener.valuesReturned(value, searchType);
                 dismiss();
+            }
+        });
+    }
+
+    private void addOtherListeners() {
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                friendCodeEditText.setText("");
             }
         });
     }

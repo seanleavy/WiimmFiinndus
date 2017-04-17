@@ -28,4 +28,10 @@
         android:orderInCategory="200"
         android:title="@string/action_loaddefaults"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_delete"
+        android:orderInCategory="300"
+        android:title="@string/clear"
+        app:showAsAction="never" />
 </menu>

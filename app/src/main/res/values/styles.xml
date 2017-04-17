@@ -10,6 +10,8 @@
         <item name="windowNoTitle">true</item>
         <item name="colorControlHighlight">@color/black</item>
         <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:itemTextAppearance">@style/myOptionsMenuTextApearance</item>
+        <item name="actionOverflowMenuStyle">@style/CustomOptionsMenuOverflow</item>
     </style>
     
     <style name="LauncherTheme" parent="Theme.AppCompat.NoActionBar">
@@ -60,6 +62,21 @@
         <item name="colorControlActivated">@color/nintendo_red</item>
         <item name="colorSwitchThumbNormal">@color/nintendo_red</item>
         <item name="android:colorForeground">@color/nintendo_red</item>
+    </style>
+
+    <style name="myOptionsMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="CustomOptionsMenuOverflow" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">@color/nintendo_red_dark</item>
+        <!-- Required for pre-Lollipop. -->
+        <item name="overlapAnchor">false</item>
+
+        <!-- Required for Lollipop. -->
+        <item name="android:overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">9.0dip</item>
     </style>
 
 </resources>

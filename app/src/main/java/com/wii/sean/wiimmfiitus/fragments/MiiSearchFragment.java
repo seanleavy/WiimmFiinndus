@@ -47,7 +47,7 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
     private CustomWiiCyclerViewAdapter wiiAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private FloatingActionButton startButton;
-    private TextView history;
+    private TextView searchResultsTextview;
     private ItemTouchHelper miiItemTouchHelper;
     private ItemTouchHelper.SimpleCallback simpleMiiItemTouchCallback;
     private ProgressBar progressBar;
@@ -87,6 +87,7 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
         wiiCyclerView.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(miiSearchView.getContext());
         wiiCyclerView.setLayoutManager(recyclerLayoutManager);
+        searchResultsTextview = (TextView) miiSearchView.findViewById(R.id.search_result_textview);
         final View parentTabView = getActivity().findViewById(R.id.tab_dots);
         if(searchPreferncesManager.isFirstRun()) {
             SnackBarHelper.showSnackBar(getContext(), parentCoordinatorLayout,
@@ -156,12 +157,16 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
         if(id == R.id.menu_load_wiimfii) {
             CustomTabsLoader.loadWebsite(UrlConstants.WiimFiiUrl, getContext());
         }
         if(id == R.id.menu_search_history) {
             showSearchHistoryDialog();
+        }
+        if(id == R.id.menu_delete) {
+            clearRecyclerView();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -270,6 +275,16 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
             });
         } else {
             // todo put messaging here
+            clearRecyclerView();
+            searchResultsTextview.setVisibility(View.VISIBLE);
+            searchResultsTextview.setText(R.string.miis_not_found_text);
+            searchResultsTextview.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    searchResultsTextview.setVisibility(View.INVISIBLE);
+                }
+            }, 3000);
+
         }
         startButton.setVisibility(View.VISIBLE);
         startButton.setClickable(true);
@@ -282,5 +297,11 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
         if(searchType.equals(SearchDialog.FRIENDCODESEARCH)) {
             searchPreferncesManager.addToPreference(PreferencesManager.HISTORYPREFERENCES, value);
         }
+    }
+
+    private void clearRecyclerView() {
+        wiiList.clear();
+        wiiAdapter = new CustomWiiCyclerViewAdapter(wiiList);
+        wiiCyclerView.setAdapter(wiiAdapter);
     }
 }

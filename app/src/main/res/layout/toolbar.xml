@@ -5,7 +5,7 @@
     android:id="@+id/wiimmfii_toolbar"
     android:background="@drawable/rounded_toolbar"
     android:layout_width="match_parent"
-    android:gravity="center_vertical"
+    android:gravity="center_vertical|end"
     android:layout_height="@dimen/toolbar_height"
     >
 

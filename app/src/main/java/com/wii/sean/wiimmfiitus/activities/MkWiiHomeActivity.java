@@ -77,6 +77,7 @@ public class MkWiiHomeActivity extends AppCompatActivity implements BaseFragment
             menu.findItem(R.id.load_default_miis).setVisible(false);
             menu.findItem(R.id.menu_load_wiimfii).setVisible(true);
             menu.findItem(R.id.menu_search_history).setVisible(true);
+            menu.findItem(R.id.menu_delete).setVisible(true);
         }
         if(mViewPager.getCurrentItem() == 1) {
             textview.setText(R.string.saved_friends);
@@ -84,6 +85,7 @@ public class MkWiiHomeActivity extends AppCompatActivity implements BaseFragment
             menu.findItem(R.id.load_default_miis).setVisible(true);
             menu.findItem(R.id.menu_load_wiimfii).setVisible(false);
             menu.findItem(R.id.menu_search_history).setVisible(false);
+            menu.findItem(R.id.menu_delete).setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
     }

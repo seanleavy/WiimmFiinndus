@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="miis_found_text">"found  !!"</string>
-    <string name="miis_not_found_text">"friend  not  online"</string>
+    <string name="miis_not_found_text">"Friend  Offline"</string>
     <string name="pressed_wiimfii">loading wiimmfi.de/mkw</string>
     <string name="dialog_body_fcode">Enter Friend Code</string>
     <string name="dialog_body_mii">Enter Mii Name</string>
@@ -17,6 +17,7 @@
     <string name="saved_friends">Saved Miis</string>
     <string name="search_friends">Mii Search</string>
     <string name="history">History</string>
+    <string name="clear">clear</string>
     <string name="friend_added">"  added  to  favourites"</string>
     <string name="default_search">searching</string>
     <string name="favourites_card_tip">Hold to search</string>
