@@ -48,5 +48,6 @@ dependencies {
     compile 'com.snappydb:snappydb-lib:0.4.0'
     compile 'com.esotericsoftware.kryo:kryo:2.24.0'
     compile 'com.android.support:customtabs:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     testCompile 'junit:junit:4.12'
 }

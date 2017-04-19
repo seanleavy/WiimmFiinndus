@@ -1,10 +1,15 @@
 package com.wii.sean.wiimmfiitus.model;
 
 import com.google.gson.Gson;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MiiCharacter {
+public class MiiCharacter implements Serializable {
+
+    public static boolean MIIOFFLINE = false;
+    public static boolean MIIONLINE = true;
 
     private String friendCode;
     private String mii;
@@ -19,7 +24,6 @@ public class MiiCharacter {
         this.friendCode = fCode;
         this.mii = miiName;
         this.vr = vrPoints;
-
     }
 
     public MiiCharacter(String fCode, String miiName, String vrPoints, boolean online) {

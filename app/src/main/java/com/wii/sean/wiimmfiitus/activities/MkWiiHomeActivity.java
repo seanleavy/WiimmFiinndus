@@ -36,6 +36,7 @@ public class MkWiiHomeActivity extends AppCompatActivity implements BaseFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        //setTheme
         listeners = new ArrayList<>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mk_wii_home_activity);

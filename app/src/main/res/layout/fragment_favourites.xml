@@ -19,9 +19,8 @@
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/padding_margin_10dp"
             android:paddingRight="@dimen/padding_margin_10dp"
-            android:paddingTop="@dimen/padding_margin_1dp"
+            android:paddingTop="@dimen/padding_margin_2dp"
             />
-
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

@@ -12,7 +12,10 @@
     <dimen name="miis_found_layout_size">35dp</dimen>
     <dimen name="padding_margin_10dp">10dp</dimen>
     <dimen name="padding_margin_1dp">1dp</dimen>
+    <dimen name="padding_margin_2dp">2dp</dimen>
     <dimen name="collapsing_image_Size">120dp</dimen>
+
+    <integer name="swipe_refresh_threshold">280</integer>
 
     <dimen name="card_view_default_height">200dp</dimen>
 
@@ -20,6 +23,7 @@
     <dimen name="vertical_icon_size_mii">130dp</dimen>
     <dimen name="horizontal_icon_size_mii">25dp</dimen>
     <dimen name="toolbar_icon_size">48dp</dimen>
+    <dimen name="toolbar_icon_size_small">25dp</dimen>
     <dimen name="toolbar_icon_size_big">68dp</dimen>
     <dimen name="onboarding_icon_size_big">250dp</dimen>
     <dimen name="edittext_number_fields_horizontal">190dp</dimen>
@@ -27,6 +31,7 @@
     <dimen name="edittext_padding_left">20dp</dimen>
     <dimen name="toolbar_height">58dp</dimen>
 
+    <dimen name="license_card_small_textsize">10dp</dimen>
     <dimen name="toolbar_textsize">20sp</dimen>
     <dimen name="miis_found_textsize">26dp</dimen>
     <dimen name="tab_vertical_size">35dp</dimen>

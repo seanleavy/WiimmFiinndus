@@ -1,6 +1,7 @@
 package com.wii.sean.wiimmfiitus.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +11,12 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
+import com.wii.sean.wiimmfiitus.activities.LobbyActivity;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
@@ -35,12 +38,6 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         }
     }
 
-    public class DefaultViewHolder extends ViewHolder {
-        public DefaultViewHolder(View v) {
-            super(v);
-        }
-    }
-
     public class FriendViewHolder extends ViewHolder {
 
         public TextView friendCode;
@@ -49,6 +46,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         public CardView licenseCard;
         public ImageView icon;
         public ImageView onlineIcon;
+        public LinearLayout lobbyButtonGroup;
 
         public FriendViewHolder(View v) {
             super(v);
@@ -59,6 +57,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
             this.vrPoints = (TextView)v.findViewById(R.id.vr_textview);
             this.icon = (ImageView)v.findViewById(R.id.mii_icon);
             this.onlineIcon = (ImageView) v.findViewById(R.id.online_offline_image);
+            this.lobbyButtonGroup = (LinearLayout) v.findViewById(R.id.lobby_button_group);
         }
     }
 
@@ -100,6 +99,23 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         friendCardViewHolder.miiName.setText(wiiList.get(position).getMii());
         friendCardViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.onlineIcon.getContext(),
                 wiiList.get(position).isOnline() == true ? R.drawable.online : R.drawable.offline));
+
+        // Show the Lobby button and add a listener that sends a serialised Miicharacter to the Lobby Activity
+        if(wiiList.get(position).isOnline()) {
+            friendCardViewHolder.lobbyButtonGroup.setVisibility(View.VISIBLE);
+            friendCardViewHolder.lobbyButtonGroup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.startActivity(new Intent(context, LobbyActivity.class).putExtra("mii",
+                            new MiiCharacter(friendCardViewHolder.friendCode.getText().toString(),
+                                    friendCardViewHolder.miiName.getText().toString(),
+                                    friendCardViewHolder.vrPoints.getText().toString())
+                    ));
+                }
+            });
+        }
+        else
+            friendCardViewHolder.lobbyButtonGroup.setVisibility(View.INVISIBLE);
         setAnimation(((FriendViewHolder) holder).itemView, position);
 //        friendCardViewHolder.licenseCard.setOnClickListener(new View.OnClickListener() {
 //            @Override

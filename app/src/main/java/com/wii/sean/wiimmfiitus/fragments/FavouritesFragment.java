@@ -94,7 +94,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     }
 
     private void setRefreshListener() {
-        swipeRefreshLayout.setDistanceToTriggerSync(280);
+        swipeRefreshLayout.setDistanceToTriggerSync(getResources().getInteger(R.integer.swipe_refresh_threshold));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -104,6 +104,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     }
 
     private void refreshAll() {
+        //todo: not good
         preferencesManager = new PreferencesManager(favouritesView.getContext());
         final List<MiiCharacter> favouritesFriendCodesList = preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES);
         View parent = favouritesView.findViewById(R.id.parent_linearlayout);
@@ -184,6 +185,14 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     public void onDestroy() {
         ((MkWiiHomeActivity)getActivity()).removePreferenceUpdateListener(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        for(MiiCharacter miiCharacter : miiList)
+            miiCharacter.setOnlineTo(MiiCharacter.MIIOFFLINE);
+        preferencesManager.overwritePreferenceWith(miiList, PreferencesManager.FAVOURITESPREFERENCES);
+        super.onStop();
     }
 
     @Override
