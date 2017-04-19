@@ -3,6 +3,7 @@ package com.wii.sean.wiimmfiitus.dialogs;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.InputType;
@@ -92,16 +93,18 @@ public class SearchDialog extends DialogFragment {
                         s.append('-');
                     }
                     if (friendCodeEditText.getText().toString().length() >= 14) {
-                        search.setEnabled(true);
-                    } else
-                        search.setEnabled(false);
+                        search.setVisibility(View.VISIBLE);
+                    } else {
+                        search.setVisibility(View.INVISIBLE);
+
+                    }
                 }
                 // for mii text entry
                 if(toggleSwitch.isChecked()) {
-                    if (friendCodeEditText.getText().toString().length() >= 1) {
-                        search.setEnabled(true);
-                    } else
-                        search.setEnabled(false);
+                    if (friendCodeEditText.getText().toString().length() >= 1)
+                        search.setVisibility(View.VISIBLE);
+                    else
+                        search.setVisibility(View.INVISIBLE);
                 }
             }
         };
