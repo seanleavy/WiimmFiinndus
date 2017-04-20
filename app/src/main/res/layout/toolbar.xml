@@ -18,4 +18,15 @@
         android:textColor="@color/nintendo_grey_light"
         android:id="@+id/nintendoToolbarTextview" />
 
+    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:gravity="start|center"
+        android:textStyle="italic"
+        android:textSize="@dimen/toolbar_textsize"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textColor="@color/nintendo_grey_light"
+        android:id="@+id/nintendoSecondaryToolbarTextview"
+        />
+
 </android.support.v7.widget.Toolbar>

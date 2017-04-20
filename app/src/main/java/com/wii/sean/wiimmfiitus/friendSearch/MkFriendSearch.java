@@ -7,6 +7,7 @@ import com.wii.sean.wiimmfiitus.Constants.UrlConstants;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
 import com.wii.sean.wiimmfiitus.helpers.RandomUserAgent;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
+import com.wii.sean.wiimmfiitus.model.RoomModel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,46 +16,95 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class MkFriendSearch {
 
+    public static boolean ROOMENABLED = true;
+    private static boolean SEARCHROOM = false;
+
     private ArrayList<String> miis;
     private ArrayList<String> friendCodes;
     private ArrayList<String> vrpoints;
-    private List<MiiCharacter> miiFriendsFound;
+    private List<MiiCharacter> resultList;
 
     public MkFriendSearch() {
     }
 
-    public List<MiiCharacter> searchFriendList(Object searchToken) {
+    public List searchFriendList(Object... searchTokenParam) {
+        Object searchToken = searchTokenParam[0];
         try {
             String userAgent = RandomUserAgent.getRandomUserAgent();
             Document mkDocument = Jsoup.connect(UrlConstants.WiimFiiUrl)
                     .userAgent(userAgent)
                     .get();
-            Element table = mkDocument.select("table").get(0);
-            Elements tr = table.select("tr[class^=tr0],tr[class^=tr1]");
 
-            miis = new ArrayList<>();
-            friendCodes = new ArrayList<>();
-            vrpoints = new ArrayList<>();
-            miiFriendsFound = new ArrayList();
+            if(searchTokenParam.length > 1)
+            SEARCHROOM =  (Boolean) searchTokenParam[1];
+            if(!SEARCHROOM) {
+                Element table = mkDocument.select("table").get(0);
+                Elements tr = table.select("tr[class^=tr0],tr[class^=tr1]");
+                miis = new ArrayList<>();
+                friendCodes = new ArrayList<>();
+                vrpoints = new ArrayList<>();
+                resultList = new ArrayList();
 
-            int rowCount = 0;
-            for(Element row : tr) {
-                if(row.text().length() > 8) {
-                    friendCodes.add(row.select("a").text().trim());
-                    vrpoints.add(tr.get(rowCount).select("td").get(6).text());
-                    miis.add(tr.get(rowCount).select("td").get(8).text());
-                    rowCount++;
+                int rowCount = 0;
+                for (Element row : tr) {
+                    if (row.text().length() > 8) {
+                        friendCodes.add(row.select("a").text().trim());
+                        vrpoints.add(tr.get(rowCount).select("td").get(6).text());
+                        miis.add(tr.get(rowCount).select("td").get(8).text());
+                        rowCount++;
+                    }
                 }
+                searchResults(searchToken, vrpoints, miis, friendCodes);
             }
-            searchResults(searchToken, vrpoints, miis, friendCodes);
+            if(SEARCHROOM) {
+                Elements elements = mkDocument.getAllElements();
+                if(elements.select("tr.tr0:contains(" + searchToken + "),tr.tr1:contains("+searchToken+")").size() == 0) {
+                    return null;
+                }
+                Element uppBound = elements.select("tr.tr0:contains(" + searchToken + ")" +
+                        ",tr.tr1:contains("+searchToken+")").prevAll("[id]")
+                        .first()
+                        .nextElementSibling();
+                Element lowerBound = elements.select("tr.tr0:contains(" + searchToken + ")," +
+                        " tr.tr1:contains(" + searchToken + ")")
+                        .nextAll("[id]")
+                        .first();
+
+                String fCode = "";
+                String Role = "";
+                String Region = "";
+                String connFail = "";
+                String VRpoints = "";
+                String mii = "";
+
+                Element e = uppBound;
+                List<MiiCharacter> miiList = new ArrayList<>();
+                while(e.nextElementSibling() != lowerBound) {
+                    e = uppBound.nextElementSibling();
+                    //todo MiiCharacter as builder
+                    miiList.add(new MiiCharacter(e.children().get(0).text(), e.children().get(8).text(), e.children().get(6).text()));
+                    uppBound = e;
+                }
+
+                Elements roomElements = elements.select("tr.tr0:contains(" + searchToken + "), tr.tr1:contains(" + searchToken + ")").prevAll("[id]").first().children();
+                String roomTitle = roomElements.select("th").text();
+                String room = roomElements.select("a").text();
+                String locale = roomTitle.substring(0, roomTitle.lastIndexOf(room)).trim();
+                String connfails = roomTitle.substring(roomTitle.lastIndexOf(")") + 1, roomTitle.lastIndexOf(" ")).trim();
+                String races = roomTitle.substring(roomTitle.lastIndexOf(",") + 1, roomTitle.lastIndexOf("(")).trim();
+                RoomModel roomModel = new RoomModel(room, locale, connfails, races, miiList);
+                return new ArrayList(Arrays.asList(roomModel));
+            }
         } catch (IOException e) {
             Log.e(LogHelper.getTag(MkFriendSearch.class), e.getMessage());
         }
-        return miiFriendsFound;
+        return resultList;
     }
 
     //todo do a loose match for codes also
@@ -69,7 +119,7 @@ public class MkFriendSearch {
                         if(mii.contains("1.") && mii.contains("2.")) {
                             mii = mii.substring(2, mii.indexOf("2"));
                         }
-                        miiFriendsFound.add(new MiiCharacter(fCode.get(i),
+                        resultList.add(new MiiCharacter(fCode.get(i),
                                 mii,
                                 vr.get(i).toString(),
                                 isOnline));
@@ -83,7 +133,7 @@ public class MkFriendSearch {
                             fCode.get(i).equals(FriendCodes.DIKROT.getFriendCode()) ||
                             fCode.get(i).equals(FriendCodes.FARTFACE.getFriendCode()) ||
                             fCode.get(i).equals(FriendCodes.SEAN.getFriendCode())) {
-                        miiFriendsFound.add(new MiiCharacter(fCode.get(i),
+                        resultList.add(new MiiCharacter(fCode.get(i),
                                 miiName.get(i).toString(),
                                 vr.get(i).toString(),
                                 isOnline));
@@ -98,7 +148,7 @@ public class MkFriendSearch {
                     if(fCode.get(i).equals(m.getFriendCode())) {
                         m.setOnlineTo(true);
                         m.setVr(vrpoints.get(i));
-                        miiFriendsFound.add(m);
+                        resultList.add(m);
                     }
                 }
             }

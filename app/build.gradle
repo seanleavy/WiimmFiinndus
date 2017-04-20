@@ -43,7 +43,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.google.guava:guava:20.0'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'org.jsoup:jsoup:1.10.1'
+    compile 'org.jsoup:jsoup:1.10.2'
     compile 'com.rohit.recycleritemclicksupport:recycleritemclicksupport:1.0.1'
     compile 'com.snappydb:snappydb-lib:0.4.0'
     compile 'com.esotericsoftware.kryo:kryo:2.24.0'

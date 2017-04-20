@@ -2,42 +2,65 @@ package com.wii.sean.wiimmfiitus.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.wii.sean.wiimmfiitus.R;
+import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
+import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
+import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
+import com.wii.sean.wiimmfiitus.model.RoomModel;
+
+import java.util.ArrayList;
 
 public class LobbyActivity extends AppCompatActivity implements AsyncTaskCompleteListener {
+
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
+    private ArrayList<MiiCharacter> miiList;
+    private CustomWiiCyclerViewAdapter customWiiCyclerViewAdapter;
+    private NintendoTextview title;
+    private NintendoTextview regionTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
         Bundle bundle = this.getIntent().getExtras();
-        MiiCharacter mii = (MiiCharacter) bundle.getSerializable("mii");
-        // modify search to group all miis in room to a list
-        // create a room model maybe or expand Miicharacter or use Builder pattern?
-        // search for mii
-        // where does room title and race type come from? Put it in every mii object or put a list of builder miicharacters in a race model object and return it as a result?
-        // connection fail threshold above 3 change card background to red
-
-        //Race model:
-        // new Race(String region, String roomLabel, String numberRaces, String lastStart, List<MiiCharacter> list)
-        //
-
-        // create initial adapter with all miis in group
-        // search every 15 seconds in this activities lifetime. add option to change refresh time. Maybe use a spinner to limit server abuse. Save it in sharedpreferneces
-        // if list changes notifydatasetchanged in ontaskcomplete which should redraw recyclerview
-        // set recyclerview as a compact layout. Single column?
-        // enable swipe add favourites
-        // Layout
-        // Lobby Name on top underneath lobby title
-        // could be issue with animations due to constant updating. Maybe add a flag to vieewholder animate to disable
+        final MiiCharacter mii = (MiiCharacter) bundle.getSerializable("mii");
+        recyclerView = (RecyclerView) findViewById(R.id.lobby_recyclerview);
+//        recyclerViewLayoutManager = new LinearLayoutManager(this);
+        recyclerViewLayoutManager = new GridLayoutManager(this, 1);
+        miiList = new ArrayList<>();
+        customWiiCyclerViewAdapter = new CustomWiiCyclerViewAdapter(miiList);
+        recyclerView.setLayoutManager(recyclerViewLayoutManager);
+        recyclerView.setAdapter(customWiiCyclerViewAdapter);
+        title = (NintendoTextview) findViewById(R.id.nintendoToolbarTextview);
+        regionTitle = (NintendoTextview) findViewById(R.id.nintendoSecondaryToolbarTextview);
+        Button button = (Button) findViewById(R.id.load_lobby);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(LobbyActivity.this, LobbyActivity.this);
+                searchAsyncHelper.execute(mii.getFriendCode(), MkFriendSearch.ROOMENABLED);
+                Toast.makeText(LobbyActivity.this, "pressed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onTaskComplete(Object result) {
-
+        RoomModel roomModel = (RoomModel)((ArrayList)result).get(0);
+        miiList.addAll(roomModel.getMiiList());
+        title.setText(roomModel.getRoomName());
+        regionTitle.setText(roomModel.getRegionName());
+        customWiiCyclerViewAdapter.notifyDataSetChanged();
     }
 }
