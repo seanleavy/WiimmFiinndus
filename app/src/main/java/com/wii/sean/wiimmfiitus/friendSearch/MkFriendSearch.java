@@ -22,8 +22,7 @@ import java.util.List;
 
 public class MkFriendSearch {
 
-    public static boolean ROOMENABLED = true;
-    private static boolean SEARCHROOM = false;
+    public static final boolean ROOMENABLED = true;
 
     private ArrayList<String> miis;
     private ArrayList<String> friendCodes;
@@ -33,7 +32,7 @@ public class MkFriendSearch {
     public MkFriendSearch() {
     }
 
-    public List searchFriendList(Object... searchTokenParam) {
+    public Collection searchFriendList(Object... searchTokenParam) {
         Object searchToken = searchTokenParam[0];
         try {
             String userAgent = RandomUserAgent.getRandomUserAgent();
@@ -41,8 +40,9 @@ public class MkFriendSearch {
                     .userAgent(userAgent)
                     .get();
 
+            boolean SEARCHROOM = false;
             if(searchTokenParam.length > 1)
-            SEARCHROOM =  (Boolean) searchTokenParam[1];
+                SEARCHROOM =  (Boolean) searchTokenParam[1];
             if(!SEARCHROOM) {
                 Element table = mkDocument.select("table").get(0);
                 Elements tr = table.select("tr[class^=tr0],tr[class^=tr1]");
@@ -64,7 +64,7 @@ public class MkFriendSearch {
             }
             if(SEARCHROOM) {
                 Elements elements = mkDocument.getAllElements();
-                if(elements.select("tr.tr0:contains(" + searchToken + "),tr.tr1:contains("+searchToken+")").size() == 0) {
+                if(elements.select("tr.tr0:contains("+searchToken+"),tr.tr1:contains("+searchToken+")").size() == 0) {
                     return null;
                 }
                 Element uppBound = elements.select("tr.tr0:contains(" + searchToken + ")" +
@@ -77,9 +77,10 @@ public class MkFriendSearch {
                         .first();
 
                 String fCode = "";
+                //todo: role
                 String Role = "";
                 String Region = "";
-                String connFail = "";
+                String connFail = "--";
                 String VRpoints = "";
                 String mii = "";
 
@@ -98,7 +99,8 @@ public class MkFriendSearch {
                 String locale = roomTitle.substring(0, roomTitle.lastIndexOf(room)).trim();
                 String connfails = roomTitle.substring(roomTitle.lastIndexOf(")") + 1, roomTitle.lastIndexOf(" ")).trim();
                 String races = roomTitle.substring(roomTitle.lastIndexOf(",") + 1, roomTitle.lastIndexOf("(")).trim();
-                RoomModel roomModel = new RoomModel(room, locale, connfails, races, miiList);
+                String raceTimes = roomTitle.substring(roomTitle.indexOf("(") + 1, roomTitle.indexOf(")"));
+                RoomModel roomModel = new RoomModel(room, locale, connfails, races, raceTimes, miiList);
                 return new ArrayList(Arrays.asList(roomModel));
             }
         } catch (IOException e) {

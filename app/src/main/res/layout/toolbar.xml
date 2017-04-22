@@ -29,4 +29,14 @@
         android:id="@+id/nintendoSecondaryToolbarTextview"
         />
 
+    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:textSize="8dp"
+        android:textColor="@color/nintendo_grey_light"
+        android:id="@+id/lobby_player_count"
+        />
+
 </android.support.v7.widget.Toolbar>

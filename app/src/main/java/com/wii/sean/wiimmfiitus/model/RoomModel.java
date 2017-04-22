@@ -9,13 +9,15 @@ public class RoomModel {
     private String regionName = "";
     private String connectionRating = "";
     private String timesRaced = "";
+    private String lobbyCreatedTime = "";
     private List<MiiCharacter> miiList = new ArrayList<>();
 
-    public RoomModel(String roomName, String regionName, String connectionRating, String timesRaced, List<MiiCharacter> list) {
+    public RoomModel(String roomName, String regionName, String connectionRating, String timesRaced, String lobbyCreatedTime, List<MiiCharacter> list) {
         this.roomName = roomName;
         this.regionName = regionName;
         this.connectionRating = connectionRating;
         this.timesRaced = timesRaced;
+        this.lobbyCreatedTime = lobbyCreatedTime;
         this.miiList = list;
     }
 
@@ -58,5 +60,13 @@ public class RoomModel {
 
     public void setTimesRaced(String timesRaced) {
         this.timesRaced = timesRaced;
+    }
+
+    public String getLobbyCreatedTime() {
+        return lobbyCreatedTime;
+    }
+
+    public void setLobbyCreatedTime(String lobbyCreatedTime) {
+        this.lobbyCreatedTime = lobbyCreatedTime;
     }
 }

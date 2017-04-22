@@ -8,8 +8,11 @@ import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,11 +62,19 @@ public class PreferencesManager {
     }
 
     public void addToPreference(String preferenceKey, Object valueToAdd) {
-        List preferenceList;
-        if(getPreferencesFor(preferenceKey) != null)
-            preferenceList = new ArrayList(Arrays.asList(getPreferencesFor(preferenceKey)));
-        else
-            preferenceList = new ArrayList();
+        Collection preferenceList;
+        switch(preferenceKey) {
+            case "searchesMade" : {
+                preferenceList = new CircularFifoQueue(6);
+                preferenceList.addAll(getPreferencesAsList(preferenceKey));
+                break;
+            }
+            default: {
+                preferenceList = new ArrayList();
+                preferenceList.addAll(getPreferencesAsList(preferenceKey));
+                break;
+            }
+        }
         if(!preferenceList.contains(valueToAdd)) {
             try {
                 preferenceList.add(valueToAdd);
@@ -73,10 +84,6 @@ public class PreferencesManager {
                 Log.e(LogHelper.getTag(getClass()), e.getMessage());
             }
         }
-    }
-
-    public static void main(String[] args) {
-
     }
 
     public boolean removeFromPreference(String preferenceKey, Object toRemove) {

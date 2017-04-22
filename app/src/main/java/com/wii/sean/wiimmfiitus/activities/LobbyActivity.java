@@ -3,11 +3,7 @@ package com.wii.sean.wiimmfiitus.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
@@ -28,6 +24,11 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     private CustomWiiCyclerViewAdapter customWiiCyclerViewAdapter;
     private NintendoTextview title;
     private NintendoTextview regionTitle;
+    private NintendoTextview connectionLabel;
+    private NintendoTextview connectionDrops;
+    private NintendoTextview raceCount;
+    private NintendoTextview lobbyCreatedTime;
+    private NintendoTextview lobbyCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,23 +45,31 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         recyclerView.setAdapter(customWiiCyclerViewAdapter);
         title = (NintendoTextview) findViewById(R.id.nintendoToolbarTextview);
         regionTitle = (NintendoTextview) findViewById(R.id.nintendoSecondaryToolbarTextview);
-        Button button = (Button) findViewById(R.id.load_lobby);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(LobbyActivity.this, LobbyActivity.this);
-                searchAsyncHelper.execute(mii.getFriendCode(), MkFriendSearch.ROOMENABLED);
-                Toast.makeText(LobbyActivity.this, "pressed", Toast.LENGTH_SHORT).show();
-            }
-        });
+        connectionLabel = (NintendoTextview) findViewById(R.id.connection_drops_label);
+        connectionDrops = (NintendoTextview) findViewById(R.id.connection_drops_value);
+        raceCount = (NintendoTextview) findViewById(R.id.race_count);
+        lobbyCreatedTime = (NintendoTextview) findViewById(R.id.lobby_created_time);
+        lobbyCount = (NintendoTextview) findViewById(R.id.lobby_player_count);
+        SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(LobbyActivity.this, LobbyActivity.this);
+        searchAsyncHelper.execute(mii.getFriendCode(), MkFriendSearch.ROOMENABLED);
     }
 
     @Override
     public void onTaskComplete(Object result) {
-        RoomModel roomModel = (RoomModel)((ArrayList)result).get(0);
-        miiList.addAll(roomModel.getMiiList());
-        title.setText(roomModel.getRoomName());
-        regionTitle.setText(roomModel.getRegionName());
-        customWiiCyclerViewAdapter.notifyDataSetChanged();
+        if(result != null) {
+            RoomModel roomModel = (RoomModel) ((ArrayList) result).get(0);
+            miiList.addAll(roomModel.getMiiList());
+            title.setText(roomModel.getRoomName());
+            regionTitle.setText(roomModel.getRegionName());
+            connectionLabel.setText(getString(R.string.connection_drops_label));
+            String connRating = roomModel.getConnectionRating();
+            if(connRating.equals(""))
+                connRating = "none";
+            connectionDrops.setText(connRating);
+            raceCount.setText(roomModel.getTimesRaced());
+            lobbyCount.setText("Players " + Integer.toString(miiList.size()));
+            lobbyCreatedTime.setText(roomModel.getLobbyCreatedTime());
+            customWiiCyclerViewAdapter.notifyDataSetChanged();
+        }
     }
 }

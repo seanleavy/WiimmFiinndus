@@ -26,6 +26,7 @@
     <string name="group_search">" online"</string>
     <string name="searching">Searching</string>
     <string name="lobby">lobby...</string>
+    <string name="connection_drops_label">"connection drops: "</string>
 
     <string name="dialog_cancel">cancel</string>
     <string name="dialog_search">search</string>

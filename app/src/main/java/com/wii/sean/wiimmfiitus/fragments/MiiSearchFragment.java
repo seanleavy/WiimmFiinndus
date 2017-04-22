@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.collect.Lists;
 import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
 import com.wii.sean.wiimmfiitus.Constants.UrlConstants;
 import com.wii.sean.wiimmfiitus.R;
@@ -216,28 +217,28 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
 
     //TODO use spinner instead. this is a mess.
     private void showSearchHistoryDialog() {
-        View searchHistoryDialogView = getLayoutInflater(null).inflate(R.layout.search_history_dialog, null);
+        LayoutInflater layoutInflater = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE));
+        View searchHistoryDialogView = layoutInflater.inflate(R.layout.search_history_dialog, null);
         final TextView clearHistory = (TextView) searchHistoryDialogView.findViewById(R.id.clear_history_preferences);
         clearHistory.setVisibility(View.INVISIBLE);
-        // todo why is this a miicharacter and not a string
-        List<MiiCharacter> searchHistoryResultSet = searchPreferncesManager.getPreferencesAsList(PreferencesManager.HISTORYPREFERENCES);
         final ArrayAdapter<String> searchResultsAdapter = new ArrayAdapter<>(searchHistoryDialogView.getContext(),
-                R.layout.search_history_row,
-                searchHistoryResultSet.toArray(new String[searchHistoryResultSet.size()]));
-
+                R.layout.search_history_row, Lists.reverse(searchPreferncesManager.getPreferencesAsList(PreferencesManager.HISTORYPREFERENCES)));
         AlertDialog.Builder searchDialogBuilder = new AlertDialog.Builder(searchHistoryDialogView.getContext());
+
         searchDialogBuilder.setSingleChoiceItems(searchResultsAdapter, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                submitSearch(searchResultsAdapter.getItem(which));
                 dialog.dismiss();
             }
         });
+
         searchDialogBuilder.setView(searchHistoryDialogView);
         final AlertDialog searchHistoryDialog = searchDialogBuilder.create();
-
         if(searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES) != null)
             if(searchPreferncesManager.getPreferencesFor(PreferencesManager.HISTORYPREFERENCES).length > 0)
                 clearHistory.setVisibility(View.VISIBLE);
+
         clearHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
