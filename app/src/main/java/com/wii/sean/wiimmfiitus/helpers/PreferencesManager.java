@@ -7,6 +7,7 @@ import android.util.Log;
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
+import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
@@ -18,9 +19,10 @@ import java.util.List;
 
 public class PreferencesManager {
 
-    public static String HISTORYPREFERENCES = "searchesMade";
-    public static String FAVOURITESPREFERENCES = "favourites";
-    public static String DEFAULTPREFERENCES = "default";
+    public static final String HISTORYPREFERENCES = "searchesMade";
+    public static final String FAVOURITESPREFERENCES = "favourites";
+    public static final String DEFAULTPREFERENCES = "default";
+    public static final String DIALOGSEARCHPREFERENCE = "searchToggle";
 
     private DB snappy;
     private String firstRun;
@@ -86,7 +88,7 @@ public class PreferencesManager {
         }
     }
 
-    public boolean removeFromPreference(String preferenceKey, Object toRemove) {
+    public void removeFromPreference(String preferenceKey, Object toRemove) {
         List values = new ArrayList(Arrays.asList(getPreferencesFor(preferenceKey)));
         if(values.contains(toRemove)) {
             values.remove(toRemove);
@@ -98,7 +100,6 @@ public class PreferencesManager {
                 Log.e(LogHelper.getTag(getClass()), e.getMessage());
             }
         }
-        return false;
     }
 
     public boolean clearPrefencefromDB(String preferenceKey) {

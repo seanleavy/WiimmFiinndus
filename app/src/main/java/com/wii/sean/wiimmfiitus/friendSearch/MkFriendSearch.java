@@ -32,7 +32,7 @@ public class MkFriendSearch {
     public MkFriendSearch() {
     }
 
-    public Collection searchFriendList(Object... searchTokenParam) {
+    public List searchFriendList(Object... searchTokenParam) {
         Object searchToken = searchTokenParam[0];
         try {
             String userAgent = RandomUserAgent.getRandomUserAgent();
@@ -78,18 +78,31 @@ public class MkFriendSearch {
 
                 String fCode = "";
                 //todo: role
-                String Role = "";
-                String Region = "";
+                String role = "";
+                String region = "";
                 String connFail = "--";
                 String VRpoints = "";
                 String mii = "";
+                String match = "";
 
                 Element e = uppBound;
                 List<MiiCharacter> miiList = new ArrayList<>();
                 while(e.nextElementSibling() != lowerBound) {
                     e = uppBound.nextElementSibling();
                     //todo MiiCharacter as builder
-                    miiList.add(new MiiCharacter(e.children().get(0).text(), e.children().get(8).text(), e.children().get(6).text()));
+                    fCode = e.children().get(0).text();
+                    mii = e.children().get(8).text();
+                    if(mii.contains("1.") && mii.contains("2.")) {
+                        mii = mii.substring(2, mii.indexOf("2"));
+                    }
+                    VRpoints = e.children().get(6).text();
+                    role = e.children().get(1).text();
+                    region = e.children().get(2).text();
+                    connFail = e.children().get(5).text();
+                    match = e.children().get(3).text();
+                    miiList.add(new MiiCharacter(fCode, mii, VRpoints,
+                            MiiCharacter.MIIONLINE, MiiCharacter.COMPACT_VIEW_DETAILED, role,
+                            region, match, connFail));
                     uppBound = e;
                 }
 

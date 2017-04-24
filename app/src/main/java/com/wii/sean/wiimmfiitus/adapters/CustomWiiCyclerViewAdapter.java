@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.activities.LobbyActivity;
+import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
@@ -26,9 +27,17 @@ import java.util.List;
 public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCyclerViewAdapter.ViewHolder> implements AsyncTaskCompleteListener {
 
     public List<MiiCharacter> wiiList = new ArrayList<>();
-    public static final int SEARCHED_STATE = 1;
-    public static final int DEFAULT_STATE = 0;
-    public FriendViewHolder friendCardViewHolder;
+    public TextView friendCode;
+    public TextView miiName;
+    public TextView vrPoints;
+    public CardView licenseCard;
+    public static final int DEFAULT_VIEW = 0;
+    public static final int COMPACT_VIEW = 1;
+    public static final int DEFAULT_VIEW_DETAILED = 2;
+    public static final int COMPACT_VIEW_DETAILED = 3;
+    private int mViewType = 0;
+
+    public ViewHolder friendCardViewHolder;
     private int lastPosition = -1;
     private Context context;
 
@@ -38,39 +47,57 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         }
     }
 
-    public class FriendViewHolder extends ViewHolder {
+    public class DefaultFriendViewHolder extends ViewHolder {
 
-        public TextView friendCode;
-        public TextView miiName;
-        public TextView vrPoints;
-        public CardView licenseCard;
         public ImageView icon;
         public ImageView onlineIcon;
         public LinearLayout lobbyButtonGroup;
 
-        public FriendViewHolder(View v) {
+        public DefaultFriendViewHolder(View v, int type) {
             super(v);
             context = v.getContext();
-            this.licenseCard = (CardView) v.findViewById(R.id.mii_license_card);
-            this.friendCode = (TextView)v.findViewById(R.id.friend_code_textview);
-            this.miiName = (TextView)v.findViewById(R.id.mii_name_textview);
-            this.vrPoints = (TextView)v.findViewById(R.id.vr_textview);
+            licenseCard = (CardView) v.findViewById(R.id.mii_license_card);
+            friendCode = (TextView)v.findViewById(R.id.friend_code_textview);
+            miiName = (TextView)v.findViewById(R.id.mii_name_textview);
+            vrPoints = (TextView)v.findViewById(R.id.vr_textview);
             this.icon = (ImageView)v.findViewById(R.id.mii_icon);
             this.onlineIcon = (ImageView) v.findViewById(R.id.online_offline_image);
             this.lobbyButtonGroup = (LinearLayout) v.findViewById(R.id.lobby_button_group);
         }
     }
 
+    public class CompactFriendHolder extends ViewHolder {
+
+        private NintendoTextview connectionFails;
+        private NintendoTextview role;
+        private NintendoTextview match;
+        private NintendoTextview region;
+
+        public CompactFriendHolder(View v, int type) {
+            super(v);
+            context = v.getContext();
+            licenseCard = (CardView) v.findViewById(R.id.mii_license_card);
+            friendCode = (TextView)v.findViewById(R.id.friend_code_textview);
+            miiName = (TextView)v.findViewById(R.id.mii_name_textview);
+            vrPoints = (TextView)v.findViewById(R.id.vr_textview);
+            connectionFails = (NintendoTextview) v.findViewById(R.id.connfails);
+            role = (NintendoTextview) v.findViewById(R.id.role);
+            match = (NintendoTextview) v.findViewById(R.id.match);
+            region = (NintendoTextview) v.findViewById(R.id.region);
+        }
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
-        FriendViewHolder fvh = null;
-        if(viewType == SEARCHED_STATE) {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mii_license_card_view, parent, false);
-            fvh = new FriendViewHolder(v);
-        } else if (viewType == DEFAULT_STATE) {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.first_card, parent, false);
-            fvh = new FriendViewHolder(v);
+        ViewHolder fvh = null;
+        if(viewType == DEFAULT_VIEW) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mii_license_card_default, parent, false);
+            fvh = new DefaultFriendViewHolder(v, viewType);
+        }
+        if (viewType == COMPACT_VIEW_DETAILED) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mii_license_card_compact_detailed, parent, false);
+            fvh = new CompactFriendHolder(v, viewType);
         }
         return fvh;
     }
@@ -80,49 +107,52 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        friendCardViewHolder = (FriendViewHolder) holder;
-        friendCardViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.icon.getContext(), R.drawable.mii_default));
-        for(MiiCharacter m : wiiList) {
-            if(wiiList.get(position).getMii().equals(FriendCodes.PONCHO.getMii())) {
-                friendCardViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.icon.getContext(), R.drawable.mii_poncho));
-            }
-            if(wiiList.get(position).getMii().equals(FriendCodes.FARTFACE.getMii())) {
-                friendCardViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.icon.getContext(), R.drawable.mii_fart));
-            }
-            if(wiiList.get(position).getMii().equals(FriendCodes.DIKROT.getMii())) {
-                friendCardViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.icon.getContext(), R.drawable.mii_dikrot));
-            }
-        }
-        friendCardViewHolder.friendCode.setText(wiiList.get(position).getFriendCode());
-        friendCardViewHolder.vrPoints.setText(String.valueOf(wiiList.get(position).getVr()));
-        friendCardViewHolder.miiName.setText(wiiList.get(position).getMii());
-        friendCardViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(friendCardViewHolder.onlineIcon.getContext(),
-                wiiList.get(position).isOnline() == true ? R.drawable.online : R.drawable.offline));
-
-        // Show the Lobby button and add a listener that sends a serialised Miicharacter to the Lobby Activity
-        if(wiiList.get(position).isOnline()) {
-            friendCardViewHolder.lobbyButtonGroup.setVisibility(View.VISIBLE);
-            friendCardViewHolder.lobbyButtonGroup.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    context.startActivity(new Intent(context, LobbyActivity.class).putExtra("mii",
-                            new MiiCharacter(friendCardViewHolder.friendCode.getText().toString(),
-                                    friendCardViewHolder.miiName.getText().toString(),
-                                    friendCardViewHolder.vrPoints.getText().toString())
-                    ));
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if(getItemViewType(position) == DEFAULT_VIEW || getItemViewType(position) == DEFAULT_VIEW_DETAILED) {
+            if(((DefaultFriendViewHolder)holder).icon != null)
+                ((DefaultFriendViewHolder)holder).icon.setImageDrawable(ContextCompat.getDrawable(((DefaultFriendViewHolder)holder).icon.getContext(), R.drawable.mii_default));
+            for (MiiCharacter m : wiiList) {
+                if (wiiList.get(position).getMii().equals(FriendCodes.PONCHO.getMii())) {
+                    ((DefaultFriendViewHolder)holder).icon.setImageDrawable(ContextCompat.getDrawable(((DefaultFriendViewHolder)holder).icon.getContext(), R.drawable.mii_poncho));
                 }
-            });
+                if (wiiList.get(position).getMii().equals(FriendCodes.FARTFACE.getMii())) {
+                    ((DefaultFriendViewHolder)holder).icon.setImageDrawable(ContextCompat.getDrawable(((DefaultFriendViewHolder)holder).icon.getContext(), R.drawable.mii_fart));
+                }
+                if (wiiList.get(position).getMii().equals(FriendCodes.DIKROT.getMii())) {
+                    ((DefaultFriendViewHolder)holder).icon.setImageDrawable(ContextCompat.getDrawable(((DefaultFriendViewHolder)holder).icon.getContext(), R.drawable.mii_dikrot));
+                }
+            }
+            // add lobby listener
+            if(((DefaultFriendViewHolder)holder).onlineIcon != null) {
+                ((DefaultFriendViewHolder)holder).onlineIcon.setImageDrawable(ContextCompat.getDrawable(((DefaultFriendViewHolder)holder).onlineIcon.getContext(),
+                        wiiList.get(position).isOnline() == true ? R.drawable.online : R.drawable.offline));
+                if(wiiList.get(position).isOnline()) {
+                    ((DefaultFriendViewHolder)holder).lobbyButtonGroup.setVisibility(View.VISIBLE);
+                    ((DefaultFriendViewHolder)holder).lobbyButtonGroup.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            context.startActivity(new Intent(context, LobbyActivity.class).putExtra("mii",
+                                    new MiiCharacter(friendCode.getText().toString(), miiName.getText().toString(), vrPoints.getText().toString()))
+                            );
+                        }
+                    });
+                }
+            }
+
+            // Show the Lobby button and add a listener that sends a serialised Miicharacter to the Lobby Activity
+            else
+                ((DefaultFriendViewHolder)holder).lobbyButtonGroup.setVisibility(View.INVISIBLE);
         }
-        else
-            friendCardViewHolder.lobbyButtonGroup.setVisibility(View.INVISIBLE);
-        setAnimation(((FriendViewHolder) holder).itemView, position);
-//        friendCardViewHolder.licenseCard.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                clicklistener.recyclerViewItemClicked(v, holder.getAdapterPosition());
-//            }
-//        });
+        if(getItemViewType(position) == COMPACT_VIEW_DETAILED) {
+            ((CompactFriendHolder)holder).region.setText(wiiList.get(position).getRegion());
+            ((CompactFriendHolder)holder).connectionFails.setText(context.getResources().getString(R.string.connection_drops_label) + wiiList.get(position).getConnectionFails());
+            ((CompactFriendHolder)holder).match.setText(wiiList.get(position).getMatch());
+            ((CompactFriendHolder)holder).role.setText(wiiList.get(position).getRole());
+        }
+        this.friendCode.setText(wiiList.get(position).getFriendCode());
+        this.vrPoints.setText(String.valueOf(wiiList.get(position).getVr()));
+        this.miiName.setText(wiiList.get(position).getMii());
+        setAnimation(((ViewHolder) holder).itemView, position);
     }
 
     @Override
@@ -132,11 +162,13 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
 
     @Override
     public int getItemViewType(int position) {
-        if(wiiList.isEmpty()) {
-            return DEFAULT_STATE;
-        } else {
-            return SEARCHED_STATE;
+        if(wiiList.get(0).getType() == MiiCharacter.DEFAULT_VIEW) {
+            return DEFAULT_VIEW;
         }
+        if(wiiList.get(0).getType() == MiiCharacter.COMPACT_VIEW_DETAILED) {
+            return COMPACT_VIEW_DETAILED;
+        }
+        return 0;
     }
 
     private void setAnimation(View viewToAnimate, int pos) {

@@ -270,7 +270,7 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
                     Log.d("TESR", "TESTTTTTTTT");
                     Toast.makeText(getContext(),
                             "HELLO it's a me, " +
-                                    ((CustomWiiCyclerViewAdapter.FriendViewHolder) recyclerView.getChildViewHolder(v)).miiName.getText(),
+                                    wiiList.get(position).getMii(),
                             Toast.LENGTH_LONG).show();
                 }
             });

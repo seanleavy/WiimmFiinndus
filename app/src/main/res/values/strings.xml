@@ -6,8 +6,10 @@
     <string name="miis_found_text">"found  !!"</string>
     <string name="miis_not_found_text">"Friend  Offline"</string>
     <string name="pressed_wiimfii">loading wiimmfi.de/mkw</string>
-    <string name="dialog_body_fcode">Enter Friend Code</string>
-    <string name="dialog_body_mii">Enter Mii Name</string>
+    <string-array name="dialog_search_type_label">
+        <item>Enter Friend Code</item>
+        <item>Enter Mii Name</item>
+    </string-array>
     <string name="fcode">FriendCode</string>
     <string name="clear_history">"clear history"</string>
     <string name="history_cleard_toast">history cleared</string>
@@ -26,13 +28,15 @@
     <string name="group_search">" online"</string>
     <string name="searching">Searching</string>
     <string name="lobby">lobby...</string>
-    <string name="connection_drops_label">"connection drops: "</string>
+    <string name="connection_drops_label">"conn drops: "</string>
+    <string name="toolbar_count_playing">"  playing"</string>
 
     <string name="dialog_cancel">cancel</string>
     <string name="dialog_search">search</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+    <string name="load_wiimffii">Load wiimmfi.de/mkw</string>
     <string name="action_loaddefaults">"great bunch of lads"</string>
 
     <!-- TODO: Remove or change this placeholder text -->

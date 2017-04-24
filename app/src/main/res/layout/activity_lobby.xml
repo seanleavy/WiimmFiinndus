@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.wii.sean.wiimmfiitus.activities.LobbyActivity"
     >
 
@@ -13,74 +14,83 @@
 
         <include
             android:id="@+id/wiimmfii_toolbar"
-            layout="@layout/toolbar" />
+            layout="@layout/toolbar"
+            />
 
         <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_below="@id/wiimmfii_toolbar"
             android:id="@+id/lobby_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/padding_margin_10dp"
             android:paddingRight="@dimen/padding_margin_10dp"
-            android:paddingTop="@dimen/padding_margin_2dp"
             />
 
     </RelativeLayout>
 
-    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-        android:id="@+id/race_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/padding_margin_2dp"
-        android:layout_marginTop="@dimen/toolbar_height"
-        android:layout_gravity="center_horizontal"
-        android:paddingLeft="@dimen/activity_vertical_margin_large"
-        android:paddingRight="@dimen/activity_vertical_margin_large"
-        android:textSize="10dp"
-        android:background="@color/nintendo_red_dark"
-        android:textColor="@color/white"
-        />
-
-    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-        android:layout_marginTop="@dimen/toolbar_height"
-        android:paddingLeft="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_vertical_margin_large"
-        android:paddingBottom="@dimen/padding_margin_2dp"
-        android:gravity="start"
-        android:textSize="10dp"
-        android:textColor="@color/white"
-        android:background="@color/nintendo_red_dark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lobby_created_time"
-        />
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/nintendo_red_dark"
-        android:layout_gravity="end"
-        android:paddingBottom="@dimen/padding_margin_2dp"
         android:layout_marginTop="@dimen/toolbar_height"
-        android:orientation="horizontal">
+        android:paddingLeft="@dimen/activity_vertical_margin_large"
+        android:paddingBottom="@dimen/padding_margin_2dp"
+        >
 
         <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-            android:id="@+id/connection_drops_label"
+            android:id="@+id/race_count"
             android:layout_width="wrap_content"
-            android:background="@color/nintendo_red_dark"
             android:layout_height="wrap_content"
             android:textSize="10dp"
-            android:textColor="@color/nintendo_grey_light"
-            android:text=""/>
+            android:textColor="@color/white"
+            android:layout_weight=".3"
+            />
 
         <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-            android:id="@+id/connection_drops_value"
-            android:background="@color/nintendo_red_dark"
-            android:layout_width="wrap_content"
-            android:paddingRight="@dimen/activity_vertical_margin"
             android:textSize="10dp"
             android:textColor="@color/white"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lobby_created_time"
+            android:layout_weight=".3"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight=".3"
+            >
+
+            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+                android:id="@+id/connection_drops_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:textColor="@color/nintendo_grey_light"
+                android:text=""/>
+
+            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+                android:id="@+id/connection_drops_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:textSize="10dp"
+                android:textColor="@color/white"
+                />
+
+        </LinearLayout>
+
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin_large"
+        android:layout_gravity="center|bottom"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:visibility="gone" />
 
 </FrameLayout>

@@ -1,9 +1,10 @@
 package com.wii.sean.wiimmfiitus.dialogs;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.InputType;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
+import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 
 public class SearchDialog extends DialogFragment {
 
@@ -29,6 +31,7 @@ public class SearchDialog extends DialogFragment {
     private NintendoTextview searchTypeTextView;
     private EditText friendCodeEditText;
     private SwitchCompat toggleSwitch;
+    private String[] searchTypeArray;
 
     // Dialog callback interface
     public interface DialogListener {
@@ -50,12 +53,16 @@ public class SearchDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.friend_code_dialog, container);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getContext().getPackageName(), Context.MODE_PRIVATE);
         super.onCreateView(inflater, container, savedInstanceState);
         cancel = (Button) view.findViewById(R.id.button_cancel);
         search = (Button) view.findViewById(R.id.button_search);
+        searchTypeArray = getResources().getStringArray(R.array.dialog_search_type_label);
         searchTypeTextView = (NintendoTextview) view.findViewById(R.id.dialog_search_title);
+        searchTypeTextView.setText(sharedPreferences.getBoolean(PreferencesManager.DIALOGSEARCHPREFERENCE, false) ? searchTypeArray[1] :  searchTypeArray[0]);
         friendCodeEditText = (EditText) view.findViewById(R.id.friend_code_edittext);
         toggleSwitch = (SwitchCompat) view.findViewById(R.id.alertdialog_toggle_switch);
+        toggleSwitch.setChecked(sharedPreferences.getBoolean(PreferencesManager.DIALOGSEARCHPREFERENCE, false));
         delete = (Button) view.findViewById(R.id.delete_friend_code);
         delete.setVisibility(View.INVISIBLE);
         addEditTextListener();
@@ -112,20 +119,33 @@ public class SearchDialog extends DialogFragment {
     }
 
     private void addEditTextListener() {
+        boolean searchType = getContext().getSharedPreferences(getContext().getPackageName(), Context.MODE_PRIVATE).getBoolean(PreferencesManager.DIALOGSEARCHPREFERENCE, false);
+        if(searchType == false)
+            friendCodeEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_TEXT);
+        else
+            friendCodeEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         friendCodeEditText.addTextChangedListener(getTextWatcher());
         toggleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 if(isChecked) {
                     //change search title and keyboard type
-                    searchTypeTextView.setText(R.string.dialog_body_mii);
+                    searchTypeTextView.setText(searchTypeArray[1]);
                     friendCodeEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                     friendCodeEditText.getText().clear();
+                    getContext().getSharedPreferences(getContext().getPackageName(), Context.MODE_PRIVATE)
+                            .edit()
+                            .putBoolean(PreferencesManager.DIALOGSEARCHPREFERENCE, true)
+                            .apply();
                 }
                 else {
-                    searchTypeTextView.setText(R.string.dialog_body_fcode);
+                    searchTypeTextView.setText(searchTypeArray[0]);
                     friendCodeEditText.getText().clear();
                     friendCodeEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_TEXT);
+                    getContext().getSharedPreferences(getContext().getPackageName(), Context.MODE_PRIVATE)
+                            .edit()
+                            .putBoolean(PreferencesManager.DIALOGSEARCHPREFERENCE, false)
+                            .apply();
                 }
             }
         });
@@ -136,7 +156,7 @@ public class SearchDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String value = friendCodeEditText.getText().toString();
-                String searchType = toggleSwitch.isChecked() == true ? MIISEARCH : FRIENDCODESEARCH;
+                String searchType = toggleSwitch.isChecked() ? MIISEARCH : FRIENDCODESEARCH;
                 //todo hacky need to not do this. Fuckups will be had
                 DialogListener myListener = (DialogListener) getFragmentManager().getFragments().get(0);
                 myListener.valuesReturned(value, searchType);

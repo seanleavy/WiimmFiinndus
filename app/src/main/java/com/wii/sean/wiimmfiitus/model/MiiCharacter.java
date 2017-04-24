@@ -11,10 +11,20 @@ public class MiiCharacter implements Serializable {
     public static boolean MIIOFFLINE = false;
     public static boolean MIIONLINE = true;
 
-    private String friendCode;
-    private String mii;
-    private String vr;
-    private boolean isOnline = false;
+    public static final int DEFAULT_VIEW = 0;
+    public static final int COMPACT_VIEW = 1;
+    public static final int DEFAULT_VIEW_DETAILED = 2;
+    public static final int COMPACT_VIEW_DETAILED = 3;
+
+    private String friendCode = "";
+    private String mii = "";
+    private String vr = "";
+    private Integer type = MiiCharacter.DEFAULT_VIEW;
+    private Boolean isOnline = false;
+    private String role = "";
+    private String region = "";
+    private String match = "";
+    private String connectionFails = "";
 
     public MiiCharacter() {
 
@@ -31,6 +41,19 @@ public class MiiCharacter implements Serializable {
         this.mii = miiName;
         this.vr = vrPoints;
         this.isOnline = online;
+    }
+
+    //todo: issue with snappy db preventing a builder class
+    public MiiCharacter(String fCode, String miiName, String vrPoints, boolean online, int type, String role, String region, String match, String connectionFails) {
+        this.friendCode = fCode;
+        this.mii = miiName;
+        this.vr = vrPoints;
+        this.type = type;
+        this.isOnline = online;
+        this.role = role;
+        this.region = region;
+        this.match = match;
+        this.connectionFails = connectionFails;
     }
 
     public String getFriendCode() {
@@ -91,5 +114,25 @@ public class MiiCharacter implements Serializable {
     @Override
     public int hashCode() {
         return 0;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public String getMatch() {
+        return match;
+    }
+
+    public String getConnectionFails() {
+        return connectionFails;
     }
 }

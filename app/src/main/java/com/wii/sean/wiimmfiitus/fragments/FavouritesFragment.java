@@ -48,8 +48,9 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private List<MiiCharacter> miiList;
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CustomWiiCyclerViewAdapter.FriendViewHolder friendViewHolder;
+    private CustomWiiCyclerViewAdapter.DefaultFriendViewHolder friendViewHolder;
     private boolean isGroupSearch = false;
+    private int pos = 0;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -214,8 +215,8 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 Log.e("TAAAAAAG", "YAAAAAAAAAAY");
-                friendViewHolder = (CustomWiiCyclerViewAdapter.FriendViewHolder) recyclerView.getChildViewHolder(v);
-                searchTask(((CustomWiiCyclerViewAdapter.FriendViewHolder)recyclerView.getChildViewHolder(v)).friendCode.getText().toString());
+                searchTask(miiList.get(position).getFriendCode());
+                pos = position;
             }
         });
         wiiCyclerView.setLayoutManager(layoutManager);
@@ -283,7 +284,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         }
         else
             Toast.makeText(favouritesView.getContext(),
-                    friendViewHolder.miiName.getText() +
+                    miiList.get(pos).getMii() +
                             ( ((List<MiiCharacter>)result).size() > 0 ? getResources().getString(R.string.online) : getResources().getString(R.string.offline)),
                     Toast.LENGTH_SHORT).show();
         wiiCyclerViewAdapter.notifyDataSetChanged();
