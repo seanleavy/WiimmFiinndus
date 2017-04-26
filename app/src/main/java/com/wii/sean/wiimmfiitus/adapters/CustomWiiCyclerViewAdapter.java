@@ -157,7 +157,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
                 compactFriendHolder.vrPoints.setText(wiiList.get(position).getVr());
                 compactFriendHolder.miiName.setText(wiiList.get(position).getMii());
                 compactFriendHolder.region.setText(wiiList.get(position).getRegion());
-                compactFriendHolder.connectionFails.setText(context.getResources().getString(R.string.connection_drops_label) + wiiList.get(position).getConnectionFails());
+                compactFriendHolder.connectionFails.setText(wiiList.get(position).getConnectionFails());
                 compactFriendHolder.match.setText(wiiList.get(position).getMatch());
                 compactFriendHolder.role.setText(wiiList.get(position).getRole());
                 compactFriendHolder = null;

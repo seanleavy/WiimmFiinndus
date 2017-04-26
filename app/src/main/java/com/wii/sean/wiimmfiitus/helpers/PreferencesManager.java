@@ -32,9 +32,9 @@ public class PreferencesManager {
 
     public PreferencesManager(Context context) {
         try {
-            snappy = DBFactory.open(context);
             sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
             this.context = context;
+            snappy = DBFactory.open(context);
         } catch (SnappydbException e) {
             Log.e(LogHelper.getTag(getClass()), e.getMessage());
         }

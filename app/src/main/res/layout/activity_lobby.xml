@@ -64,12 +64,11 @@
             >
 
             <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                android:id="@+id/connection_drops_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="10dp"
                 android:textColor="@color/nintendo_grey_light"
-                android:text=""/>
+                android:text="@string/connection_drops_label"/>
 
             <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
                 android:id="@+id/connection_drops_value"

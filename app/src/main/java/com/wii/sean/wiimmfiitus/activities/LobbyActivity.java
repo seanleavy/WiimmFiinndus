@@ -33,14 +33,13 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     private CustomWiiCyclerViewAdapter customWiiCyclerViewAdapter;
     private NintendoTextview roomTitle;
     private NintendoTextview regionTitle;
-    private NintendoTextview connectionLabel;
     private NintendoTextview connectionDrops;
     private NintendoTextview raceCount;
     private NintendoTextview lobbyCreatedTime;
     private NintendoTextview lobbyCount;
     private ProgressBar progressBar;
-    private final Handler handler = new Handler();
-
+    private Runnable runnable;
+    final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +53,8 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         recyclerView.setAdapter(customWiiCyclerViewAdapter);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_search);
-            roomTitle = (NintendoTextview) findViewById(R.id.nintendoSecondaryToolbarTextview);
+        roomTitle = (NintendoTextview) findViewById(R.id.nintendoSecondaryToolbarTextview);
         regionTitle = (NintendoTextview) findViewById(R.id.nintendoToolbarTextview);
-        connectionLabel = (NintendoTextview) findViewById(R.id.connection_drops_label);
         connectionDrops = (NintendoTextview) findViewById(R.id.connection_drops_value);
         raceCount = (NintendoTextview) findViewById(R.id.race_count);
         lobbyCreatedTime = (NintendoTextview) findViewById(R.id.lobby_created_time);
@@ -75,7 +73,6 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             // todo hardcode shit here for default friends
 //            if(miiList.contains(FriendCodes.PONCHO)) {
             regionTitle.setText(roomModel.getRegionName());
-            connectionLabel.setText(getString(R.string.connection_drops_label));
             String connRating = roomModel.getConnectionRating();
             if(connRating.equals(""))
                 connRating = "none";
@@ -98,7 +95,7 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         final MiiCharacter mii = (MiiCharacter) bundle.getSerializable("mii");
         final SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(LobbyActivity.this, LobbyActivity.this);
         searchAsyncHelper.execute(mii.getFriendCode(), MkFriendSearch.ROOMENABLED);
-        handler.postDelayed(new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
                 final SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(LobbyActivity.this, LobbyActivity.this);
@@ -107,12 +104,13 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
                 progressBar.setVisibility(View.VISIBLE);
                 handler.postDelayed(this, 15000);
             }
-        }, 15000);
+        };
+        handler.post(runnable);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
+        handler.removeCallbacks(runnable);
     }
 }

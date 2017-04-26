@@ -77,6 +77,7 @@
                 <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
                     android:id="@+id/role"
                     android:textSize="10dp"
+                    android:textColor="@color/white"
                     android:layout_marginTop="@dimen/padding_margin_2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -95,15 +96,30 @@
 
         </LinearLayout>
 
-        <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+        <LinearLayout
             android:layout_below="@id/second_row"
-            android:id="@+id/connfails"
-            android:gravity="center"
-            android:paddingLeft="@dimen/padding_margin_10dp"
-            android:paddingRight="@dimen/activity_vertical_margin"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="8dp" />
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+                android:id="@+id/connfails_label"
+                android:text="@string/connection_drops_label"
+                android:paddingLeft="@dimen/padding_margin_10dp"
+                android:paddingRight="@dimen/padding_margin_2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="8dp" />
+
+            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+                android:layout_width="wrap_content"
+                android:id="@+id/connfails"
+                android:textSize="8dp"
+                android:textColor="@color/nintendo_grey_light"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
         <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
             android:layout_below="@id/second_row"
