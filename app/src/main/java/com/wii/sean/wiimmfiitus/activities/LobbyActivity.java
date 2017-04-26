@@ -8,13 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
+import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 import com.wii.sean.wiimmfiitus.model.RoomModel;
@@ -36,6 +39,8 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     private NintendoTextview lobbyCreatedTime;
     private NintendoTextview lobbyCount;
     private ProgressBar progressBar;
+    private final Handler handler = new Handler();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,8 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             miiList.clear();
             customWiiCyclerViewAdapter.notifyDataSetChanged();
             miiList.addAll(roomModel.getMiiList());
+            // todo hardcode shit here for default friends
+//            if(miiList.contains(FriendCodes.PONCHO)) {
             regionTitle.setText(roomModel.getRegionName());
             connectionLabel.setText(getString(R.string.connection_drops_label));
             String connRating = roomModel.getConnectionRating();
@@ -80,6 +87,10 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             recyclerView.setAdapter(recyclerView.getAdapter());
             customWiiCyclerViewAdapter.notifyDataSetChanged();
         }
+        else {
+            Toast.makeText(this, getString(R.string.offline), Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void refreshLobby() {
@@ -87,7 +98,6 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         final MiiCharacter mii = (MiiCharacter) bundle.getSerializable("mii");
         final SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(LobbyActivity.this, LobbyActivity.this);
         searchAsyncHelper.execute(mii.getFriendCode(), MkFriendSearch.ROOMENABLED);
-        final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -98,5 +108,11 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
                 handler.postDelayed(this, 15000);
             }
         }, 15000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
     }
 }

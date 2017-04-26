@@ -26,6 +26,7 @@
         </activity>
         <activity
             android:name=".activities.LobbyActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait"/>
     </application>
 

@@ -256,15 +256,15 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     private void processResult(Object result) {
         int i;
         boolean found = false;
-        for(i = 0; i < wiiCyclerViewAdapter.wiiList.size(); i++) {
+        for(i = 0; i < miiList.size(); i++) {
             for (MiiCharacter mii : (List<MiiCharacter>) result) {
-                if (mii.getFriendCode().equals(wiiCyclerViewAdapter.wiiList.get(i).getFriendCode())) {
+                if (mii.getFriendCode().equals(miiList.get(i).getFriendCode())) {
                     found = true;
-                    wiiCyclerViewAdapter.wiiList.set(i, mii);
+                    miiList.set(i, mii);
                     break;
                 }
                 else
-                    wiiCyclerViewAdapter.wiiList.get(i).setOnlineTo(false);
+                    miiList.get(i).setOnlineTo(false);
             }
         }
         if(found) {
