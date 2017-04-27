@@ -10,20 +10,17 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
-import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 import com.wii.sean.wiimmfiitus.model.RoomModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LobbyActivity extends AppCompatActivity implements AsyncTaskCompleteListener {
 
@@ -42,9 +39,11 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     final Handler handler = new Handler();
     private Bundle bundle;
     private MiiCharacter mii;
+    private boolean viewTypeChange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        viewTypeChange = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
         bundle = this.getIntent().getExtras();
@@ -87,15 +86,23 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             lobbyCreatedTime.setText(roomModel.getLobbyCreatedTime());
             recyclerView.setAdapter(recyclerView.getAdapter());
             customWiiCyclerViewAdapter.notifyDataSetChanged();
+            viewTypeChange = false;
         }
 
 
 
         if(result == null && mii.isFriend()) {
-            miiList.clear();
-            miiList.add(mii);
+            if(viewTypeChange == false) {
+                mii.setType(MiiCharacter.DEFAULT_VIEW);
+                miiList.clear();
+                miiList.add(mii);
+                customWiiCyclerViewAdapter = new CustomWiiCyclerViewAdapter(miiList);
+                recyclerView.setLayoutManager(recyclerViewLayoutManager);
+                recyclerView.setAdapter(customWiiCyclerViewAdapter);
+                viewTypeChange = true;
+            }
+
             roomTitle.setText("waiting for friends...");
-            customWiiCyclerViewAdapter.notifyDataSetChanged();
         }
         if(result == null && !mii.isFriend()) {
             Toast.makeText(this, getString(R.string.offline), Toast.LENGTH_SHORT).show();

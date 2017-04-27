@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,14 @@ import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.activities.LobbyActivity;
 import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
+import com.wii.sean.wiimmfiitus.helpers.LogHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCyclerViewAdapter.ViewHolder> implements AsyncTaskCompleteListener {
+public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements AsyncTaskCompleteListener {
 
     public List<MiiCharacter> wiiList = new ArrayList<>();
 
@@ -38,13 +40,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
     private int lastPosition = -1;
     private Context context;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View v) {
-            super(v);
-        }
-    }
-
-    public class DefaultFriendViewHolder extends ViewHolder {
+    public class DefaultFriendViewHolder extends RecyclerView.ViewHolder {
 
         private TextView friendCode;
         private NintendoTextview miiName;
@@ -66,7 +62,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
         }
     }
 
-    public class CompactFriendHolder extends ViewHolder {
+    public class CompactFriendHolder extends RecyclerView.ViewHolder {
 
         private NintendoTextview friendCode;
         private NintendoTextview miiName;
@@ -91,9 +87,9 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
-        ViewHolder fvh = null;
+        RecyclerView.ViewHolder fvh = null;
         if(wiiList.get(0).getType() == DEFAULT_VIEW) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mii_license_card_default, parent, false);
             fvh = new DefaultFriendViewHolder(v, viewType);
@@ -110,10 +106,11 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         switch (wiiList.get(position).getType())
         {
             case MiiCharacter.DEFAULT_VIEW:
+                Log.e(LogHelper.getTag(getClass()), "THIS IS THE VIEWHOLDER BEING CAST" + holder.getClass().toString());
                 DefaultFriendViewHolder friendViewHolder = (DefaultFriendViewHolder) holder;
                 if(friendViewHolder.icon != null)
                     friendViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendViewHolder.icon.getContext(), R.drawable.mii_default));
@@ -167,7 +164,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
 
         }
 
-        setAnimation(((ViewHolder) holder).itemView, position);
+        setAnimation(((RecyclerView.ViewHolder) holder).itemView, position);
     }
 
     @Override

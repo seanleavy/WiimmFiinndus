@@ -121,6 +121,10 @@ public class MiiCharacter implements Serializable {
         return type;
     }
 
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public String getRole() {
         return role;
     }
