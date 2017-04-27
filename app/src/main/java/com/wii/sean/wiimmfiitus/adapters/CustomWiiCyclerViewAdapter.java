@@ -126,16 +126,18 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<CustomWiiCy
                 if (wiiList.get(position).getMii().equals(FriendCodes.DIKROT.getMii())) {
                     friendViewHolder.icon.setImageDrawable(ContextCompat.getDrawable(friendViewHolder.icon.getContext(), R.drawable.mii_dikrot));
                 }
-                // add lobby listener
                 friendViewHolder.onlineIcon.setImageDrawable(ContextCompat.getDrawable(friendViewHolder.onlineIcon.getContext(),
                         wiiList.get(position).isOnline() == true ? R.drawable.online : R.drawable.offline));
-                if(wiiList.get(position).isOnline()) {
+
+                // add lobby listener
+                if(wiiList.get(position).isOnline() || wiiList.get(position).isFriend()) {
                     friendViewHolder.lobbyButtonGroup.setVisibility(View.VISIBLE);
                     friendViewHolder.lobbyButtonGroup.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            context.startActivity(new Intent(context, LobbyActivity.class).putExtra("mii",
-                                    new MiiCharacter(wiiList.get(position).getFriendCode(), wiiList.get(position).getMii(), wiiList.get(position).getVr()))
+                            MiiCharacter mii = new MiiCharacter(wiiList.get(position).getFriendCode(), wiiList.get(position).getMii(), wiiList.get(position).getVr());
+                            mii.setFriend(true);
+                            context.startActivity(new Intent(context, LobbyActivity.class).putExtra("mii", mii)
                             );
                         }
                     });

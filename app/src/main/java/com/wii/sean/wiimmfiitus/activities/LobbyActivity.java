@@ -40,11 +40,15 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     private ProgressBar progressBar;
     private Runnable runnable;
     final Handler handler = new Handler();
+    private Bundle bundle;
+    private MiiCharacter mii;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
+        bundle = this.getIntent().getExtras();
+        mii = (MiiCharacter) bundle.getSerializable("mii");
         recyclerView = (RecyclerView) findViewById(R.id.lobby_recyclerview);
 //        recyclerViewLayoutManager = new LinearLayoutManager(this);
         recyclerViewLayoutManager = new GridLayoutManager(this, 1);
@@ -84,15 +88,22 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             recyclerView.setAdapter(recyclerView.getAdapter());
             customWiiCyclerViewAdapter.notifyDataSetChanged();
         }
-        else {
+
+
+
+        if(result == null && mii.isFriend()) {
+            miiList.clear();
+            miiList.add(mii);
+            roomTitle.setText("waiting for friends...");
+            customWiiCyclerViewAdapter.notifyDataSetChanged();
+        }
+        if(result == null && !mii.isFriend()) {
             Toast.makeText(this, getString(R.string.offline), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
     private void refreshLobby() {
-        Bundle bundle = this.getIntent().getExtras();
-        final MiiCharacter mii = (MiiCharacter) bundle.getSerializable("mii");
         final SearchAsyncHelper searchAsyncHelper = new SearchAsyncHelper(LobbyActivity.this, LobbyActivity.this);
         searchAsyncHelper.execute(mii.getFriendCode(), MkFriendSearch.ROOMENABLED);
         runnable = new Runnable() {

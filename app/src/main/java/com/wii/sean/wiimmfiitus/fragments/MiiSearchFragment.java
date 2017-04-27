@@ -137,6 +137,7 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                wiiList.get(viewHolder.getAdapterPosition()).setFriend(true);
                 searchPreferncesManager.addToPreference(PreferencesManager.FAVOURITESPREFERENCES,
                         wiiList.get(viewHolder.getAdapterPosition()));
                 SnackBarHelper.showSnackBar(getContext(), miiSearchView,

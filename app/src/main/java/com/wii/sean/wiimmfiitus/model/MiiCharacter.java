@@ -20,11 +20,12 @@ public class MiiCharacter implements Serializable {
     private String mii = "";
     private String vr = "";
     private Integer type = MiiCharacter.DEFAULT_VIEW;
-    private Boolean isOnline = false;
+    private boolean isOnline = false;
     private String role = "";
     private String region = "";
     private String match = "";
     private String connectionFails = "";
+    private boolean isFriend = false;
 
     public MiiCharacter() {
 
@@ -134,5 +135,13 @@ public class MiiCharacter implements Serializable {
 
     public String getConnectionFails() {
         return connectionFails;
+    }
+
+    public boolean isFriend() {
+        return isFriend;
+    }
+
+    public void setFriend(boolean friend) {
+        isFriend = friend;
     }
 }
