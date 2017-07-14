@@ -1,7 +1,6 @@
 # WiimmFiitus
 
-Mario Kart wii Friend Code/Mii Name helper.
-Features:
+**Mario Kart wii Friend Code/Mii Name helper.**
 
 ![alt text](https://github.com/seanleavy/WiimmFiinndus/blob/master/screenshots/Screenshot_20170714-162906.png)
 
@@ -9,6 +8,7 @@ Features:
 
 ![alt text](https://github.com/seanleavy/WiimmFiinndus/blob/master/screenshots/Screenshot_20170714-163735.png)
 
+Features:
 
 -FriendCode and Mii Name searching
 
