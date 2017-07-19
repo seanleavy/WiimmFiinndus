@@ -1,4 +1,4 @@
-# WiimmFiitus
+# WiimmFiindus
 
 **Mario Kart wii Friend Code/Mii Name helper.**
 
