@@ -1,6 +1,7 @@
 package com.wii.sean.wiimmfiitus.activities;
 
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -65,6 +66,17 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         lobbyCreatedTime = (NintendoTextview) findViewById(R.id.lobby_created_time);
         lobbyCount = (NintendoTextview) findViewById(R.id.lobby_player_count);
         refreshLobby();
+
+        RecyclerItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new RecyclerItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                Log.i(LogHelper.getTag(getClass()), "LONGCCCCCCLICK!!!!!!!!!!!!!");
+                AmiigavelDialog dialog = AmiigavelDialog.newInstance(miiList.get(position));
+                FragmentManager fm = getSupportFragmentManager();
+                dialog.show(fm, "");
+                return true;
+            }
+        });
     }
 
     @Override
@@ -110,13 +122,6 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             Toast.makeText(this, getString(R.string.offline), Toast.LENGTH_SHORT).show();
             finish();
         }
-        RecyclerItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new RecyclerItemClickSupport.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-                AmiigavelDialog dialog = AmiigavelDialog.newInstance();
-                return false;
-            }
-        });
     }
 
     private void refreshLobby() {
@@ -139,10 +144,5 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(runnable);
-    }
-
-    @Override
-    public void decide(int decision) {
-
     }
 }

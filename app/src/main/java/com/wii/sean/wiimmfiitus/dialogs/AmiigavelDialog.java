@@ -51,7 +51,7 @@ public class AmiigavelDialog extends DialogFragment {
         //todo research a better option here instead of 2 buttons
         final MiiCharacter miiCharacter = (MiiCharacter) getArguments().getSerializable("mii");
         //todo. create a preferencesmanager singleton, remove multiple instances throughout codebase
-        PreferencesManager p = new PreferencesManager(getContext());
+        final PreferencesManager p = new PreferencesManager(getContext());
         friend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

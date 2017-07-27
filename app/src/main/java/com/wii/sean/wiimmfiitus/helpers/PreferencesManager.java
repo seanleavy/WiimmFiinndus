@@ -15,9 +15,10 @@ import java.util.List;
 
 public class PreferencesManager {
 
-    public static String HISTORYPREFERENCES = "searchesMade";
-    public static String FAVOURITESPREFERENCES = "favourites";
-    public static String DEFAULTPREFERENCES = "default";
+    public static final String HISTORYPREFERENCES = "searchesMade";
+    public static final String FAVOURITESPREFERENCES = "favourites";
+    public static final String DEFAULTPREFERENCES = "default";
+    public static final String DIALOGSEARCHPREFERENCE = "searchToggle";
 
     private DB snappy;
     private String firstRun;
