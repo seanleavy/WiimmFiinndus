@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
+import com.wii.sean.wiimmfiitus.dialogs.AmiigavelDialog;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
@@ -22,7 +23,7 @@ import com.wii.sean.wiimmfiitus.model.RoomModel;
 
 import java.util.ArrayList;
 
-public class LobbyActivity extends AppCompatActivity implements AsyncTaskCompleteListener {
+public class LobbyActivity extends AppCompatActivity implements AsyncTaskCompleteListener, AmiigavelDialog.LobbyDialogListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -130,5 +131,10 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    public void decide(int decision) {
+
     }
 }
