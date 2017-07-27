@@ -26,6 +26,7 @@ public class MiiCharacter implements Serializable {
     private String match = "";
     private String connectionFails = "";
     private boolean isFriend = false;
+    private boolean isCheater = false;
 
     public MiiCharacter() {
 
@@ -147,5 +148,13 @@ public class MiiCharacter implements Serializable {
 
     public void setFriend(boolean friend) {
         isFriend = friend;
+    }
+
+    public boolean getIsCheater() {
+        return this.isCheater;
+    }
+
+    public void setIsCheater(boolean isCheater) {
+        this.isCheater = isCheater;
     }
 }
