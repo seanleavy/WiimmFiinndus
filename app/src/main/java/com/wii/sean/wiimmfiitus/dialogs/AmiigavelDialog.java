@@ -9,25 +9,23 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.wii.sean.wiimmfiitus.R;
+import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
+import com.wii.sean.wiimmfiitus.model.MiiCharacter;
+
+import java.io.Serializable;
 
 public class AmiigavelDialog extends DialogFragment {
 
     private Button friend;
     private Button cheater;
 
-    public static int FRIEND = 0;
-    public static int CHEATER = 1;
-
-    public interface LobbyDialogListener {
-        public void decide(int decision);
-    }
-
     public AmiigavelDialog() {
 
     }
 
-    public static AmiigavelDialog newInstance() {
+    public static AmiigavelDialog newInstance(Serializable serializable) {
         Bundle args = new Bundle();
+        args.putSerializable("mii", serializable);
         AmiigavelDialog fragment = new AmiigavelDialog();
         fragment.setArguments(args);
         return fragment;
@@ -50,19 +48,22 @@ public class AmiigavelDialog extends DialogFragment {
     }
 
     private void addListeners() {
-        final LobbyDialogListener lobbyDialogListener;
         //todo research a better option here instead of 2 buttons
+        final MiiCharacter miiCharacter = (MiiCharacter) getArguments().getSerializable("mii");
+        //todo. create a preferencesmanager singleton, remove multiple instances throughout codebase
+        PreferencesManager p = new PreferencesManager(getContext());
         friend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lobbyDialogListener.decide(AmiigavelDialog.FRIEND);
+                miiCharacter.setFriend(true);
+                p.addToPreference(PreferencesManager.FAVOURITESPREFERENCES, miiCharacter);
                 dismiss();
             }
         });
         cheater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lobbyDialogListener.decide(AmiigavelDialog.CHEATER);
+                miiCharacter.setIsCheater(true);
                 dismiss();
             }
         });

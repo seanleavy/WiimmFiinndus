@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
@@ -23,7 +24,7 @@ import com.wii.sean.wiimmfiitus.model.RoomModel;
 
 import java.util.ArrayList;
 
-public class LobbyActivity extends AppCompatActivity implements AsyncTaskCompleteListener, AmiigavelDialog.LobbyDialogListener {
+public class LobbyActivity extends AppCompatActivity implements AsyncTaskCompleteListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -109,6 +110,13 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             Toast.makeText(this, getString(R.string.offline), Toast.LENGTH_SHORT).show();
             finish();
         }
+        RecyclerItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new RecyclerItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                AmiigavelDialog dialog = AmiigavelDialog.newInstance();
+                return false;
+            }
+        });
     }
 
     private void refreshLobby() {
