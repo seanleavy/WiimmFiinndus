@@ -69,6 +69,12 @@ public class MkWiiHomeActivity extends AppCompatActivity implements BaseFragment
     }
 
     @Override
+    protected void onResume() {
+        preferenceUpdated();
+        super.onResume();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         NintendoTextview textview = (NintendoTextview) findViewById(nintendoToolbarTextview);
         getMenuInflater().inflate(R.menu.main_menu, menu);

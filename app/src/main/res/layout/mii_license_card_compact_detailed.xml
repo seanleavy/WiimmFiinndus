@@ -15,121 +15,144 @@
     android:layout_gravity="center"
     >
 
-    <RelativeLayout
-        android:background="@color/black"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/cardtop"
-            android:paddingLeft="@dimen/padding_margin_10dp"
+        <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+            android:alpha="0.4"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:elevation="2dp"
+            android:id="@+id/friendcheat"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:orientation="horizontal"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:elevation="2dp"
+            android:alpha="0.4"
+            android:visibility="invisible"
+            android:id="@+id/overlay_relative"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:background="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             >
 
-            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                android:id="@+id/mii_name_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/nintendo_red_dark"
-                android:paddingLeft="@dimen/padding_margin_10dp"
-                android:paddingTop="@dimen/padding_margin_10dp"
-                android:paddingRight="@dimen/padding_margin_10dp"
-                android:textSize="20dp"/>
-
-            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                android:id="@+id/friend_code_textview"
-                android:paddingRight="@dimen/activity_vertical_margin"
-                android:paddingTop="@dimen/padding_margin_10dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textColor="@color/nintendo_red_light"
-                android:gravity="end"
-                android:textSize="12dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:paddingLeft="@dimen/activity_vertical_margin"
-            android:id="@+id/second_row"
-            android:layout_below="@+id/cardtop"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                android:id="@+id/vr_textview"
-                android:layout_marginTop="@dimen/activity_vertical_margin_small"
-                android:textSize="16dp"
-                android:textColor="@color/nintendo_grey_light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-
             <LinearLayout
-                android:gravity="end"
+                android:id="@+id/cardtop"
+                android:paddingLeft="@dimen/padding_margin_10dp"
                 android:layout_width="match_parent"
-                android:paddingRight="@dimen/activity_vertical_margin"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:orientation="horizontal"
+                >
 
                 <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                    android:id="@+id/role"
-                    android:textSize="10dp"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="@dimen/padding_margin_2dp"
+                    android:id="@+id/mii_name_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@color/nintendo_red_dark"
                     android:paddingLeft="@dimen/padding_margin_10dp"
-                    android:paddingRight="@dimen/activity_vertical_margin"
-                    />
+                    android:paddingTop="@dimen/padding_margin_10dp"
+                    android:paddingRight="@dimen/padding_margin_10dp"
+                    android:textSize="20dp"/>
 
                 <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                    android:id="@+id/match"
-                    android:layout_gravity="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12dp" />
+                    android:id="@+id/friend_code_textview"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingTop="@dimen/padding_margin_10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/nintendo_red_light"
+                    android:gravity="end"
+                    android:textSize="12dp"/>
 
             </LinearLayout>
 
-        </LinearLayout>
+            <LinearLayout
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:id="@+id/second_row"
+                android:layout_below="@+id/cardtop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_below="@id/second_row"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content">
+                <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+                    android:id="@+id/vr_textview"
+                    android:layout_marginTop="@dimen/activity_vertical_margin_small"
+                    android:textSize="16dp"
+                    android:textColor="@color/nintendo_grey_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <LinearLayout
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:layout_height="wrap_content">
+
+                    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+                        android:id="@+id/role"
+                        android:textSize="10dp"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="@dimen/padding_margin_2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/padding_margin_10dp"
+                        android:paddingRight="@dimen/activity_vertical_margin"
+                        />
+
+                    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+                        android:id="@+id/match"
+                        android:layout_gravity="end"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_below="@id/second_row"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+
+                <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+                    android:id="@+id/connfails_label"
+                    android:text="@string/connection_drops_label"
+                    android:paddingLeft="@dimen/padding_margin_10dp"
+                    android:paddingRight="@dimen/padding_margin_2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8dp" />
+
+                <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+                    android:layout_width="wrap_content"
+                    android:id="@+id/connfails"
+                    android:textSize="8dp"
+                    android:textColor="@color/nintendo_grey_light"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
             <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                android:id="@+id/connfails_label"
-                android:text="@string/connection_drops_label"
-                android:paddingLeft="@dimen/padding_margin_10dp"
-                android:paddingRight="@dimen/padding_margin_2dp"
-                android:layout_width="wrap_content"
+                android:layout_below="@id/second_row"
+                android:id="@+id/region"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="8dp" />
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:textSize="10dp"
+                android:gravity="end" />
 
-            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                android:layout_width="wrap_content"
-                android:id="@+id/connfails"
-                android:textSize="8dp"
-                android:textColor="@color/nintendo_grey_light"
-                android:layout_height="wrap_content" />
+        </RelativeLayout>
 
-        </LinearLayout>
-
-        <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-            android:layout_below="@id/second_row"
-            android:id="@+id/region"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/activity_vertical_margin"
-            android:textSize="10dp"
-            android:gravity="end" />
-
-    </RelativeLayout>
+    </FrameLayout>
 
 </android.support.v7.widget.CardView>

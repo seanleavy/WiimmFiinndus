@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@drawable/rounded_corner_no_background"
+
     android:layout_height="match_parent">
 
-    <Button
+    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+        android:clickable="true"
+        android:alpha="0.9"
+        android:minEms="8"
+        android:maxEms="8"
+        android:ems="8"
+        android:background="@drawable/rounded_corner_background"
+        android:padding="@dimen/activity_vertical_margin_small"
+        android:layout_margin="@dimen/activity_vertical_margin_small"
+        style="@style/Mii_license_text"
+        android:gravity="center"
         android:id="@+id/friend"
-        android:text="@string/dialog_friend"
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
-    <Button
+    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+        android:clickable="true"
+        android:alpha="0.9"
+        android:minEms="8"
+        android:maxEms="8"
+        android:ems="8"
+        android:background="@drawable/rounded_corner_background"
+        android:padding="@dimen/activity_vertical_margin_small"
+        style="@style/Mii_license_text"
+        android:gravity="center"
+        android:layout_margin="@dimen/activity_vertical_margin_small"
         android:id="@+id/cheater"
         android:text="@string/dialog_cheater"
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

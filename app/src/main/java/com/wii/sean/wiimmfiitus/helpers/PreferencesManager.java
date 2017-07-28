@@ -17,6 +17,7 @@ public class PreferencesManager {
 
     public static final String HISTORYPREFERENCES = "searchesMade";
     public static final String FAVOURITESPREFERENCES = "favourites";
+    public static final String CHEATERPREFERENCES = "cheaters";
     public static final String DEFAULTPREFERENCES = "default";
     public static final String DIALOGSEARCHPREFERENCE = "searchToggle";
 

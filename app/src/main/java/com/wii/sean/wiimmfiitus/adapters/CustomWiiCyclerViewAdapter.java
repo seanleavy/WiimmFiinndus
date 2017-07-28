@@ -2,6 +2,7 @@ package com.wii.sean.wiimmfiitus.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wii.sean.wiimmfiitus.R;
@@ -71,6 +75,8 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         private NintendoTextview role;
         private NintendoTextview match;
         private NintendoTextview region;
+        private ImageView overlay;
+        private NintendoTextview cheatfriend;
 
         public CompactFriendHolder(View v, int type) {
             super(v);
@@ -83,6 +89,8 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             this.role = (NintendoTextview) v.findViewById(R.id.role);
             this.match = (NintendoTextview) v.findViewById(R.id.match);
             this.region = (NintendoTextview) v.findViewById(R.id.region);
+            this.overlay = (ImageView) v.findViewById(R.id.overlay_relative);
+            this.cheatfriend = (NintendoTextview) v.findViewById(R.id.friendcheat);
         }
     }
 
@@ -159,6 +167,22 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 compactFriendHolder.connectionFails.setText(wiiList.get(position).getConnectionFails());
                 compactFriendHolder.match.setText(wiiList.get(position).getMatch());
                 compactFriendHolder.role.setText(wiiList.get(position).getRole());
+                if(wiiList.get(position).isFriend()) {
+                    compactFriendHolder.miiName.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow));
+                    compactFriendHolder.miiName.setTextColor(ContextCompat.getColor(context, R.color.nintendo_red_dark));
+                }
+                if(wiiList.get(position).getIsCheater()) {
+                    compactFriendHolder.overlay.setBackgroundColor(ContextCompat.getColor(context, R.color.nintendo_red));
+                    compactFriendHolder.overlay.setVisibility(View.VISIBLE);
+                    compactFriendHolder.cheatfriend.setVisibility(View.VISIBLE);
+                    compactFriendHolder.cheatfriend.setText(context.getString(R.string.friend));
+                    compactFriendHolder.cheatfriend.setTextColor(ContextCompat.getColor(context, R.color.nintendo_red));
+                    compactFriendHolder.cheatfriend.setText(context.getString(R.string.cheater));
+                }
+                if(wiiList.get(position).getRegion().toUpperCase().contains("CTGP")) {
+                    compactFriendHolder.region.setTextColor(ContextCompat.getColor(context, R.color.nintendo_red));
+                    compactFriendHolder.region.setAnimation(getBlinkAnimation());
+                }
                 compactFriendHolder = null;
                 break;
 
@@ -178,6 +202,16 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             viewToAnimate.startAnimation(animation);
             lastPosition = pos;
         }
+    }
+
+    private Animation getBlinkAnimation(){
+        Animation animation = new AlphaAnimation(1, 0);
+        animation.setDuration(500);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setRepeatCount(Animation.INFINITE);
+        animation.setRepeatMode(Animation.REVERSE);
+
+        return animation;
     }
 
     @Override

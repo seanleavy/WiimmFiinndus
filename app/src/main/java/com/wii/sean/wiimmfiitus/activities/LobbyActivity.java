@@ -18,6 +18,7 @@ import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
 import com.wii.sean.wiimmfiitus.dialogs.AmiigavelDialog;
 import com.wii.sean.wiimmfiitus.friendSearch.MkFriendSearch;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
+import com.wii.sean.wiimmfiitus.helpers.CheaterFriendSearch;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
 import com.wii.sean.wiimmfiitus.model.MiiCharacter;
@@ -34,6 +35,7 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     private NintendoTextview roomTitle;
     private NintendoTextview regionTitle;
     private NintendoTextview connectionDrops;
+    private NintendoTextview connectionDropsLabel;
     private NintendoTextview raceCount;
     private NintendoTextview lobbyCreatedTime;
     private NintendoTextview lobbyCount;
@@ -58,10 +60,12 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         customWiiCyclerViewAdapter = new CustomWiiCyclerViewAdapter(miiList);
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         recyclerView.setAdapter(customWiiCyclerViewAdapter);
+        recyclerView.setVerticalFadingEdgeEnabled(true);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_search);
         roomTitle = (NintendoTextview) findViewById(R.id.nintendoSecondaryToolbarTextview);
         regionTitle = (NintendoTextview) findViewById(R.id.nintendoToolbarTextview);
         connectionDrops = (NintendoTextview) findViewById(R.id.connection_drops_value);
+        connectionDropsLabel = (NintendoTextview) findViewById(R.id.conndrops_label);
         raceCount = (NintendoTextview) findViewById(R.id.race_count);
         lobbyCreatedTime = (NintendoTextview) findViewById(R.id.lobby_created_time);
         lobbyCount = (NintendoTextview) findViewById(R.id.lobby_player_count);
@@ -82,11 +86,14 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     @Override
     public void onTaskComplete(Object result) {
         if(result != null) {
+            mii.setType(MiiCharacter.COMPACT_VIEW_DETAILED);
             progressBar.setVisibility(View.INVISIBLE);
             RoomModel roomModel = (RoomModel) ((ArrayList) result).get(0);
             miiList.clear();
             customWiiCyclerViewAdapter.notifyDataSetChanged();
             miiList.addAll(roomModel.getMiiList());
+            miiList.get(miiList.indexOf(mii)).setFriend(true);
+            CheaterFriendSearch.findCheatersAndFriends(LobbyActivity.this, miiList);
             // todo hardcode shit here for default friends
 //            if(miiList.contains(FriendCodes.PONCHO)) {
             regionTitle.setText(roomModel.getRegionName());
@@ -94,12 +101,15 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             if(connRating.equals(""))
                 connRating = "none";
             connectionDrops.setText(connRating);
+            connectionDropsLabel.setVisibility(View.VISIBLE);
             raceCount.setText(roomModel.getTimesRaced());
             roomTitle.setText(roomModel.getRoomName());
             lobbyCount.setText(Integer.toString(miiList.size()) + getString(R.string.toolbar_count_playing));
             lobbyCreatedTime.setText(roomModel.getLobbyCreatedTime());
             recyclerView.setAdapter(recyclerView.getAdapter());
             customWiiCyclerViewAdapter.notifyDataSetChanged();
+            recyclerView.smoothScrollToPosition(customWiiCyclerViewAdapter.getItemCount());
+            recyclerView.smoothScrollToPosition(0);
             viewTypeChange = false;
         }
 

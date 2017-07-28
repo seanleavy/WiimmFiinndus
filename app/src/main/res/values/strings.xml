@@ -33,8 +33,16 @@
 
     <string name="dialog_cancel">cancel</string>
     <string name="dialog_search">search</string>
+    <string-array name="dialog_friend_choice">
+        <item>friend</item>
+        <item>unfriend</item>
+    </string-array>
     <string name="dialog_friend">friend</string>
     <string name="dialog_cheater">cheater!</string>
+
+    <string name="friend">FRIEND</string>
+    <string name="cheater">CHEATER</string>
+    <string name="ctgp">CTGP</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
