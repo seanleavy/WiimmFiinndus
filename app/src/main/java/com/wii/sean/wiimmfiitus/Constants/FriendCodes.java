@@ -1,6 +1,6 @@
 package com.wii.sean.wiimmfiitus.Constants;
 
-import com.wii.sean.wiimmfiitus.model.MiiCharacter;
+import com.wii.sean.wiimmfiitus.models.MiiCharacter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

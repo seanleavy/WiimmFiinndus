@@ -25,7 +25,7 @@ import com.wii.sean.wiimmfiitus.activities.LobbyActivity;
 import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
-import com.wii.sean.wiimmfiitus.model.MiiCharacter;
+import com.wii.sean.wiimmfiitus.models.MiiCharacter;
 
 import java.util.ArrayList;
 import java.util.List;

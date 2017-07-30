@@ -21,8 +21,8 @@ import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.CheaterFriendSearch;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
-import com.wii.sean.wiimmfiitus.model.MiiCharacter;
-import com.wii.sean.wiimmfiitus.model.RoomModel;
+import com.wii.sean.wiimmfiitus.models.MiiCharacter;
+import com.wii.sean.wiimmfiitus.models.RoomModel;
 
 import java.util.ArrayList;
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
-import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.List;
 

@@ -6,8 +6,8 @@ import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.Constants.UrlConstants;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
 import com.wii.sean.wiimmfiitus.helpers.RandomUserAgent;
-import com.wii.sean.wiimmfiitus.model.MiiCharacter;
-import com.wii.sean.wiimmfiitus.model.RoomModel;
+import com.wii.sean.wiimmfiitus.models.MiiCharacter;
+import com.wii.sean.wiimmfiitus.models.RoomModel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,7 +17,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class MkFriendSearch {
