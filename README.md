@@ -18,6 +18,8 @@ Features:
 
 -search history
 
+Download: https://github.com/seanleavy/WiimmFiinndus/releases/latest
+
 Uses libraries:
 
 -snappydb
