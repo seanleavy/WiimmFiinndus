@@ -18,7 +18,6 @@ Features:
 
 -search history
 
-Download: https://github.com/seanleavy/WiimmFiinndus/releases/latest
 
 Uses libraries:
 
@@ -33,3 +32,5 @@ Uses libraries:
 -kryo
 
 -jsoup
+
+<b>Download: https://github.com/seanleavy/WiimmFiinndus/releases/latest</b>
