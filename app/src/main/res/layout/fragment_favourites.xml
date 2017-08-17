@@ -1,12 +1,49 @@
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/parent_linearlayout"
+    android:id="@+id/coordinator_layout"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.wii.sean.wiimmfiitus.fragments.FavouritesFragment">
+
+    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+        android:id="@+id/friend_tip_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:text="@string/favourites_tip"
+        android:layout_gravity="top|center"
+        android:padding="@dimen/activity_vertical_margin_extra_large"
+        android:textColor="@color/nintendo_grey_light"
+        android:visibility="invisible"/>
+
+
+    <ImageView
+        android:visibility="invisible"
+        android:layout_gravity="center"
+        android:layout_width="200sp"
+        android:layout_height="200dp"
+        android:id="@+id/sadClown"
+        android:src="@drawable/sadclown_red"/>
+
+    <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
+        app:layout_anchor="@id/sadClown"
+        android:text="@string/favourites_blurb"
+        android:textAlignment="center"
+        app:layout_anchorGravity="bottom"
+        android:id="@+id/friend_blurb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:textStyle="bold"
+        android:layout_gravity="bottom|center"
+        android:padding="@dimen/activity_vertical_margin_extra_large"
+        android:textSize="20dp"
+        android:textColor="@color/nintendo_grey_light"
+        android:visibility="invisible"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
@@ -24,4 +61,4 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

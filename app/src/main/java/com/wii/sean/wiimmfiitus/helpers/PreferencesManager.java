@@ -10,7 +10,6 @@ import com.snappydb.SnappydbException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class PreferencesManager {
@@ -18,7 +17,9 @@ public class PreferencesManager {
     public static final String HISTORYPREFERENCES = "searchesMade";
     public static final String FAVOURITESPREFERENCES = "favourites";
     public static final String CHEATERPREFERENCES = "cheaters";
-    public static final String DEFAULTPREFERENCES = "default";
+    public static final String APPFIRSTRUN = "default";
+    public static final String SEARCHFIRSTRUN = "default";
+    public static final String FIRSTFAVOURITEADDED = "firstFavouriteAdded";
     public static final String DIALOGSEARCHPREFERENCE = "searchToggle";
 
     private DB snappy;
@@ -112,13 +113,13 @@ public class PreferencesManager {
         }
     }
 
-    public boolean isFirstRun() {
-        return !sharedPreferences.getBoolean(PreferencesManager.DEFAULTPREFERENCES, false);
+    public boolean isFirstRun(String preferenceType) {
+        return !sharedPreferences.getBoolean(preferenceType, false);
     }
 
-    public void setFirstRunToBe(boolean bool) {
+    public void setFirstRunPreference(String preferenceType, boolean bool) {
         preferenceEditor = sharedPreferences.edit();
-        preferenceEditor.putBoolean(PreferencesManager.DEFAULTPREFERENCES, bool);
+        preferenceEditor.putBoolean(preferenceType, bool);
         preferenceEditor.commit();
     }
 }

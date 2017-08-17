@@ -55,6 +55,7 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
     private View parentCoordinatorLayout;
     private View miiSearchView;
     private Toolbar toolbar;
+    private View parentTabView;
 
     private PreferencesManager searchPreferncesManager;
 
@@ -89,14 +90,14 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
         recyclerLayoutManager = new LinearLayoutManager(miiSearchView.getContext());
         wiiCyclerView.setLayoutManager(recyclerLayoutManager);
         searchResultsTextview = (TextView) miiSearchView.findViewById(R.id.search_result_textview);
-        final View parentTabView = getActivity().findViewById(R.id.tab_dots);
-        if(searchPreferncesManager.isFirstRun()) {
+        parentTabView = getActivity().findViewById(R.id.tab_dots);
+        if(searchPreferncesManager.isFirstRun(PreferencesManager.APPFIRSTRUN)) {
             SnackBarHelper.showSnackBar(getContext(), parentCoordinatorLayout,
                     getResources().getString(R.string.first_run_message),
                     Snackbar.LENGTH_LONG,
                     null,
                     parentTabView);
-                searchPreferncesManager.setFirstRunToBe(true);
+            searchPreferncesManager.setFirstRunPreference(PreferencesManager.APPFIRSTRUN, true);
         }
 
         startButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -275,6 +276,14 @@ public class MiiSearchFragment extends BaseFragment implements MkWiiHomeActivity
                             Toast.LENGTH_LONG).show();
                 }
             });
+            if(searchPreferncesManager.isFirstRun(PreferencesManager.SEARCHFIRSTRUN)) {
+                SnackBarHelper.showSnackBar(getContext(), parentCoordinatorLayout,
+                        getResources().getString(R.string.search_save_tip),
+                        Snackbar.LENGTH_LONG,
+                        null,
+                        parentTabView);
+                searchPreferncesManager.setFirstRunPreference(PreferencesManager.SEARCHFIRSTRUN, true);
+            }
         } else {
             // todo put messaging here
             clearRecyclerView();

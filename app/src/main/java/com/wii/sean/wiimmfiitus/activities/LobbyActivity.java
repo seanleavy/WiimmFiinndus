@@ -71,14 +71,10 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         lobbyCount = (NintendoTextview) findViewById(R.id.lobby_player_count);
         refreshLobby();
 
-        RecyclerItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new RecyclerItemClickSupport.OnItemLongClickListener() {
+        RecyclerItemClickSupport.addTo(recyclerView).setOnItemClickListener(new RecyclerItemClickSupport.OnItemClickListener() {
             @Override
-            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-                Log.i(LogHelper.getTag(getClass()), "LONGCCCCCCLICK!!!!!!!!!!!!!");
-                AmiigavelDialog dialog = AmiigavelDialog.newInstance(miiList.get(position));
-                FragmentManager fm = getSupportFragmentManager();
-                dialog.show(fm, "");
-                return true;
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                AmiigavelDialog.newInstance(miiList.get(position)).show(getSupportFragmentManager(), "");
             }
         });
     }
@@ -97,10 +93,9 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             // todo hardcode shit here for default friends
 //            if(miiList.contains(FriendCodes.PONCHO)) {
             regionTitle.setText(roomModel.getRegionName());
-            String connRating = roomModel.getConnectionRating();
-            if(connRating.equals(""))
-                connRating = "none";
-            connectionDrops.setText(connRating);
+            if(roomModel.getConnectionRating().equals(""))
+                roomModel.setConnectionRating(" 0");
+            connectionDrops.setText(roomModel.getConnectionRating());
             connectionDropsLabel.setVisibility(View.VISIBLE);
             raceCount.setText(roomModel.getTimesRaced());
             roomTitle.setText(roomModel.getRoomName());
@@ -108,8 +103,6 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             lobbyCreatedTime.setText(roomModel.getLobbyCreatedTime());
             recyclerView.setAdapter(recyclerView.getAdapter());
             customWiiCyclerViewAdapter.notifyDataSetChanged();
-            recyclerView.smoothScrollToPosition(customWiiCyclerViewAdapter.getItemCount());
-            recyclerView.smoothScrollToPosition(0);
             viewTypeChange = false;
         }
 
