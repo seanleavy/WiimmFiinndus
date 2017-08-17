@@ -33,4 +33,6 @@ Uses libraries:
 
 -jsoup
 
-<b>Download: https://github.com/seanleavy/WiimmFiinndus/releases/latest</b>
+
+
+<h2><b>Download: https://github.com/seanleavy/WiimmFiinndus/releases/latest</b></h2>
