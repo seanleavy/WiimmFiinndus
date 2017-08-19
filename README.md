@@ -18,6 +18,7 @@ Features:
 
 -search history
 
+
 Uses libraries:
 
 -snappydb
@@ -31,3 +32,7 @@ Uses libraries:
 -kryo
 
 -jsoup
+
+
+
+<h2><b>Download: https://github.com/seanleavy/WiimmFiinndus/releases/latest</b></h2>
