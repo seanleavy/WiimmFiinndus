@@ -99,7 +99,7 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             connectionDropsLabel.setVisibility(View.VISIBLE);
             raceCount.setText(roomModel.getTimesRaced());
             roomTitle.setText(roomModel.getRoomName());
-            lobbyCount.setText(Integer.toString(miiList.size()) + getString(R.string.toolbar_count_playing));
+            lobbyCount.setText(Integer.toString(miiList.size()));
             lobbyCreatedTime.setText(roomModel.getLobbyCreatedTime());
             recyclerView.setAdapter(recyclerView.getAdapter());
             customWiiCyclerViewAdapter.notifyDataSetChanged();

@@ -85,7 +85,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         setAdapter();
         swipeRefreshLayout = (SwipeRefreshLayout) favouritesView.findViewById(R.id.swipe_refresh_layout);
 
-        setOnBoarding(View.VISIBLE);
+        setOnBoarding();
         enableSwipeDragFavourites();
         setRefreshListener();
         return favouritesView;
@@ -163,16 +163,16 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         }
         if(id == R.id.load_default_miis) {
             setDefaultFriends();
+            setOnBoarding();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void setOnBoarding(int visibility) {
-        if(wiiCyclerViewAdapter.getItemCount() == 0) {
-            favouritesView.findViewById(R.id.sadClown).setVisibility(visibility);
-            ((NintendoTextview) favouritesView.findViewById(R.id.friend_tip_textview)).setVisibility(visibility);
-            ((NintendoTextview) favouritesView.findViewById(R.id.friend_blurb)).setVisibility(visibility);
-        }
+    private void setOnBoarding() {
+        int visibility = miiList.size() > 0 ? View.INVISIBLE :  View.VISIBLE;
+        favouritesView.findViewById(R.id.sadClown).setVisibility(visibility);
+        ((NintendoTextview) favouritesView.findViewById(R.id.friend_tip_textview)).setVisibility(visibility);
+        ((NintendoTextview) favouritesView.findViewById(R.id.friend_blurb)).setVisibility(visibility);
     }
 
     @Override
@@ -293,6 +293,6 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                             ( ((List<MiiCharacter>)result).size() > 0 ? getResources().getString(R.string.online) : getResources().getString(R.string.offline)),
                     Toast.LENGTH_SHORT).show();
         wiiCyclerViewAdapter.notifyDataSetChanged();
-        setOnBoarding(View.INVISIBLE);
+        setOnBoarding();
     }
 }

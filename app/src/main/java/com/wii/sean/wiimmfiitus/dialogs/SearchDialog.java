@@ -20,6 +20,7 @@ import android.widget.EditText;
 import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
+import com.wii.sean.wiimmfiitus.helpers.SetTouchDelegate;
 
 public class SearchDialog extends DialogFragment {
 
@@ -65,6 +66,7 @@ public class SearchDialog extends DialogFragment {
         toggleSwitch.setChecked(sharedPreferences.getBoolean(PreferencesManager.DIALOGSEARCHPREFERENCE, false));
         delete = (Button) view.findViewById(R.id.delete_friend_code);
         delete.setVisibility(View.INVISIBLE);
+        SetTouchDelegate.expandTouchArea(friendCodeEditText, delete, 5);
         addEditTextListener();
         addSearchListener();
         addOtherListeners();
