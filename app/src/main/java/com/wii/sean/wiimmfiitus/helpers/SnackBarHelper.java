@@ -13,7 +13,7 @@ import com.wii.sean.wiimmfiitus.R;
 
 //create a build pattern
 public class SnackBarHelper {
-
+//todo change this to a builder pattern
     public static void showSnackBar(Context context, View v, String resource, int length, Drawable d, final View... args) {
         Snackbar snackbar = Snackbar.make(v, resource, length);
         snackbar.setActionTextColor(context.getResources().getColor(android.R.color.holo_red_dark));

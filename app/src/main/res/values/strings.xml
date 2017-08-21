@@ -19,6 +19,7 @@
     <string name="mii">Mii</string>
     <string name="dialog_title">Search</string>
     <string name="first_run_message">"Hold the SEARCH button if you're from Roscommon"</string>
+    <string name="drag_reorder_message">Drag to reorder your favourites</string>
     <string name="saved_friends">Saved Miis</string>
     <string name="search_friends">Mii Search</string>
     <string name="history">History</string>

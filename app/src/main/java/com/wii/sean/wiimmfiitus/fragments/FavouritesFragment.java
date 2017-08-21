@@ -1,6 +1,8 @@
 package com.wii.sean.wiimmfiitus.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,8 +18,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Predicate;
@@ -153,6 +153,13 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         };
         miiItemTouchHelper = new ItemTouchHelper(callback);
         miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
+        RecyclerItemClickSupport.addTo(wiiCyclerView).setOnItemLongClickListener(new RecyclerItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                SnackBarHelper.showSnackBar(getContext(), getParentActivity().findViewById(R.id.homescreen_main_layout), getContext().getString(R.string.drag_reorder_message), 2000, null);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -295,5 +302,16 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                     Toast.LENGTH_SHORT).show();
         wiiCyclerViewAdapter.notifyDataSetChanged();
         setOnBoarding();
+    }
+
+    private Activity getParentActivity() {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity)context;
+            }
+            context = ((ContextWrapper)context).getBaseContext();
+        }
+        return null;
     }
 }
