@@ -44,6 +44,7 @@
                     android:layout_height="match_parent" >
 
                     <LinearLayout
+                        android:elevation="@dimen/padding_margin_10dp"
                         android:alpha="0.6"
                         android:foreground="?attr/selectableItemBackground"
                         android:layout_gravity="bottom"

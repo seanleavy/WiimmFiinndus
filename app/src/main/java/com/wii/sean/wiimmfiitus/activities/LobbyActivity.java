@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         raceCount = (NintendoTextview) findViewById(R.id.race_count);
         lobbyCreatedTime = (NintendoTextview) findViewById(R.id.lobby_created_time);
         lobbyCount = (NintendoTextview) findViewById(R.id.lobby_player_count);
+        setOnBoarding();
         refreshLobby();
 
         RecyclerItemClickSupport.addTo(recyclerView).setOnItemClickListener(new RecyclerItemClickSupport.OnItemClickListener() {
@@ -93,8 +95,9 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             // todo hardcode shit here for default friends
 //            if(miiList.contains(FriendCodes.PONCHO)) {
             regionTitle.setText(roomModel.getRegionName());
-            if(roomModel.getConnectionRating().equals(""))
+            if(roomModel.getConnectionRating().equals("")) {
                 roomModel.setConnectionRating(" 0");
+            }
             connectionDrops.setText(roomModel.getConnectionRating());
             connectionDropsLabel.setVisibility(View.VISIBLE);
             raceCount.setText(roomModel.getTimesRaced());
@@ -104,6 +107,7 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             recyclerView.setAdapter(recyclerView.getAdapter());
             customWiiCyclerViewAdapter.notifyDataSetChanged();
             viewTypeChange = false;
+            setOnBoarding();
         }
 
 
@@ -147,5 +151,10 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(runnable);
+    }
+
+    private void setOnBoarding() {
+        int visibility = miiList.size() > 0 ? View.INVISIBLE :  View.VISIBLE;
+        findViewById(R.id.image_lobby).setVisibility(visibility);
     }
 }

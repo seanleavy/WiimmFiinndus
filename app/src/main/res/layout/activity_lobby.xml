@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/default_android_grey"
     tools:context="com.wii.sean.wiimmfiitus.activities.LobbyActivity"
     >
 
@@ -93,5 +93,13 @@
         android:layout_gravity="center|bottom"
         android:padding="@dimen/activity_horizontal_margin"
         android:visibility="gone" />
+
+    <ImageView
+        android:layout_marginTop="@dimen/padding_margin_65dp"
+        android:id="@+id/image_lobby"
+        android:layout_width="@dimen/collapsing_image_Size"
+        android:layout_height="@dimen/collapsing_image_Size"
+        android:src="@drawable/bobomb"
+        android:layout_gravity="center"/>
 
 </FrameLayout>
