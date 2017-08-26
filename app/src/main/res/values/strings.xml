@@ -5,6 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="miis_found_text">"found  !!"</string>
     <string name="miis_not_found_text">"Friend  Offline"</string>
+    <string name="favourites_blurb">No friends.</string>
+    <string name="favourites_tip"> Swipe over some miis from your searches</string>
+    <string name="search_save_tip">Swipe the cards left to right to add to your favourites. Tap and hold to rearrange them</string>
     <string name="pressed_wiimfii">loading wiimmfi.de/mkw</string>
     <string-array name="dialog_search_type_label">
         <item>Enter Friend Code</item>
@@ -16,6 +19,7 @@
     <string name="mii">Mii</string>
     <string name="dialog_title">Search</string>
     <string name="first_run_message">"Hold the SEARCH button if you're from Roscommon"</string>
+    <string name="drag_reorder_message">Drag to reorder your favourites</string>
     <string name="saved_friends">Saved Miis</string>
     <string name="search_friends">Mii Search</string>
     <string name="history">History</string>

@@ -2,7 +2,6 @@ package com.wii.sean.wiimmfiitus.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wii.sean.wiimmfiitus.R;
@@ -198,7 +196,7 @@ public class CustomWiiCyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void setAnimation(View viewToAnimate, int pos) {
         if(pos > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
             viewToAnimate.startAnimation(animation);
             lastPosition = pos;
         }

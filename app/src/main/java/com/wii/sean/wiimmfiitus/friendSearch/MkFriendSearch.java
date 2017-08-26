@@ -6,8 +6,8 @@ import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
 import com.wii.sean.wiimmfiitus.Constants.UrlConstants;
 import com.wii.sean.wiimmfiitus.helpers.LogHelper;
 import com.wii.sean.wiimmfiitus.helpers.RandomUserAgent;
-import com.wii.sean.wiimmfiitus.models.MiiCharacter;
-import com.wii.sean.wiimmfiitus.models.RoomModel;
+import com.wii.sean.wiimmfiitus.model.MiiCharacter;
+import com.wii.sean.wiimmfiitus.model.RoomModel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,6 +17,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class MkFriendSearch {
@@ -131,7 +133,11 @@ public class MkFriendSearch {
                         String mii = miiName.get(i);
                         // remove 1. 2. Mii name here caused by 2 people on same wii
                         if(mii.contains("1.") && mii.contains("2.")) {
+                            String mii2 = mii.substring(mii.indexOf("2"));
                             mii = mii.substring(2, mii.indexOf("2"));
+                            Collections.addAll(resultList,
+                                    new MiiCharacter(fCode.get(i), mii, vr.get(i).toString(), isOnline),
+                                    new MiiCharacter(fCode.get(i), mii2, vr.get(i).toString(), isOnline));
                         }
                         resultList.add(new MiiCharacter(fCode.get(i),
                                 mii,
@@ -155,7 +161,6 @@ public class MkFriendSearch {
                 }
             }
         }
-
         if(tag instanceof List) {
             for(int i = 0; i < fCode.size(); i++) {
                 for(MiiCharacter m : (List<MiiCharacter>) tag) {

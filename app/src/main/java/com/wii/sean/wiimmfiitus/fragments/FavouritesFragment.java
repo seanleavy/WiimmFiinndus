@@ -1,6 +1,8 @@
 package com.wii.sean.wiimmfiitus.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import com.wii.sean.wiimmfiitus.R;
 import com.wii.sean.wiimmfiitus.activities.MkWiiHomeActivity;
 import com.wii.sean.wiimmfiitus.adapters.CustomWiiCyclerViewAdapter;
 import com.wii.sean.wiimmfiitus.Constants.FriendCodes;
+import com.wii.sean.wiimmfiitus.customViews.NintendoTextview;
 import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
@@ -82,7 +85,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         setAdapter();
         swipeRefreshLayout = (SwipeRefreshLayout) favouritesView.findViewById(R.id.swipe_refresh_layout);
 
-        setOnBoardingAnimation();
+        setOnBoarding();
         enableSwipeDragFavourites();
         setRefreshListener();
         return favouritesView;
@@ -102,7 +105,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         //todo: not good
         preferencesManager = new PreferencesManager(favouritesView.getContext());
         final List<MiiCharacter> favouritesFriendCodesList = preferencesManager.getPreferencesAsList(PreferencesManager.FAVOURITESPREFERENCES);
-        View parent = favouritesView.findViewById(R.id.parent_linearlayout);
+        View parent = favouritesView.findViewById(R.id.coordinator_layout);
         SnackBarHelper.showSnackBar(getContext(),
                 parent, "",
                 Snackbar.LENGTH_SHORT,
@@ -150,6 +153,13 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         };
         miiItemTouchHelper = new ItemTouchHelper(callback);
         miiItemTouchHelper.attachToRecyclerView(wiiCyclerView);
+        RecyclerItemClickSupport.addTo(wiiCyclerView).setOnItemLongClickListener(new RecyclerItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                SnackBarHelper.showSnackBar(getContext(), getParentActivity().findViewById(R.id.homescreen_main_layout), getContext().getString(R.string.drag_reorder_message), 2000, null);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -160,14 +170,16 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
         }
         if(id == R.id.load_default_miis) {
             setDefaultFriends();
+            setOnBoarding();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void setOnBoardingAnimation() {
-        if(preferencesManager.isFirstRun()) {
-            // todo ?!
-        }
+    private void setOnBoarding() {
+        int visibility = miiList.size() > 0 ? View.INVISIBLE :  View.VISIBLE;
+        favouritesView.findViewById(R.id.sadClown).setVisibility(visibility);
+        ((NintendoTextview) favouritesView.findViewById(R.id.friend_tip_textview)).setVisibility(visibility);
+        ((NintendoTextview) favouritesView.findViewById(R.id.friend_blurb)).setVisibility(visibility);
     }
 
     @Override
@@ -193,6 +205,7 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
     @Override
     public void preferenceUpdate() {
         if(favouritesView != null) {
+            setOnBoarding();
             setAdapter();
         }
     }
@@ -288,5 +301,17 @@ public class FavouritesFragment extends BaseFragment implements MkWiiHomeActivit
                             ( ((List<MiiCharacter>)result).size() > 0 ? getResources().getString(R.string.online) : getResources().getString(R.string.offline)),
                     Toast.LENGTH_SHORT).show();
         wiiCyclerViewAdapter.notifyDataSetChanged();
+        setOnBoarding();
+    }
+
+    private Activity getParentActivity() {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity)context;
+            }
+            context = ((ContextWrapper)context).getBaseContext();
+        }
+        return null;
     }
 }

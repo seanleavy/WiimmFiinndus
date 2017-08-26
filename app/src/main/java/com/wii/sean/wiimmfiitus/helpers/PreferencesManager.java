@@ -8,18 +8,18 @@ import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
-import org.apache.commons.collections4.queue.CircularFifoQueue;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class PreferencesManager {
 
     public static final String HISTORYPREFERENCES = "searchesMade";
     public static final String FAVOURITESPREFERENCES = "favourites";
-    public static final String DEFAULTPREFERENCES = "default";
+    public static final String CHEATERPREFERENCES = "cheaters";
+    public static final String APPFIRSTRUN = "default";
+    public static final String SEARCHFIRSTRUN = "default";
+    public static final String FIRSTFAVOURITEADDED = "firstFavouriteAdded";
     public static final String DIALOGSEARCHPREFERENCE = "searchToggle";
 
     private DB snappy;
@@ -30,9 +30,9 @@ public class PreferencesManager {
 
     public PreferencesManager(Context context) {
         try {
+            snappy = DBFactory.open(context);
             sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
             this.context = context;
-            snappy = DBFactory.open(context);
         } catch (SnappydbException e) {
             Log.e(LogHelper.getTag(getClass()), e.getMessage());
         }
@@ -62,19 +62,11 @@ public class PreferencesManager {
     }
 
     public void addToPreference(String preferenceKey, Object valueToAdd) {
-        Collection preferenceList;
-        switch(preferenceKey) {
-            case "searchesMade" : {
-                preferenceList = new CircularFifoQueue(6);
-                preferenceList.addAll(getPreferencesAsList(preferenceKey));
-                break;
-            }
-            default: {
-                preferenceList = new ArrayList();
-                preferenceList.addAll(getPreferencesAsList(preferenceKey));
-                break;
-            }
-        }
+        List preferenceList;
+        if(getPreferencesFor(preferenceKey) != null)
+            preferenceList = new ArrayList(Arrays.asList(getPreferencesFor(preferenceKey)));
+        else
+            preferenceList = new ArrayList();
         if(!preferenceList.contains(valueToAdd)) {
             try {
                 preferenceList.add(valueToAdd);
@@ -86,7 +78,8 @@ public class PreferencesManager {
         }
     }
 
-    public void removeFromPreference(String preferenceKey, Object toRemove) {
+
+    public boolean removeFromPreference(String preferenceKey, Object toRemove) {
         List values = new ArrayList(Arrays.asList(getPreferencesFor(preferenceKey)));
         if(values.contains(toRemove)) {
             values.remove(toRemove);
@@ -98,6 +91,7 @@ public class PreferencesManager {
                 Log.e(LogHelper.getTag(getClass()), e.getMessage());
             }
         }
+        return false;
     }
 
     public boolean clearPrefencefromDB(String preferenceKey) {
@@ -119,13 +113,13 @@ public class PreferencesManager {
         }
     }
 
-    public boolean isFirstRun() {
-        return !sharedPreferences.getBoolean(PreferencesManager.DEFAULTPREFERENCES, false);
+    public boolean isFirstRun(String preferenceType) {
+        return !sharedPreferences.getBoolean(preferenceType, false);
     }
 
-    public void setFirstRunToBe(boolean bool) {
+    public void setFirstRunPreference(String preferenceType, boolean bool) {
         preferenceEditor = sharedPreferences.edit();
-        preferenceEditor.putBoolean(PreferencesManager.DEFAULTPREFERENCES, bool);
+        preferenceEditor.putBoolean(preferenceType, bool);
         preferenceEditor.commit();
     }
 }

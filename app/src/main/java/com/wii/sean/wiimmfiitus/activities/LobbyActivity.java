@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -69,16 +70,13 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         raceCount = (NintendoTextview) findViewById(R.id.race_count);
         lobbyCreatedTime = (NintendoTextview) findViewById(R.id.lobby_created_time);
         lobbyCount = (NintendoTextview) findViewById(R.id.lobby_player_count);
+        setOnBoarding();
         refreshLobby();
 
-        RecyclerItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new RecyclerItemClickSupport.OnItemLongClickListener() {
+        RecyclerItemClickSupport.addTo(recyclerView).setOnItemClickListener(new RecyclerItemClickSupport.OnItemClickListener() {
             @Override
-            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-                Log.i(LogHelper.getTag(getClass()), "LONGCCCCCCLICK!!!!!!!!!!!!!");
-                AmiigavelDialog dialog = AmiigavelDialog.newInstance(miiList.get(position));
-                FragmentManager fm = getSupportFragmentManager();
-                dialog.show(fm, "");
-                return true;
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                AmiigavelDialog.newInstance(miiList.get(position)).show(getSupportFragmentManager(), "");
             }
         });
     }
@@ -97,20 +95,19 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             // todo hardcode shit here for default friends
 //            if(miiList.contains(FriendCodes.PONCHO)) {
             regionTitle.setText(roomModel.getRegionName());
-            String connRating = roomModel.getConnectionRating();
-            if(connRating.equals(""))
-                connRating = "none";
-            connectionDrops.setText(connRating);
+            if(roomModel.getConnectionRating().equals("")) {
+                roomModel.setConnectionRating(" 0");
+            }
+            connectionDrops.setText(roomModel.getConnectionRating());
             connectionDropsLabel.setVisibility(View.VISIBLE);
             raceCount.setText(roomModel.getTimesRaced());
             roomTitle.setText(roomModel.getRoomName());
-            lobbyCount.setText(Integer.toString(miiList.size()) + getString(R.string.toolbar_count_playing));
+            lobbyCount.setText(Integer.toString(miiList.size()));
             lobbyCreatedTime.setText(roomModel.getLobbyCreatedTime());
             recyclerView.setAdapter(recyclerView.getAdapter());
             customWiiCyclerViewAdapter.notifyDataSetChanged();
-            recyclerView.smoothScrollToPosition(customWiiCyclerViewAdapter.getItemCount());
-            recyclerView.smoothScrollToPosition(0);
             viewTypeChange = false;
+            setOnBoarding();
         }
 
 
@@ -154,5 +151,10 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(runnable);
+    }
+
+    private void setOnBoarding() {
+        int visibility = miiList.size() > 0 ? View.INVISIBLE :  View.VISIBLE;
+        findViewById(R.id.image_lobby).setVisibility(visibility);
     }
 }
