@@ -32,7 +32,7 @@ import com.wii.sean.wiimmfiitus.friendSearch.SearchAsyncHelper;
 import com.wii.sean.wiimmfiitus.helpers.PreferencesManager;
 import com.wii.sean.wiimmfiitus.helpers.SnackBarHelper;
 import com.wii.sean.wiimmfiitus.interfaces.AsyncTaskCompleteListener;
-import com.wii.sean.wiimmfiitus.models.MiiCharacter;
+import com.wii.sean.wiimmfiitus.model.MiiCharacter;
 
 import java.util.ArrayList;
 import java.util.Collections;
