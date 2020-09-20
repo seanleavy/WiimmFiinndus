@@ -110,7 +110,7 @@ public class MiiCharacter implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return ((MiiCharacter) obj).getFriendCode().equals(this.getFriendCode()) && ((MiiCharacter) obj).getMii().equals(this.getMii());
+        return ((MiiCharacter) obj).getFriendCode().equals(this.getFriendCode());
     }
 
     @Override
