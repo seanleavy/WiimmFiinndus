@@ -45,6 +45,22 @@ public class MiiCharacter implements Serializable {
         this.isOnline = online;
     }
 
+    public MiiCharacter(String fCode, String miiName, String vrPoints, boolean online, int type) {
+        this.friendCode = fCode;
+        this.mii = miiName;
+        this.vr = vrPoints;
+        this.isOnline = online;
+        this.type = type;
+    }
+
+    public MiiCharacter(String fCode, String miiName, String vrPoints, int type) {
+        this.friendCode = fCode;
+        this.mii = miiName;
+        this.vr = vrPoints;
+        this.type = type;
+    }
+
+
     //todo: issue with snappy db preventing a builder class
     public MiiCharacter(String fCode, String miiName, String vrPoints, boolean online, int type, String role, String region, String match, String connectionFails) {
         this.friendCode = fCode;

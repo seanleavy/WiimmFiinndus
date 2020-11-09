@@ -17,8 +17,9 @@
             layout="@layout/toolbar"
             />
 
+
         <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin_large"
             android:layout_below="@id/wiimmfii_toolbar"
             android:id="@+id/lobby_recyclerview"
             android:layout_width="match_parent"
@@ -42,9 +43,9 @@
             android:id="@+id/race_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
+            android:textSize="16dp"
             android:textColor="@color/white"
-            android:layout_weight=".3"
+            android:layout_weight=".5"
             />
 
         <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
@@ -53,35 +54,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/lobby_created_time"
-            android:layout_weight=".3"
+            android:layout_weight=".5"
             />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight=".3"
-            >
 
-            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                android:visibility="invisible"
-                android:id="@+id/conndrops_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10dp"
-                android:textColor="@color/nintendo_grey_light"
-                android:text="@string/connection_drops_label"/>
-
-            <com.wii.sean.wiimmfiitus.customViews.NintendoTextview
-                android:id="@+id/connection_drops_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/activity_vertical_margin"
-                android:textSize="10dp"
-                android:textColor="@color/white"
-                />
-
-        </LinearLayout>
 
     </LinearLayout>
 

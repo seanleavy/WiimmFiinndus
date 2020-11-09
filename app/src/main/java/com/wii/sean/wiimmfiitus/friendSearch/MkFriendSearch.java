@@ -109,12 +109,15 @@ public class MkFriendSearch {
 
                 Elements roomElements = elements.select("tr.tr0:contains(" + searchToken + "), tr.tr1:contains(" + searchToken + ")").prevAll("[id]").first().children();
                 String roomTitle = roomElements.select("th").text();
+                String roomType = roomTitle.substring(0, roomTitle.indexOf("room") + 4).trim();
                 String room = roomElements.select("a").text();
-                String locale = roomTitle.substring(0, roomTitle.lastIndexOf(room)).trim();
-                String connfails = roomTitle.substring(roomTitle.lastIndexOf(")") + 1, roomTitle.lastIndexOf(" ")).trim();
-                String races = roomTitle.substring(roomTitle.lastIndexOf(",") + 1, roomTitle.lastIndexOf("(")).trim();
+                //String locale = roomTitle.substring(0, roomTitle.lastIndexOf(room)).trim();
+                //String connfails = roomTitle.substring(roomTitle.lastIndexOf(")") + 1, roomTitle.lastIndexOf(" ")).trim();
+                String races = "";
+                if (roomTitle.toLowerCase().contains(("races")))
+                    races = roomTitle.substring(roomTitle.indexOf(",") + 1, roomTitle.lastIndexOf("(last")).trim();
                 String raceTimes = roomTitle.substring(roomTitle.indexOf("(") + 1, roomTitle.indexOf(")"));
-                RoomModel roomModel = new RoomModel(room, locale, connfails, races, raceTimes, miiList);
+                RoomModel roomModel = new RoomModel(roomType, "", "", races, raceTimes, miiList);
                 return new ArrayList(Arrays.asList(roomModel));
             }
         } catch (IOException e) {

@@ -36,6 +36,7 @@
 
     <dimen name="license_card_small_textsize">10dp</dimen>
     <dimen name="toolbar_textsize">20sp</dimen>
+    <dimen name="toolbar_textsize_large">25sp</dimen>
     <dimen name="miis_found_textsize">26dp</dimen>
     <dimen name="tab_vertical_size">35dp</dimen>
     <dimen name="friends_fragment_text_size">36dp</dimen>

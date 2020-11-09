@@ -38,8 +38,6 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
     private CustomWiiCyclerViewAdapter customWiiCyclerViewAdapter;
     private NintendoTextview roomTitle;
     private NintendoTextview regionTitle;
-    private NintendoTextview connectionDrops;
-    private NintendoTextview connectionDropsLabel;
     private NintendoTextview raceCount;
     private NintendoTextview lobbyCreatedTime;
     private NintendoTextview lobbyCount;
@@ -70,8 +68,6 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
         progressBar = findViewById(R.id.progress_bar_search);
         roomTitle = findViewById(R.id.nintendoSecondaryToolbarTextview);
         regionTitle = findViewById(R.id.nintendoToolbarTextview);
-        connectionDrops = findViewById(R.id.connection_drops_value);
-        connectionDropsLabel = findViewById(R.id.conndrops_label);
         raceCount = findViewById(R.id.race_count);
         lobbyCreatedTime = findViewById(R.id.lobby_created_time);
         lobbyCount = findViewById(R.id.lobby_player_count);
@@ -110,11 +106,9 @@ public class LobbyActivity extends AppCompatActivity implements AsyncTaskComplet
             if(roomModel.getConnectionRating().equals("")) {
                 roomModel.setConnectionRating(" 0");
             }
-            connectionDrops.setText(roomModel.getConnectionRating());
-            connectionDropsLabel.setVisibility(View.VISIBLE);
             raceCount.setText(roomModel.getTimesRaced());
             roomTitle.setText(roomModel.getRoomName());
-            lobbyCount.setText(Integer.toString(miiList.size()));
+            lobbyCount.setText(Integer.toString(miiList.size()) + " online");
             lobbyCreatedTime.setText(roomModel.getLobbyCreatedTime());
             recyclerView.setAdapter(recyclerView.getAdapter());
             customWiiCyclerViewAdapter.notifyDataSetChanged();
